@@ -1,0 +1,144 @@
+[
+  {
+    "id": "rep-real-login",
+    "project_id": "proj-1",
+    "test_case_title": "Verify Authentication Flow (src/routes/login.tsx)",
+    "environment": "Staging",
+    "browser": "Chromium 124.0",
+    "duration_ms": 1840,
+    "error_category": "Network 401",
+    "ai_root_cause_summary": "Failure caused by API 401 Unauthorized during session token exchange in login.tsx.",
+    "ai_fix_recommendation": "Ensure Supabase authentication interceptor refreshes stale session tokens before posting credentials.",
+    "video_url": "https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-code-41648-large.mp4",
+    "screenshot_url": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80",
+    "network_logs": [
+      {
+        "method": "OPTIONS",
+        "url": "/api/auth/login",
+        "status": 204,
+        "latency": "22ms"
+      },
+      {
+        "method": "POST",
+        "url": "/api/auth/login",
+        "status": 401,
+        "latency": "145ms",
+        "error": "Token signature expired"
+      }
+    ],
+    "console_logs": [
+      {
+        "level": "info",
+        "message": "[AuthShell] Mounting welcome back form container"
+      },
+      {
+        "level": "warn",
+        "message": "[SupabaseAuth] Local storage auth token state unverified"
+      },
+      {
+        "level": "error",
+        "message": "POST https://api.speclane.com/v1/auth/login 401 (Unauthorized)"
+      },
+      {
+        "level": "error",
+        "message": "AuthError: Invalid login credentials or session expired"
+      }
+    ],
+    "dom_snapshot": "<AuthShell title=\"Welcome Back!\">\n  <form className=\"space-y-3.5\">\n    <div className=\"space-y-1.5\">\n      <Label htmlFor=\"email\">Email</Label>\n      <Input id=\"email\" type=\"email\" value=\"qa-test@speclane.com\" />\n    </div>\n    <div className=\"space-y-1.5\">\n      <Label htmlFor=\"password\">Password</Label>\n      <Input id=\"password\" type=\"password\" value=\"*********\" />\n    </div>\n    <div className=\"alert alert-error text-red-500 font-mono text-xs p-3 bg-red-950/40 rounded-xl border border-red-500/30\">\n      HTTP 401: Invalid login credentials or session token expired.\n    </div>\n  </form>\n</AuthShell>",
+    "created_at": "2026-05-18T20:55:40.500Z"
+  },
+  {
+    "id": "rep-real-billing",
+    "project_id": "proj-1",
+    "test_case_title": "Verify Billing Subscription Sync (src/routes/app.billing.tsx)",
+    "environment": "Production",
+    "browser": "WebKit 17.4",
+    "duration_ms": 6350,
+    "error_category": "Network 504",
+    "ai_root_cause_summary": "Paddle webhook dispatch timed out (HTTP 504) while confirming checkout completion.",
+    "ai_fix_recommendation": "Increase asynchronous webhook polling interval in app.billing.tsx from 5s to 15s.",
+    "video_url": "https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-man-typing-on-a-laptop-41653-large.mp4",
+    "screenshot_url": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&q=80",
+    "network_logs": [
+      {
+        "method": "POST",
+        "url": "/api/billing/create-checkout-session",
+        "status": 200,
+        "latency": "420ms"
+      },
+      {
+        "method": "GET",
+        "url": "/api/billing/poll-webhook?tx=sub_9921",
+        "status": 202,
+        "latency": "115ms"
+      },
+      {
+        "method": "GET",
+        "url": "/api/billing/poll-webhook?tx=sub_9921",
+        "status": 504,
+        "latency": "5010ms",
+        "error": "Gateway Timeout"
+      }
+    ],
+    "console_logs": [
+      {
+        "level": "info",
+        "message": "[PaddleCheckout] Initializing sandbox iframe container..."
+      },
+      {
+        "level": "info",
+        "message": "[WebhookPoll] Polling transaction confirmation (attempt 1/5)..."
+      },
+      {
+        "level": "error",
+        "message": "GET https://api.speclane.com/v1/billing/poll-webhook net::ERR_TIMED_OUT 504"
+      }
+    ],
+    "dom_snapshot": "<div className=\"billing-card p-6 rounded-3xl bg-[#14120B] border border-red-500/30\">\n  <div className=\"flex items-center justify-between\">\n    <h3 className=\"text-xl font-bold\">Pro Plan Upgrade</h3>\n    <Badge className=\"bg-amber-500 text-black\">Awaiting Webhook</Badge>\n  </div>\n  <div className=\"mt-4 p-4 rounded-xl bg-red-950/40 border border-red-500/20 text-red-400 font-mono text-xs\">\n    Error: Paddle webhook polling timeout after 15,000ms.\n  </div>\n</div>",
+    "created_at": "2026-05-18T20:05:40.500Z"
+  },
+  {
+    "id": "rep-real-chat",
+    "project_id": "proj-1",
+    "test_case_title": "Validate Team Chat WebSocket Connection (src/routes/app.chat.tsx)",
+    "environment": "Staging",
+    "browser": "Firefox 125.0",
+    "duration_ms": 2150,
+    "error_category": "Uncaught Exception",
+    "ai_root_cause_summary": "WebSocket disconnection error 1006 triggered due to missing heartbeat pulse in chat socket provider.",
+    "ai_fix_recommendation": "Implement exponential backoff reconnect logic inside the WebSocket message channel hook.",
+    "video_url": "https://assets.mixkit.co/videos/preview/mixkit-coding-on-a-screen-in-a-close-up-shot-41655-large.mp4",
+    "screenshot_url": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&q=80",
+    "network_logs": [
+      {
+        "method": "GET",
+        "url": "/api/messages/history?channel=qa-general",
+        "status": 200,
+        "latency": "380ms"
+      },
+      {
+        "method": "GET",
+        "url": "wss://ws.speclane.com/socket/v1",
+        "status": 500,
+        "latency": "1420ms",
+        "error": "Handshake Failed"
+      }
+    ],
+    "console_logs": [
+      {
+        "level": "info",
+        "message": "[ChatSocket] Booting connection to wss://ws.speclane.com"
+      },
+      {
+        "level": "warn",
+        "message": "[ChatSocket] Handshake latency exceeded 1000ms threshold"
+      },
+      {
+        "level": "error",
+        "message": "WebSocket connection to 'wss://ws.speclane.com/socket' failed: Error in connection establishment: net::ERR_CONNECTION_CLOSED"
+      }
+    ],
+    "dom_snapshot": "<div className=\"chat-container flex flex-col h-[600px] bg-[#14120B]\">\n  <div className=\"chat-header p-4 border-b border-white/10\">QA Team Channel</div>\n  <div className=\"messages-list flex-1 p-4 bg-red-950/20 border border-red-500/30 rounded-2xl m-4\">\n    <p className=\"text-red-400 font-mono text-xs font-bold\">WebSocket connection closed: 1006 Abnormal Closure</p>\n  </div>\n</div>",
+    "created_at": "2026-05-18T19:05:40.500Z"
+  }
+]

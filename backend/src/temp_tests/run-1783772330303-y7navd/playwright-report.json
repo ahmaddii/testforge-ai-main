@@ -1,0 +1,930 @@
+{
+  "config": {
+    "argv": [
+      "/home/malikahmadrasheed/.nvm/versions/node/v22.22.2/bin/node",
+      "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/node_modules/.bin/playwright",
+      "test",
+      "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd",
+      "--config=/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/playwright.config.ts",
+      "--reporter=json"
+    ],
+    "configFile": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/playwright.config.ts",
+    "rootDir": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.61.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "run-1783772330303-y7navd/pr-1.spec.ts",
+      "file": "run-1783772330303-y7navd/pr-1.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "PulsarX Landing Page Functionality",
+          "file": "run-1783772330303-y7navd/pr-1.spec.ts",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should load the page successfully and display main hero content",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 6144,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: 'Get Started' }).first()\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: 'Get Started' }).first()\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: 'Get Started' }).first()\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: 'Get Started' }).first()\u001b[22m\n\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts:22:77",
+                        "location": {
+                          "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                          "column": 77,
+                          "line": 22
+                        },
+                        "snippet": "  20 |     await expect(page.getByRole('heading', { name: 'Transforming Ideas into Digital Reality' })).toBeVisible();\n  21 |     await expect(page.getByText('We build scalable, high-performance software solutions tailored to your business needs.')).toBeVisible();\n> 22 |     await expect(page.getByRole('button', { name: 'Get Started' }).first()).toBeVisible();\n     |                                                                             ^\n  23 |     await expect(page.getByRole('button', { name: 'Contact Us' }).first()).toBeVisible();\n  24 |   });\n  25 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                            "column": 77,
+                            "line": 22
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: 'Get Started' }).first()\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: 'Get Started' }).first()\u001b[22m\n\n\n  20 |     await expect(page.getByRole('heading', { name: 'Transforming Ideas into Digital Reality' })).toBeVisible();\n  21 |     await expect(page.getByText('We build scalable, high-performance software solutions tailored to your business needs.')).toBeVisible();\n> 22 |     await expect(page.getByRole('button', { name: 'Get Started' }).first()).toBeVisible();\n     |                                                                             ^\n  23 |     await expect(page.getByRole('button', { name: 'Contact Us' }).first()).toBeVisible();\n  24 |   });\n  25 |\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts:22:77"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-11T12:21:07.136Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783772330303-y7navd-p-6fe36-d-display-main-hero-content-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                        "column": 77,
+                        "line": 22
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c04a133fb669feb59007-c97386f7fa542e80befe",
+              "file": "run-1783772330303-y7navd/pr-1.spec.ts",
+              "line": 18,
+              "column": 7
+            },
+            {
+              "title": "should display all navigation links on desktop",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1559,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('link', { name: 'Services', exact: true })\nExpected: visible\nError: strict mode violation: getByRole('link', { name: 'Services', exact: true }) resolved to 2 elements:\n    1) <a href=\"#services\" class=\"relative group px-4 py-2 rounded-full font-medium transition-all duration-300 inline-block text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('navigation').getByRole('link', { name: 'Services' })\n    2) <a href=\"#services\" class=\"text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'Services' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: 'Services', exact: true })\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('link', { name: 'Services', exact: true })\nExpected: visible\nError: strict mode violation: getByRole('link', { name: 'Services', exact: true }) resolved to 2 elements:\n    1) <a href=\"#services\" class=\"relative group px-4 py-2 rounded-full font-medium transition-all duration-300 inline-block text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('navigation').getByRole('link', { name: 'Services' })\n    2) <a href=\"#services\" class=\"text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'Services' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: 'Services', exact: true })\u001b[22m\n\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts:32:77",
+                        "location": {
+                          "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                          "column": 77,
+                          "line": 32
+                        },
+                        "snippet": "  30 |     await expect(page.getByRole('link', { name: 'Home' }).first()).toBeVisible();\n  31 |     await expect(page.getByRole('link', { name: 'About', exact: true })).toBeVisible();\n> 32 |     await expect(page.getByRole('link', { name: 'Services', exact: true })).toBeVisible();\n     |                                                                             ^\n  33 |     await expect(page.getByRole('link', { name: 'Projects', exact: true })).toBeVisible();\n  34 |     await expect(page.getByRole('link', { name: 'Testimonials', exact: true })).toBeVisible();\n  35 |     await expect(page.getByRole('link', { name: 'Contact', exact: true })).toBeVisible();"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                            "column": 77,
+                            "line": 32
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('link', { name: 'Services', exact: true })\nExpected: visible\nError: strict mode violation: getByRole('link', { name: 'Services', exact: true }) resolved to 2 elements:\n    1) <a href=\"#services\" class=\"relative group px-4 py-2 rounded-full font-medium transition-all duration-300 inline-block text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('navigation').getByRole('link', { name: 'Services' })\n    2) <a href=\"#services\" class=\"text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'Services' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: 'Services', exact: true })\u001b[22m\n\n\n  30 |     await expect(page.getByRole('link', { name: 'Home' }).first()).toBeVisible();\n  31 |     await expect(page.getByRole('link', { name: 'About', exact: true })).toBeVisible();\n> 32 |     await expect(page.getByRole('link', { name: 'Services', exact: true })).toBeVisible();\n     |                                                                             ^\n  33 |     await expect(page.getByRole('link', { name: 'Projects', exact: true })).toBeVisible();\n  34 |     await expect(page.getByRole('link', { name: 'Testimonials', exact: true })).toBeVisible();\n  35 |     await expect(page.getByRole('link', { name: 'Contact', exact: true })).toBeVisible();\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts:32:77"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-11T12:21:14.404Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783772330303-y7navd-p-803cb-navigation-links-on-desktop-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                        "column": 77,
+                        "line": 32
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c04a133fb669feb59007-dcf8af966d188c0f7d45",
+              "file": "run-1783772330303-y7navd/pr-1.spec.ts",
+              "line": 26,
+              "column": 7
+            },
+            {
+              "title": "should open and close mobile navigation menu",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 6011,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: 'Menu' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: 'Menu' })\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: 'Menu' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: 'Menu' })\u001b[22m\n\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts:44:30",
+                        "location": {
+                          "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                          "column": 30,
+                          "line": 44
+                        },
+                        "snippet": "  42 |\n  43 |     const menuButton = page.getByRole('button', { name: 'Menu' });\n> 44 |     await expect(menuButton).toBeVisible();\n     |                              ^\n  45 |     await menuButton.click();\n  46 |\n  47 |     await expect(page.getByRole('link', { name: 'Home' }).nth(1)).toBeVisible(); // Nth(1) to target the mobile menu link"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                            "column": 30,
+                            "line": 44
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: 'Menu' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: 'Menu' })\u001b[22m\n\n\n  42 |\n  43 |     const menuButton = page.getByRole('button', { name: 'Menu' });\n> 44 |     await expect(menuButton).toBeVisible();\n     |                              ^\n  45 |     await menuButton.click();\n  46 |\n  47 |     await expect(page.getByRole('link', { name: 'Home' }).nth(1)).toBeVisible(); // Nth(1) to target the mobile menu link\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts:44:30"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-11T12:21:17.109Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783772330303-y7navd-p-6f512-lose-mobile-navigation-menu-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                        "column": 30,
+                        "line": 44
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c04a133fb669feb59007-d70ba23829f9db1f83b6",
+              "file": "run-1783772330303-y7navd/pr-1.spec.ts",
+              "line": 39,
+              "column": 7
+            },
+            {
+              "title": "should navigate to sections via desktop navigation links",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1874,
+                      "error": {
+                        "message": "Error: locator.click: Error: strict mode violation: getByRole('link', { name: 'Services', exact: true }) resolved to 2 elements:\n    1) <a href=\"#services\" class=\"relative group px-4 py-2 rounded-full font-medium transition-all duration-300 inline-block text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('navigation').getByRole('link', { name: 'Services' })\n    2) <a href=\"#services\" class=\"text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'Services' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Services', exact: true })\u001b[22m\n",
+                        "stack": "Error: locator.click: Error: strict mode violation: getByRole('link', { name: 'Services', exact: true }) resolved to 2 elements:\n    1) <a href=\"#services\" class=\"relative group px-4 py-2 rounded-full font-medium transition-all duration-300 inline-block text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('navigation').getByRole('link', { name: 'Services' })\n    2) <a href=\"#services\" class=\"text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'Services' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Services', exact: true })\u001b[22m\n\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts:62:69",
+                        "location": {
+                          "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                          "column": 69,
+                          "line": 62
+                        },
+                        "snippet": "  60 |     await expect(page.getByRole('heading', { name: 'Discover PulsarX' })).toBeVisible();\n  61 |\n> 62 |     await page.getByRole('link', { name: 'Services', exact: true }).click();\n     |                                                                     ^\n  63 |     await page.waitForLoadState('networkidle');\n  64 |     await expect(page.locator('#services')).toBeInViewport();\n  65 |     await expect(page.getByRole('heading', { name: 'Our Services' })).toBeVisible();"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                            "column": 69,
+                            "line": 62
+                          },
+                          "message": "Error: locator.click: Error: strict mode violation: getByRole('link', { name: 'Services', exact: true }) resolved to 2 elements:\n    1) <a href=\"#services\" class=\"relative group px-4 py-2 rounded-full font-medium transition-all duration-300 inline-block text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('navigation').getByRole('link', { name: 'Services' })\n    2) <a href=\"#services\" class=\"text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'Services' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Services', exact: true })\u001b[22m\n\n\n  60 |     await expect(page.getByRole('heading', { name: 'Discover PulsarX' })).toBeVisible();\n  61 |\n> 62 |     await page.getByRole('link', { name: 'Services', exact: true }).click();\n     |                                                                     ^\n  63 |     await page.waitForLoadState('networkidle');\n  64 |     await expect(page.locator('#services')).toBeInViewport();\n  65 |     await expect(page.getByRole('heading', { name: 'Our Services' })).toBeVisible();\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts:62:69"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-11T12:21:24.201Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783772330303-y7navd-p-3434b-ia-desktop-navigation-links-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                        "column": 69,
+                        "line": 62
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c04a133fb669feb59007-3273e11d65b0a2b4544b",
+              "file": "run-1783772330303-y7navd/pr-1.spec.ts",
+              "line": 55,
+              "column": 7
+            },
+            {
+              "title": "should display key statistics in hero section",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1269,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-11T12:21:27.173Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c04a133fb669feb59007-eafb810c4bd463075a58",
+              "file": "run-1783772330303-y7navd/pr-1.spec.ts",
+              "line": 83,
+              "column": 7
+            },
+            {
+              "title": "should display \"Our Story\", \"Our Mission\", and \"Our Vision\" in About section",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1176,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-11T12:21:28.653Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c04a133fb669feb59007-85c2a9f772b1d4dab658",
+              "file": "run-1783772330303-y7navd/pr-1.spec.ts",
+              "line": 94,
+              "column": 7
+            },
+            {
+              "title": "should display services cards with titles and descriptions",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1271,
+                      "error": {
+                        "message": "Error: locator.click: Error: strict mode violation: getByRole('link', { name: 'Services', exact: true }) resolved to 2 elements:\n    1) <a href=\"#services\" class=\"relative group px-4 py-2 rounded-full font-medium transition-all duration-300 inline-block text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('navigation').getByRole('link', { name: 'Services' })\n    2) <a href=\"#services\" class=\"text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'Services' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Services', exact: true })\u001b[22m\n",
+                        "stack": "Error: locator.click: Error: strict mode violation: getByRole('link', { name: 'Services', exact: true }) resolved to 2 elements:\n    1) <a href=\"#services\" class=\"relative group px-4 py-2 rounded-full font-medium transition-all duration-300 inline-block text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('navigation').getByRole('link', { name: 'Services' })\n    2) <a href=\"#services\" class=\"text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'Services' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Services', exact: true })\u001b[22m\n\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts:114:69",
+                        "location": {
+                          "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                          "column": 69,
+                          "line": 114
+                        },
+                        "snippet": "  112 |\n  113 |   test('should display services cards with titles and descriptions', async () => {\n> 114 |     await page.getByRole('link', { name: 'Services', exact: true }).click();\n      |                                                                     ^\n  115 |     await page.waitForLoadState('networkidle');\n  116 |\n  117 |     // Web Development card"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                            "column": 69,
+                            "line": 114
+                          },
+                          "message": "Error: locator.click: Error: strict mode violation: getByRole('link', { name: 'Services', exact: true }) resolved to 2 elements:\n    1) <a href=\"#services\" class=\"relative group px-4 py-2 rounded-full font-medium transition-all duration-300 inline-block text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('navigation').getByRole('link', { name: 'Services' })\n    2) <a href=\"#services\" class=\"text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'Services' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Services', exact: true })\u001b[22m\n\n\n  112 |\n  113 |   test('should display services cards with titles and descriptions', async () => {\n> 114 |     await page.getByRole('link', { name: 'Services', exact: true }).click();\n      |                                                                     ^\n  115 |     await page.waitForLoadState('networkidle');\n  116 |\n  117 |     // Web Development card\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts:114:69"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-11T12:21:29.860Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783772330303-y7navd-p-467f5-ith-titles-and-descriptions-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                        "column": 69,
+                        "line": 114
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c04a133fb669feb59007-c5e92406680a88353891",
+              "file": "run-1783772330303-y7navd/pr-1.spec.ts",
+              "line": 113,
+              "column": 7
+            },
+            {
+              "title": "should display project cards with details in Projects section",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1601,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-11T12:21:32.066Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c04a133fb669feb59007-f1208b3f806f98fe6fb8",
+              "file": "run-1783772330303-y7navd/pr-1.spec.ts",
+              "line": 166,
+              "column": 7
+            },
+            {
+              "title": "should display testimonials in the testimonials section",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 2072,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”')\nExpected: visible\nError: strict mode violation: getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”') resolved to 4 elements:\n    1) <p class=\"text-lg italic text-muted-foreground\">…</p> aka getByText('“PulsarX transformed our').first()\n    2) <p class=\"text-lg italic text-muted-foreground\">…</p> aka getByText('“PulsarX transformed our').nth(1)\n    3) <p class=\"text-lg italic text-muted-foreground\">…</p> aka getByText('“PulsarX transformed our').nth(2)\n    4) <p class=\"text-lg italic text-muted-foreground\">…</p> aka getByText('“PulsarX transformed our').nth(3)\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”')\nExpected: visible\nError: strict mode violation: getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”') resolved to 4 elements:\n    1) <p class=\"text-lg italic text-muted-foreground\">…</p> aka getByText('“PulsarX transformed our').first()\n    2) <p class=\"text-lg italic text-muted-foreground\">…</p> aka getByText('“PulsarX transformed our').nth(1)\n    3) <p class=\"text-lg italic text-muted-foreground\">…</p> aka getByText('“PulsarX transformed our').nth(2)\n    4) <p class=\"text-lg italic text-muted-foreground\">…</p> aka getByText('“PulsarX transformed our').nth(3)\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”')\u001b[22m\n\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts:202:157",
+                        "location": {
+                          "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                          "column": 157,
+                          "line": 202
+                        },
+                        "snippet": "  200 |     await expect(page.getByRole('heading', { name: 'Trusted by Visionaries' })).toBeVisible();\n  201 |     // Check for specific testimonial text and author\n> 202 |     await expect(page.getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”')).toBeVisible();\n      |                                                                                                                                                             ^\n  203 |     await expect(page.getByText('Faraz Ali')).toBeVisible();\n  204 |     await expect(page.getByText('CEO, Innovatech')).toBeVisible();\n  205 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                            "column": 157,
+                            "line": 202
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”')\nExpected: visible\nError: strict mode violation: getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”') resolved to 4 elements:\n    1) <p class=\"text-lg italic text-muted-foreground\">…</p> aka getByText('“PulsarX transformed our').first()\n    2) <p class=\"text-lg italic text-muted-foreground\">…</p> aka getByText('“PulsarX transformed our').nth(1)\n    3) <p class=\"text-lg italic text-muted-foreground\">…</p> aka getByText('“PulsarX transformed our').nth(2)\n    4) <p class=\"text-lg italic text-muted-foreground\">…</p> aka getByText('“PulsarX transformed our').nth(3)\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”')\u001b[22m\n\n\n  200 |     await expect(page.getByRole('heading', { name: 'Trusted by Visionaries' })).toBeVisible();\n  201 |     // Check for specific testimonial text and author\n> 202 |     await expect(page.getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”')).toBeVisible();\n      |                                                                                                                                                             ^\n  203 |     await expect(page.getByText('Faraz Ali')).toBeVisible();\n  204 |     await expect(page.getByText('CEO, Innovatech')).toBeVisible();\n  205 |\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts:202:157"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-11T12:21:33.890Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783772330303-y7navd-p-7dff1-in-the-testimonials-section-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                        "column": 157,
+                        "line": 202
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c04a133fb669feb59007-82a1e1c3e02b03cbd814",
+              "file": "run-1783772330303-y7navd/pr-1.spec.ts",
+              "line": 196,
+              "column": 7
+            },
+            {
+              "title": "should display contact form fields and submission button",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1319,
+                      "error": {
+                        "message": "Error: locator.click: Error: strict mode violation: getByRole('link', { name: 'Contact', exact: true }) resolved to 2 elements:\n    1) <a href=\"#contact\" class=\"relative group px-4 py-2 rounded-full font-medium transition-all duration-300 inline-block text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('navigation').getByRole('link', { name: 'Contact' })\n    2) <a href=\"#contact\" class=\"text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'Contact' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Contact', exact: true })\u001b[22m\n",
+                        "stack": "Error: locator.click: Error: strict mode violation: getByRole('link', { name: 'Contact', exact: true }) resolved to 2 elements:\n    1) <a href=\"#contact\" class=\"relative group px-4 py-2 rounded-full font-medium transition-all duration-300 inline-block text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('navigation').getByRole('link', { name: 'Contact' })\n    2) <a href=\"#contact\" class=\"text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'Contact' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Contact', exact: true })\u001b[22m\n\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts:212:68",
+                        "location": {
+                          "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                          "column": 68,
+                          "line": 212
+                        },
+                        "snippet": "  210 |\n  211 |   test('should display contact form fields and submission button', async () => {\n> 212 |     await page.getByRole('link', { name: 'Contact', exact: true }).click();\n      |                                                                    ^\n  213 |     await page.waitForLoadState('networkidle');\n  214 |\n  215 |     await expect(page.getByRole('heading', { name: 'Send us a message' })).toBeVisible();"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                            "column": 68,
+                            "line": 212
+                          },
+                          "message": "Error: locator.click: Error: strict mode violation: getByRole('link', { name: 'Contact', exact: true }) resolved to 2 elements:\n    1) <a href=\"#contact\" class=\"relative group px-4 py-2 rounded-full font-medium transition-all duration-300 inline-block text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('navigation').getByRole('link', { name: 'Contact' })\n    2) <a href=\"#contact\" class=\"text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'Contact' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Contact', exact: true })\u001b[22m\n\n\n  210 |\n  211 |   test('should display contact form fields and submission button', async () => {\n> 212 |     await page.getByRole('link', { name: 'Contact', exact: true }).click();\n      |                                                                    ^\n  213 |     await page.waitForLoadState('networkidle');\n  214 |\n  215 |     await expect(page.getByRole('heading', { name: 'Send us a message' })).toBeVisible();\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts:212:68"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-11T12:21:36.924Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783772330303-y7navd-p-0a102-ields-and-submission-button-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                        "column": 68,
+                        "line": 212
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c04a133fb669feb59007-d8546669b7faea711986",
+              "file": "run-1783772330303-y7navd/pr-1.spec.ts",
+              "line": 211,
+              "column": 7
+            },
+            {
+              "title": "should display Book a Call section with external link",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1452,
+                      "error": {
+                        "message": "Error: locator.click: Error: strict mode violation: getByRole('link', { name: 'Contact', exact: true }) resolved to 2 elements:\n    1) <a href=\"#contact\" class=\"relative group px-4 py-2 rounded-full font-medium transition-all duration-300 inline-block text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('navigation').getByRole('link', { name: 'Contact' })\n    2) <a href=\"#contact\" class=\"text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'Contact' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Contact', exact: true })\u001b[22m\n",
+                        "stack": "Error: locator.click: Error: strict mode violation: getByRole('link', { name: 'Contact', exact: true }) resolved to 2 elements:\n    1) <a href=\"#contact\" class=\"relative group px-4 py-2 rounded-full font-medium transition-all duration-300 inline-block text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('navigation').getByRole('link', { name: 'Contact' })\n    2) <a href=\"#contact\" class=\"text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'Contact' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Contact', exact: true })\u001b[22m\n\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts:238:68",
+                        "location": {
+                          "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                          "column": 68,
+                          "line": 238
+                        },
+                        "snippet": "  236 |\n  237 |   test('should display Book a Call section with external link', async () => {\n> 238 |     await page.getByRole('link', { name: 'Contact', exact: true }).click();\n      |                                                                    ^\n  239 |     await page.waitForLoadState('networkidle');\n  240 |\n  241 |     await expect(page.getByRole('heading', { name: 'Book a Call' })).toBeVisible();"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                            "column": 68,
+                            "line": 238
+                          },
+                          "message": "Error: locator.click: Error: strict mode violation: getByRole('link', { name: 'Contact', exact: true }) resolved to 2 elements:\n    1) <a href=\"#contact\" class=\"relative group px-4 py-2 rounded-full font-medium transition-all duration-300 inline-block text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('navigation').getByRole('link', { name: 'Contact' })\n    2) <a href=\"#contact\" class=\"text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'Contact' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Contact', exact: true })\u001b[22m\n\n\n  236 |\n  237 |   test('should display Book a Call section with external link', async () => {\n> 238 |     await page.getByRole('link', { name: 'Contact', exact: true }).click();\n      |                                                                    ^\n  239 |     await page.waitForLoadState('networkidle');\n  240 |\n  241 |     await expect(page.getByRole('heading', { name: 'Book a Call' })).toBeVisible();\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts:238:68"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-11T12:21:39.380Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783772330303-y7navd-p-f9216--section-with-external-link-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                        "column": 68,
+                        "line": 238
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c04a133fb669feb59007-2b738ce8b0c5a413efcb",
+              "file": "run-1783772330303-y7navd/pr-1.spec.ts",
+              "line": 237,
+              "column": 7
+            },
+            {
+              "title": "should display contact information and quick info",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1365,
+                      "error": {
+                        "message": "Error: locator.click: Error: strict mode violation: getByRole('link', { name: 'Contact', exact: true }) resolved to 2 elements:\n    1) <a href=\"#contact\" class=\"relative group px-4 py-2 rounded-full font-medium transition-all duration-300 inline-block text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('navigation').getByRole('link', { name: 'Contact' })\n    2) <a href=\"#contact\" class=\"text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'Contact' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Contact', exact: true })\u001b[22m\n",
+                        "stack": "Error: locator.click: Error: strict mode violation: getByRole('link', { name: 'Contact', exact: true }) resolved to 2 elements:\n    1) <a href=\"#contact\" class=\"relative group px-4 py-2 rounded-full font-medium transition-all duration-300 inline-block text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('navigation').getByRole('link', { name: 'Contact' })\n    2) <a href=\"#contact\" class=\"text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'Contact' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Contact', exact: true })\u001b[22m\n\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts:250:68",
+                        "location": {
+                          "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                          "column": 68,
+                          "line": 250
+                        },
+                        "snippet": "  248 |\n  249 |   test('should display contact information and quick info', async () => {\n> 250 |     await page.getByRole('link', { name: 'Contact', exact: true }).click();\n      |                                                                    ^\n  251 |     await page.waitForLoadState('networkidle');\n  252 |\n  253 |     await expect(page.getByRole('heading', { name: 'Contact Info' })).toBeVisible();"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                            "column": 68,
+                            "line": 250
+                          },
+                          "message": "Error: locator.click: Error: strict mode violation: getByRole('link', { name: 'Contact', exact: true }) resolved to 2 elements:\n    1) <a href=\"#contact\" class=\"relative group px-4 py-2 rounded-full font-medium transition-all duration-300 inline-block text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('navigation').getByRole('link', { name: 'Contact' })\n    2) <a href=\"#contact\" class=\"text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'Contact' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Contact', exact: true })\u001b[22m\n\n\n  248 |\n  249 |   test('should display contact information and quick info', async () => {\n> 250 |     await page.getByRole('link', { name: 'Contact', exact: true }).click();\n      |                                                                    ^\n  251 |     await page.waitForLoadState('networkidle');\n  252 |\n  253 |     await expect(page.getByRole('heading', { name: 'Contact Info' })).toBeVisible();\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts:250:68"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-11T12:21:41.956Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783772330303-y7navd-p-779c3--information-and-quick-info-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                        "column": 68,
+                        "line": 250
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c04a133fb669feb59007-b021abbd860c20495e64",
+              "file": "run-1783772330303-y7navd/pr-1.spec.ts",
+              "line": 249,
+              "column": 7
+            },
+            {
+              "title": "should display social media links in contact section",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1379,
+                      "error": {
+                        "message": "Error: locator.click: Error: strict mode violation: getByRole('link', { name: 'Contact', exact: true }) resolved to 2 elements:\n    1) <a href=\"#contact\" class=\"relative group px-4 py-2 rounded-full font-medium transition-all duration-300 inline-block text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('navigation').getByRole('link', { name: 'Contact' })\n    2) <a href=\"#contact\" class=\"text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'Contact' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Contact', exact: true })\u001b[22m\n",
+                        "stack": "Error: locator.click: Error: strict mode violation: getByRole('link', { name: 'Contact', exact: true }) resolved to 2 elements:\n    1) <a href=\"#contact\" class=\"relative group px-4 py-2 rounded-full font-medium transition-all duration-300 inline-block text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('navigation').getByRole('link', { name: 'Contact' })\n    2) <a href=\"#contact\" class=\"text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'Contact' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Contact', exact: true })\u001b[22m\n\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts:271:68",
+                        "location": {
+                          "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                          "column": 68,
+                          "line": 271
+                        },
+                        "snippet": "  269 |\n  270 |   test('should display social media links in contact section', async () => {\n> 271 |     await page.getByRole('link', { name: 'Contact', exact: true }).click();\n      |                                                                    ^\n  272 |     await page.waitForLoadState('networkidle');\n  273 |\n  274 |     await expect(page.getByRole('heading', { name: 'Follow Us' }).first()).toBeVisible(); // First to differentiate from footer"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                            "column": 68,
+                            "line": 271
+                          },
+                          "message": "Error: locator.click: Error: strict mode violation: getByRole('link', { name: 'Contact', exact: true }) resolved to 2 elements:\n    1) <a href=\"#contact\" class=\"relative group px-4 py-2 rounded-full font-medium transition-all duration-300 inline-block text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('navigation').getByRole('link', { name: 'Contact' })\n    2) <a href=\"#contact\" class=\"text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'Contact' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Contact', exact: true })\u001b[22m\n\n\n  269 |\n  270 |   test('should display social media links in contact section', async () => {\n> 271 |     await page.getByRole('link', { name: 'Contact', exact: true }).click();\n      |                                                                    ^\n  272 |     await page.waitForLoadState('networkidle');\n  273 |\n  274 |     await expect(page.getByRole('heading', { name: 'Follow Us' }).first()).toBeVisible(); // First to differentiate from footer\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts:271:68"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-11T12:21:44.452Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783772330303-y7navd-p-543af-ia-links-in-contact-section-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                        "column": 68,
+                        "line": 271
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c04a133fb669feb59007-97ea7ad04cc5b32a16bd",
+              "file": "run-1783772330303-y7navd/pr-1.spec.ts",
+              "line": 270,
+              "column": 7
+            },
+            {
+              "title": "should display footer content, links, and newsletter subscription",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 10,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2363,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-11T12:21:47.322Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c04a133fb669feb59007-ff64aea861519c5d7305",
+              "file": "run-1783772330303-y7navd/pr-1.spec.ts",
+              "line": 292,
+              "column": 7
+            },
+            {
+              "title": "Back to top button should appear on scroll and be clickable",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 10,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5895,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeHidden\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('button', { name: 'Back to top' })\nExpected: hidden\nReceived: visible\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeHidden\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: 'Back to top' })\u001b[22m\n\u001b[2m    13 × locator resolved to <button aria-label=\"Back to top\" class=\"inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary-foreground hover:bg-primary/90 h-10 w-10 fixed bottom-8 right-8 rounded-full shadow-2xl bg-gradient-to-r from-primary to-accent hover:fro…>…</button>\u001b[22m\n\u001b[2m       - unexpected value \"visible\"\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeHidden\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('button', { name: 'Back to top' })\nExpected: hidden\nReceived: visible\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeHidden\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: 'Back to top' })\u001b[22m\n\u001b[2m    13 × locator resolved to <button aria-label=\"Back to top\" class=\"inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary-foreground hover:bg-primary/90 h-10 w-10 fixed bottom-8 right-8 rounded-full shadow-2xl bg-gradient-to-r from-primary to-accent hover:fro…>…</button>\u001b[22m\n\u001b[2m       - unexpected value \"visible\"\u001b[22m\n\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts:346:35",
+                        "location": {
+                          "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                          "column": 35,
+                          "line": 346
+                        },
+                        "snippet": "  344 |     // Check it's initially hidden\n  345 |     const backToTopButton = page.getByRole('button', { name: 'Back to top' });\n> 346 |     await expect(backToTopButton).toBeHidden();\n      |                                   ^\n  347 |\n  348 |     // Scroll down to make it visible\n  349 |     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                            "column": 35,
+                            "line": 346
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeHidden\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('button', { name: 'Back to top' })\nExpected: hidden\nReceived: visible\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeHidden\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: 'Back to top' })\u001b[22m\n\u001b[2m    13 × locator resolved to <button aria-label=\"Back to top\" class=\"inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary-foreground hover:bg-primary/90 h-10 w-10 fixed bottom-8 right-8 rounded-full shadow-2xl bg-gradient-to-r from-primary to-accent hover:fro…>…</button>\u001b[22m\n\u001b[2m       - unexpected value \"visible\"\u001b[22m\n\n\n  344 |     // Check it's initially hidden\n  345 |     const backToTopButton = page.getByRole('button', { name: 'Back to top' });\n> 346 |     await expect(backToTopButton).toBeHidden();\n      |                                   ^\n  347 |\n  348 |     // Scroll down to make it visible\n  349 |     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts:346:35"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-11T12:21:49.888Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783772330303-y7navd-p-28d64--on-scroll-and-be-clickable-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts",
+                        "column": 35,
+                        "line": 346
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c04a133fb669feb59007-1694929dec62959ad133",
+              "file": "run-1783772330303-y7navd/pr-1.spec.ts",
+              "line": 343,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-07-11T12:21:05.906Z",
+    "duration": 49988.656,
+    "expected": 4,
+    "skipped": 0,
+    "unexpected": 11,
+    "flaky": 0
+  }
+}

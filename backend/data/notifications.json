@@ -1,0 +1,38 @@
+[
+  {
+    "id": "notif-1-1779023173395",
+    "user_id": "default",
+    "title": "AI Analysis Complete",
+    "message": "Gemini 2.5 successfully synthesized 12 automated test scenarios for Sprint 8 Release.",
+    "type": "success",
+    "read": false,
+    "created_at": "2026-05-17T11:06:13.395Z"
+  },
+  {
+    "id": "notif-2-1779023173395",
+    "user_id": "default",
+    "title": "Critical Defect Logged",
+    "message": "BUG-402: Payment gateway webhook timeout during concurrent load testing.",
+    "type": "defect",
+    "read": false,
+    "created_at": "2026-05-16T19:06:13.395Z"
+  },
+  {
+    "id": "notif-3-1779023173395",
+    "user_id": "default",
+    "title": "Staging Pod Alert",
+    "message": "High memory utilization detected on APAC Staging Pod cluster.",
+    "type": "alert",
+    "read": true,
+    "created_at": "2026-05-14T13:06:13.395Z"
+  },
+  {
+    "id": "notif-4-1779023173395",
+    "user_id": "default",
+    "title": "Sprint Signoff Required",
+    "message": "QA signoff deadline for Release v2.8.0 is scheduled for tomorrow 17:00 UTC.",
+    "type": "sprint",
+    "read": true,
+    "created_at": "2026-05-10T13:06:13.395Z"
+  }
+]

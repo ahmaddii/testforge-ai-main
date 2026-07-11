@@ -1,0 +1,41 @@
+[
+  {
+    "id": "rel-1-1779024513870",
+    "version": "v2.8.0-rc4",
+    "title": "Enterprise Biometric Authentication Upgrade",
+    "release_date": "2026-05-20",
+    "readiness_score": 98,
+    "status": "Ready",
+    "runs_executed": 142,
+    "blocking_defects": 0,
+    "coverage": 96,
+    "created_at": "2026-05-16T13:28:33.870Z",
+    "user_id": "default"
+  },
+  {
+    "id": "rel-2-1779024513870",
+    "version": "v2.8.1-hotfix",
+    "title": "Socket Resiliency & Reconnect Tuning",
+    "release_date": "2026-05-18",
+    "readiness_score": 74,
+    "status": "At Risk",
+    "runs_executed": 38,
+    "blocking_defects": 2,
+    "coverage": 88,
+    "created_at": "2026-05-17T01:28:33.870Z",
+    "user_id": "default"
+  },
+  {
+    "id": "rel-3-1779024513870",
+    "version": "v3.0.0-beta1",
+    "title": "Autonomous SQA Cloud Studio Next-Gen",
+    "release_date": "2026-06-15",
+    "readiness_score": 85,
+    "status": "Testing",
+    "runs_executed": 210,
+    "blocking_defects": 1,
+    "coverage": 92,
+    "created_at": "2026-05-17T13:28:33.870Z",
+    "user_id": "default"
+  }
+]
