@@ -24,8 +24,6 @@ import testPlanRoutes from './routes/test-plans';
 import executionRunRoutes from './routes/execution-runs';
 import selfHealingRoutes from './routes/self-healing';
 import specyRoutes from './routes/specy';
-import githubAgentRoutes from './routes/github-agent';
-
 dotenv.config();
 
 const app = express();
@@ -60,8 +58,6 @@ app.use('/api/test-plans', testPlanRoutes);
 app.use('/api/execution-runs', executionRunRoutes);
 app.use('/api/self-healing', selfHealingRoutes);
 app.use('/api/specy', specyRoutes);
-app.use('/api/github-agent', githubAgentRoutes);
-
 
 // Health check
 app.get('/health', (req, res) => {

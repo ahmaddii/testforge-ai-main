@@ -69,7 +69,7 @@ router.post('/', authenticate, async (req: Request, res: Response) => {
     name: req.body.name || 'Core QA Plan',
     sprint: req.body.sprint || 'Sprint 1',
     start_date: req.body.start_date || new Date().toISOString().split('T')[0],
-    end_date: req.body.end_date || new Date(Date.now() + 14*24*60*60*1000).toISOString().split('T')[0],
+    end_date: req.body.end_date || new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     status: req.body.status || 'In Progress',
     total_cases: req.body.total_cases ?? 24,
     passed: req.body.passed ?? 0,

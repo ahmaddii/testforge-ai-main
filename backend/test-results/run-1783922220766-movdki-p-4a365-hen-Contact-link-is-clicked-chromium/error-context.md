@@ -6,23 +6,18 @@
 
 # Test info
 
-- Name: run-1783772330303-y7navd/pr-1.spec.ts >> PulsarX Landing Page Functionality >> should display services cards with titles and descriptions
-- Location: src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts:118:7
+- Name: run-1783922220766-movdki/pr-1.spec.ts >> PulsarX Landing Page Functionality >> Navigation Bar >> should navigate to the Contact section when "Contact" link is clicked
+- Location: src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:40:9
 
 # Error details
 
 ```
-Error: expect(locator).toBeVisible() failed
-
-Locator: getByText('Analytics')
-Expected: visible
-Error: strict mode violation: getByText('Analytics') resolved to 2 elements:
-    1) <span class="jsx-52a1e3b25473c0c8 text-muted-foreground">Analytics</span> aka getByText('Analytics', { exact: true })
-    2) <p class="text-muted-foreground mb-6 flex-grow">A high-performance analytics dashboard for visual…</p> aka getByText('A high-performance analytics')
+Error: locator.click: Error: strict mode violation: getByRole('link', { name: 'Contact', exact: true }) resolved to 2 elements:
+    1) <a href="#contact" class="relative group px-4 py-2 rounded-full font-medium transition-all duration-300 inline-block text-sm text-muted-foreground hover:text-foreground">…</a> aka getByRole('navigation').getByRole('link', { name: 'Contact' })
+    2) <a href="#contact" class="text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'Contact' })
 
 Call log:
-  - Expect "toBeVisible" with timeout 5000ms
-  - waiting for getByText('Analytics')
+  - waiting for getByRole('link', { name: 'Contact', exact: true })
 
 ```
 
@@ -37,24 +32,24 @@ Call log:
         - img "PulsarX Logo" [ref=e8]
         - generic [ref=e9]: PulsarX
       - generic [ref=e11]:
-        - link "Home" [ref=e12] [cursor=pointer]:
+        - link "Home" [ref=e1255] [cursor=pointer]:
           - /url: "#home"
-          - generic [ref=e13]: Home
-        - link "About" [ref=e14] [cursor=pointer]:
+          - generic [ref=e1256]: Home
+        - link "About" [ref=e1257] [cursor=pointer]:
           - /url: "#about"
-          - generic [ref=e16]: About
-        - link "Services" [ref=e17] [cursor=pointer]:
+          - generic [ref=e1259]: About
+        - link "Services" [ref=e1260] [cursor=pointer]:
           - /url: "#services"
-          - generic [ref=e19]: Services
-        - link "Projects" [ref=e20] [cursor=pointer]:
+          - generic [ref=e1261]: Services
+        - link "Projects" [ref=e1262] [cursor=pointer]:
           - /url: "#projects"
-          - generic [ref=e21]: Projects
-        - link "Testimonials" [ref=e22] [cursor=pointer]:
+          - generic [ref=e1263]: Projects
+        - link "Testimonials" [ref=e1264] [cursor=pointer]:
           - /url: "#testimonials"
-          - generic [ref=e23]: Testimonials
-        - link "Contact" [ref=e24] [cursor=pointer]:
+          - generic [ref=e1265]: Testimonials
+        - link "Contact" [ref=e1266] [cursor=pointer]:
           - /url: "#contact"
-          - generic [ref=e25]: Contact
+          - generic [ref=e1267]: Contact
       - link "Get Started" [ref=e27] [cursor=pointer]:
         - /url: mailto:pulsarx.inc@gmail.com
   - main [ref=e28]:
@@ -832,216 +827,156 @@ Call log:
             - /url: https://www.linkedin.com/in/malik-ahmad-rasheed-3768902a9/
           - link "Cookies" [ref=e1253] [cursor=pointer]:
             - /url: https://www.linkedin.com/in/malik-ahmad-rasheed-3768902a9/
-    - button "Back to top" [ref=e1254] [cursor=pointer]:
+    - button "Back to top" [ref=e1268] [cursor=pointer]:
       - img
   - region "Notifications (F8)":
     - list
-  - alert [ref=e1255]
+  - alert [ref=e1254]
 ```
 
 # Test source
 
 ```ts
-  48  |     // The mobile menu might be considered a dialog or have a different role.
-  49  |     // For now, keeping nth(1) as it was used to target mobile links, but aware it can be fragile.
-  50  |     await expect(page.getByRole('link', { name: 'Home' }).nth(1)).toBeVisible(); // Nth(1) to target the mobile menu link
-  51  |     await expect(page.getByRole('link', { name: 'About' }).nth(1)).toBeVisible();
-  52  |     // Test closing the menu by clicking a link
-  53  |     await page.getByRole('link', { name: 'About' }).nth(1).click();
-  54  |     await page.waitForLoadState('networkidle');
-  55  |     await expect(page.getByRole('link', { name: 'About' }).nth(1)).toBeHidden(); // Verify mobile menu is hidden
-  56  |   });
-  57  | 
-  58  |   test('should navigate to sections via desktop navigation links', async () => {
-  59  |     // Use getByRole('navigation') to scope the clicks to the main navigation area
-  60  |     await expect(page.getByRole('navigation').getByRole('link', { name: 'About', exact: true })).toBeVisible();
-  61  |     await page.getByRole('navigation').getByRole('link', { name: 'About', exact: true }).click();
-  62  |     await page.waitForLoadState('networkidle');
-  63  |     await expect(page.locator('#about')).toBeInViewport(); // Verify scroll to section
-  64  |     await expect(page.getByRole('heading', { name: 'Discover PulsarX' })).toBeVisible();
-  65  | 
-  66  |     await page.getByRole('navigation').getByRole('link', { name: 'Services', exact: true }).click();
-  67  |     await page.waitForLoadState('networkidle');
-  68  |     await expect(page.locator('#services')).toBeInViewport();
-  69  |     await expect(page.getByRole('heading', { name: 'Our Services' })).toBeVisible();
-  70  | 
-  71  |     await page.getByRole('navigation').getByRole('link', { name: 'Projects', exact: true }).click();
-  72  |     await page.waitForLoadState('networkidle');
-  73  |     await expect(page.locator('#projects')).toBeInViewport();
-  74  |     await expect(page.getByRole('heading', { name: 'Featured Masterpieces' })).toBeVisible();
-  75  | 
-  76  |     await page.getByRole('navigation').getByRole('link', { name: 'Testimonials', exact: true }).click();
-  77  |     await page.waitForLoadState('networkidle');
-  78  |     await expect(page.locator('#testimonials')).toBeInViewport();
-  79  |     await expect(page.getByRole('heading', { name: 'Trusted by Visionaries' })).toBeVisible();
-  80  | 
-  81  |     await page.getByRole('navigation').getByRole('link', { name: 'Contact', exact: true }).click();
-  82  |     await page.waitForLoadState('networkidle');
-  83  |     await expect(page.locator('#contact')).toBeInViewport();
-  84  |     await expect(page.getByRole('heading', { name: 'Get In Touch' })).toBeVisible();
-  85  |   });
-  86  | 
-  87  |   test('should display key statistics in hero section', async () => {
-  88  |     await expect(page.getByText('100+', { exact: true })).toBeVisible();
-  89  |     await expect(page.getByText('Projects Delivered')).toBeVisible();
-  90  |     await expect(page.getByText('50+', { exact: true })).toBeVisible();
-  91  |     await expect(page.getByText('Global Clients')).toBeVisible();
-  92  |     await expect(page.getByText('99.9%', { exact: true })).toBeVisible();
-  93  |     await expect(page.getByText('Uptime Guarantee')).toBeVisible();
-  94  |     await expect(page.getByText('2x', { exact: true })).toBeVisible();
-  95  |     await expect(page.getByText('ROI Average')).toBeVisible();
-  96  |   });
-  97  | 
-  98  |   test('should display "Our Story", "Our Mission", and "Our Vision" in About section', async () => {
-  99  |     // Navigate to About section using the desktop navigation link
-  100 |     await page.getByRole('navigation').getByRole('link', { name: 'About', exact: true }).click();
-  101 |     await page.waitForLoadState('networkidle');
-  102 | 
-  103 |     await expect(page.getByRole('heading', { name: 'Our Story' })).toBeVisible();
-  104 |     await expect(page.getByText(/Founded with a passion for innovation/)).toBeVisible();
-  105 | 
-  106 |     await expect(page.getByRole('heading', { name: 'Our Mission' })).toBeVisible();
-  107 |     await expect(page.getByText(/To empower businesses with cutting-edge digital solutions/)).toBeVisible();
-  108 | 
-  109 |     await expect(page.getByRole('heading', { name: 'Our Vision' })).toBeVisible();
-  110 |     await expect(page.getByText(/To be a leading digital partner, recognized for our creativity/)).toBeVisible();
-  111 | 
-  112 |     // Verify "Learn More About Us" button links to LinkedIn
-  113 |     const learnMoreButton = page.getByRole('link', { name: 'Learn More About Us' });
-  114 |     await expect(learnMoreButton).toBeVisible();
-  115 |     await expect(learnMoreButton).toHaveAttribute('href', 'https://www.linkedin.com/in/malik-ahmad-rasheed-3768902a9/');
-  116 |   });
-  117 | 
-  118 |   test('should display services cards with titles and descriptions', async () => {
-  119 |     // Navigate to Services section using the desktop navigation link
-  120 |     await page.getByRole('navigation').getByRole('link', { name: 'Services', exact: true }).click();
-  121 |     await page.waitForLoadState('networkidle');
-  122 | 
-  123 |     // Web Development card
-  124 |     await expect(page.getByRole('heading', { name: 'Web Development' })).toBeVisible();
-  125 |     await expect(page.getByText('Crafting responsive, high-performance websites tailored to your business needs')).toBeVisible();
-  126 |     await expect(page.getByText('Responsive Design')).toBeVisible();
-  127 |     await expect(page.getByText('Fast Performance')).toBeVisible();
-  128 |     await expect(page.getByText('SEO Optimized')).toBeVisible();
-  129 | 
-  130 |     // App Development card
-  131 |     await expect(page.getByRole('heading', { name: 'App Development' })).toBeVisible();
-  132 |     await expect(page.getByText('Building intuitive and scalable mobile applications for iOS and Android platforms')).toBeVisible();
-  133 |     await expect(page.getByText('iOS & Android')).toBeVisible();
-  134 |     await expect(page.getByText('Cross-Platform')).toBeVisible();
-  135 |     await expect(page.getByText('Native Feel')).toBeVisible();
-  136 | 
-  137 |     // UI/UX Design card
-  138 |     await expect(page.getByRole('heading', { name: 'UI/UX Design' })).toBeVisible();
-  139 |     await expect(page.getByText('Creating visually stunning and user-friendly interfaces that enhance user experience')).toBeVisible();
-  140 |     await expect(page.getByText('Modern Design')).toBeVisible();
-  141 |     await expect(page.getByText('User Research')).toBeVisible();
-  142 |     await expect(page.getByText('Prototyping')).toBeVisible();
-  143 | 
-  144 |     // Digital Strategy card
-  145 |     await expect(page.getByRole('heading', { name: 'Digital Strategy' })).toBeVisible();
-  146 |     await expect(page.getByText('Developing comprehensive digital strategies to optimize your online presence')).toBeVisible();
-  147 |     await expect(page.getByText('Growth Planning')).toBeVisible();
-> 148 |     await expect(page.getByText('Analytics')).toBeVisible();
-      |                                               ^ Error: expect(locator).toBeVisible() failed
-  149 |     await expect(page.getByText('ROI Focused')).toBeVisible();
-  150 | 
-  151 |     // AI Solutions card
-  152 |     await expect(page.getByRole('heading', { name: 'AI Solutions' })).toBeVisible();
-  153 |     await expect(page.getByText('Integrating cutting-edge AI technologies to automate processes, gain insights')).toBeVisible();
-  154 |     await expect(page.getByText('Machine Learning')).toBeVisible();
-  155 |     await expect(page.getByText('Automation')).toBeVisible();
-  156 |     await expect(page.getByText('Data Analysis')).toBeVisible();
-  157 | 
-  158 |     // Consultancy card
-  159 |     await expect(page.getByRole('heading', { name: 'Consultancy' })).toBeVisible();
-  160 |     await expect(page.getByText('Providing expert advice and guidance to help you navigate the complex digital landscape')).toBeVisible();
-  161 |     await expect(page.getByText('Expert Advice')).toBeVisible();
-  162 |     await expect(page.getByText('Strategy')).toBeVisible();
-  163 |     await expect(page.getByText('Best Practices')).toBeVisible();
-  164 | 
-  165 |     // Verify 'Learn More' buttons are present for services
-  166 |     const learnMoreButtons = page.locator('.jsx-52a1e3b25473c0c8 button:has-text("Learn More")');
-  167 |     await expect(learnMoreButtons).toHaveCount(6);
-  168 | 
-  169 |     await expect(page.getByRole('button', { name: 'Get in Touch' })).toBeVisible();
-  170 |   });
-  171 | 
-  172 |   test('should display project cards with details in Projects section', async () => {
-  173 |     // Navigate to Projects section using the desktop navigation link
-  174 |     await page.getByRole('navigation').getByRole('link', { name: 'Projects', exact: true }).click();
-  175 |     await page.waitForLoadState('networkidle');
-  176 | 
-  177 |     // Nebula Dashboard
-  178 |     await expect(page.getByRole('heading', { name: 'Nebula Dashboard' })).toBeVisible();
-  179 |     await expect(page.getByText('A high-performance analytics dashboard for visualizing complex datasets in real-time.')).toBeVisible();
-  180 |     await expect(page.getByText('React')).toBeVisible();
-  181 |     await expect(page.getByText('Next.js')).toBeVisible();
-  182 |     await expect(page.getByText('Tailwind')).toBeVisible();
-  183 |     await expect(page.getByText('Recharts')).toBeVisible();
-  184 |     await expect(page.getByRole('link', { name: 'View Case Study' }).first()).toBeVisible();
-  185 | 
-  186 |     // Quantum Commerce
-  187 |     await expect(page.getByRole('heading', { name: 'Quantum Commerce' })).toBeVisible();
-  188 |     await expect(page.getByText('Next-generation e-commerce platform with AI-driven product recommendations')).toBeVisible();
-  189 |     await expect(page.getByText('TypeScript')).toBeVisible();
-  190 |     await expect(page.getByText('Node.js')).toBeVisible();
-  191 |     await expect(page.getByText('GraphQL')).toBeVisible();
-  192 |     await expect(page.getByText('Stripe')).toBeVisible();
-  193 | 
-  194 |     // Cyber Sentinel
-  195 |     await expect(page.getByRole('heading', { name: 'Cyber Sentinel' })).toBeVisible();
-  196 |     await expect(page.getByText('AI-powered cybersecurity threat detection system.')).toBeVisible();
-  197 |     await expect(page.getByText('Python')).toBeVisible();
-  198 |     await expect(page.getByText('TensorFlow')).toBeVisible();
-  199 |     await expect(page.getByText('FastAPI')).toBeVisible();
-  200 |     await expect(page.getByText('Docker')).toBeVisible();
-  201 |   });
-  202 | 
-  203 |   test('should display testimonials in the testimonials section', async () => {
-  204 |     // Navigate to Testimonials section using the desktop navigation link
-  205 |     await page.getByRole('navigation').getByRole('link', { name: 'Testimonials', exact: true }).click();
-  206 |     await page.waitForLoadState('networkidle');
-  207 | 
-  208 |     await expect(page.getByRole('heading', { name: 'Trusted by Visionaries' })).toBeVisible();
-  209 |     // Check for specific testimonial text and author
-  210 |     await expect(page.getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”')).toBeVisible();
-  211 |     await expect(page.getByText('Faraz Ali')).toBeVisible();
-  212 |     await expect(page.getByText('CEO, Innovatech')).toBeVisible();
-  213 | 
-  214 |     // Since it's a marquee, check for other testimonials to ensure content is loaded.
-  215 |     await expect(page.getByText('“The app they developed for us is fantastic. User-friendly, robust, and has significantly improved our customer engagement.”')).toBeVisible();
-  216 |     await expect(page.getByText('John Smith')).toBeVisible();
-  217 |   });
-  218 | 
-  219 |   test('should display contact form fields and submission button', async () => {
-  220 |     // Navigate to Contact section using the desktop navigation link
-  221 |     await page.getByRole('navigation').getByRole('link', { name: 'Contact', exact: true }).click();
-  222 |     await page.waitForLoadState('networkidle');
-  223 | 
-  224 |     await expect(page.getByRole('heading', { name: 'Send us a message' })).toBeVisible();
-  225 |     const nameInput = page.getByLabel('Full Name');
-  226 |     const emailInput = page.getByLabel('Email Address');
-  227 |     const messageTextarea = page.getByLabel('Message');
-  228 |     const sendMessageButton = page.getByRole('button', { name: 'Send Message' });
-  229 | 
-  230 |     await expect(nameInput).toBeVisible();
-  231 |     await expect(nameInput).toHaveAttribute('placeholder', 'John Doe');
-  232 |     await expect(nameInput).toHaveAttribute('required', '');
-  233 | 
-  234 |     await expect(emailInput).toBeVisible();
-  235 |     await expect(emailInput).toHaveAttribute('placeholder', 'john@example.com');
-  236 |     await expect(emailInput).toHaveAttribute('required', '');
-  237 |     await expect(emailInput).toHaveAttribute('type', 'email');
-  238 | 
-  239 |     await expect(messageTextarea).toBeVisible();
-  240 |     await expect(messageTextarea).toHaveAttribute('placeholder', 'Tell us about your project...');
-  241 |     await expect(messageTextarea).toHaveAttribute('required', '');
-  242 | 
-  243 |     await expect(sendMessageButton).toBeVisible();
-  244 |   });
-  245 | 
-  246 |   test('should display Book a Call section with external link', async () => {
-  247 |     // Navigate to Contact section using the desktop navigation link
-  248 |     await page.getByRole('navigation').getByRole('link', { name: 'Contact', exact: true }).click();
+  1   | import { test, expect, Page } from '@playwright/test';
+  2   | 
+  3   | const BASE_URL = 'http://127.0.0.1:6513';
+  4   | 
+  5   | test.describe('PulsarX Landing Page Functionality', () => {
+  6   |   let page: Page;
+  7   | 
+  8   |   test.beforeAll(async ({ browser }) => {
+  9   |     page = await browser.newPage();
+  10  |     await page.goto(BASE_URL);
+  11  |     await page.waitForLoadState('networkidle');
+  12  |   });
+  13  | 
+  14  |   test.afterAll(async () => {
+  15  |     await page.close();
+  16  |   });
+  17  | 
+  18  |   test('should have the correct title', async () => {
+  19  |     await expect(page).toHaveTitle('PulsarX | Where Innovation Meets Excellence');
+  20  |   });
+  21  | 
+  22  |   test.describe('Navigation Bar', () => {
+  23  |     test('should display the main navigation links', async () => {
+  24  |       await expect(page.getByRole('link', { name: 'PulsarX' })).toBeVisible();
+  25  |       await expect(page.getByRole('link', { name: 'Home', exact: true })).toBeVisible();
+  26  |       await expect(page.getByRole('link', { name: 'About', exact: true })).toBeVisible();
+  27  |       await expect(page.getByRole('link', { name: 'Services', exact: true })).toBeVisible();
+  28  |       await expect(page.getByRole('link', { name: 'Projects', exact: true })).toBeVisible();
+  29  |       await expect(page.getByRole('link', { name: 'Testimonials', exact: true })).toBeVisible();
+  30  |       await expect(page.getByRole('link', { name: 'Contact', exact: true })).toBeVisible();
+  31  |       await expect(page.getByRole('link', { name: 'Get Started', exact: true })).toBeVisible();
+  32  |     });
+  33  | 
+  34  |     test('should navigate to the About section when "About" link is clicked', async () => {
+  35  |       await page.getByRole('link', { name: 'About', exact: true }).click();
+  36  |       await page.waitForLoadState('domcontentloaded'); // DOM change as it scrolls
+  37  |       await expect(page.getByRole('heading', { name: 'Discover PulsarX' })).toBeVisible();
+  38  |     });
+  39  | 
+  40  |     test('should navigate to the Contact section when "Contact" link is clicked', async () => {
+> 41  |       await page.getByRole('link', { name: 'Contact', exact: true }).click();
+      |                                                                      ^ Error: locator.click: Error: strict mode violation: getByRole('link', { name: 'Contact', exact: true }) resolved to 2 elements:
+  42  |       await page.waitForLoadState('domcontentloaded');
+  43  |       await expect(page.getByRole('heading', { name: 'Get In Touch' })).toBeVisible();
+  44  |     });
+  45  |   });
+  46  | 
+  47  |   test.describe('Hero Section (#home)', () => {
+  48  |     test('should display hero section content and call to action buttons', async () => {
+  49  |       await page.goto(BASE_URL + '#home'); // Ensure we are at the home section
+  50  |       await page.waitForLoadState('networkidle');
+  51  | 
+  52  |       await expect(page.getByText('Leading Software Development Agency')).toBeVisible();
+  53  |       await expect(page.getByRole('heading', { name: 'Transforming Ideas into Digital Reality' })).toBeVisible();
+  54  |       await expect(page.getByText(/We build scalable, high-performance software solutions/)).toBeVisible();
+  55  |       await expect(page.getByRole('link', { name: 'Get Started', exact: true })).toBeVisible();
+  56  |       await expect(page.getByRole('button', { name: 'Contact Us', exact: true })).toBeVisible();
+  57  |     });
+  58  | 
+  59  |     test('should display key statistics in hero section', async () => {
+  60  |       await expect(page.getByText('100+ Projects Delivered')).toBeVisible();
+  61  |       await expect(page.getByText('50+ Global Clients')).toBeVisible();
+  62  |       await expect(page.getByText('99.9% Uptime Guarantee')).toBeVisible();
+  63  |       await expect(page.getByText('2x ROI Average')).toBeVisible();
+  64  |     });
+  65  |   });
+  66  | 
+  67  |   test.describe('About Section (#about)', () => {
+  68  |     test('should display about section content and mission/vision statements', async () => {
+  69  |       await page.goto(BASE_URL + '#about');
+  70  |       await page.waitForLoadState('networkidle');
+  71  | 
+  72  |       await expect(page.getByRole('heading', { name: 'About Us' })).toBeVisible();
+  73  |       await expect(page.getByRole('heading', { name: 'Discover PulsarX' })).toBeVisible();
+  74  |       await expect(page.getByRole('heading', { name: 'Our Story' })).toBeVisible();
+  75  |       await expect(page.getByText(/Founded with a passion for innovation/)).toBeVisible();
+  76  |       await expect(page.getByRole('heading', { name: 'Our Mission' })).toBeVisible();
+  77  |       await expect(page.getByText(/To empower businesses with cutting-edge digital solutions/)).toBeVisible();
+  78  |       await expect(page.getByRole('heading', { name: 'Our Vision' })).toBeVisible();
+  79  |       await expect(page.getByText(/To be a leading digital partner, recognized for our creativity/)).toBeVisible();
+  80  |       await expect(page.getByRole('link', { name: 'Learn More About Us' })).toBeVisible();
+  81  |       await expect(page.getByRole('link', { name: 'Learn More About Us' })).toHaveAttribute('href', 'https://www.linkedin.com/in/malik-ahmad-rasheed-3768902a9/');
+  82  |     });
+  83  | 
+  84  |     test('should display about section statistics', async () => {
+  85  |       await expect(page.getByText('500+ Happy Clients')).toBeVisible();
+  86  |       await expect(page.getByText('1000+ Projects Completed')).toBeVisible();
+  87  |       await expect(page.getByText('98% Success Rate')).toBeVisible();
+  88  |       await expect(page.getByText('5+ Years Experience')).toBeVisible();
+  89  |     });
+  90  |   });
+  91  | 
+  92  |   test.describe('Services Section (#services)', () => {
+  93  |     test('should display services section heading and service cards', async () => {
+  94  |       await page.goto(BASE_URL + '#services');
+  95  |       await page.waitForLoadState('networkidle');
+  96  | 
+  97  |       await expect(page.getByRole('heading', { name: 'Our Services' })).toBeVisible();
+  98  |       await expect(page.getByRole('heading', { name: 'Web Development' })).toBeVisible();
+  99  |       await expect(page.getByRole('heading', { name: 'App Development' })).toBeVisible();
+  100 |       await expect(page.getByRole('heading', { name: 'UI/UX Design' })).toBeVisible();
+  101 |       await expect(page.getByRole('heading', { name: 'Digital Strategy' })).toBeVisible();
+  102 |       await expect(page.getByRole('heading', { name: 'AI Solutions' })).toBeVisible();
+  103 |       await expect(page.getByRole('heading', { name: 'Consultancy' })).toBeVisible();
+  104 |       await expect(page.locator('section').filter({ hasText: 'Need a custom solution? We\'re here to help.Get in Touch' }).getByRole('button', { name: 'Get in Touch' })).toBeVisible();
+  105 |     });
+  106 | 
+  107 |     test('should display features for "Web Development" service', async () => {
+  108 |       await page.goto(BASE_URL + '#services');
+  109 |       await page.waitForLoadState('networkidle');
+  110 | 
+  111 |       const webDevCard = page.locator('div').filter({ hasText: /^Web DevelopmentCrafting responsive, high-performance websites tailored to your business needs/ }).first();
+  112 |       await expect(webDevCard.getByText('Responsive Design')).toBeVisible();
+  113 |       await expect(webDevCard.getByText('Fast Performance')).toBeVisible();
+  114 |       await expect(webDevCard.getByText('SEO Optimized')).toBeVisible();
+  115 |       await expect(webDevCard.getByRole('button', { name: 'Learn More' })).toBeVisible();
+  116 |     });
+  117 |   });
+  118 | 
+  119 |   test.describe('Projects Section (#projects)', () => {
+  120 |     test('should display projects section heading and project cards', async () => {
+  121 |       await page.goto(BASE_URL + '#projects');
+  122 |       await page.waitForLoadState('networkidle');
+  123 | 
+  124 |       await expect(page.getByRole('heading', { name: 'Featured Masterpieces' })).toBeVisible();
+  125 |       await expect(page.getByText('Explore a selection of our most impactful projects, where innovation meets execution.')).toBeVisible();
+  126 |       await expect(page.getByRole('heading', { name: 'Nebula Dashboard' })).toBeVisible();
+  127 |       await expect(page.getByRole('heading', { name: 'Quantum Commerce' })).toBeVisible();
+  128 |       await expect(page.getByRole('heading', { name: 'Cyber Sentinel' })).toBeVisible();
+  129 |       await expect(page.getByRole('link', { name: 'View Case Study' }).first()).toBeVisible();
+  130 |     });
+  131 |   });
+  132 | 
+  133 |   test.describe('Testimonials Section (#testimonials)', () => {
+  134 |     test('should display testimonials section heading and at least one testimonial', async () => {
+  135 |       await page.goto(BASE_URL + '#testimonials');
+  136 |       await page.waitForLoadState('networkidle');
+  137 | 
+  138 |       await expect(page.getByRole('heading', { name: 'Trusted by Visionaries' })).toBeVisible();
+  139 |       await expect(page.getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”')).toBeVisible();
+  140 |       await expect(page.getByText('Faraz Ali')).toBeVisible();
+  141 |       await expect(page.getByText('CEO, Innovatech')).toBeVisible();
 ```

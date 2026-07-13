@@ -10,16 +10,11 @@ export interface RepoFile {
  */
 export class GitHubService {
   private static baseUrl = 'https://api.github.com';
-  private static token = process.env.GITHUB_TOKEN;
-
   private static getHeaders() {
     const headers: Record<string, string> = {
       'Accept': 'application/vnd.github.v3+json',
       'User-Agent': 'Speclane-AI-Assistant'
     };
-    if (this.token) {
-      headers['Authorization'] = `token ${this.token}`;
-    }
     return headers;
   }
 
@@ -38,9 +33,21 @@ export class GitHubService {
   /**
    * Fetches the file tree of a repository
    */
-  static async getFileTree(owner: string, repo: string, branch = 'main'): Promise<any[]> {
+  static async getFileTree(owner: string, repo: string, branch?: string): Promise<any[]> {
     try {
-      const response = await fetch(`${this.baseUrl}/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`, {
+      let targetBranch = branch;
+      if (!targetBranch) {
+        const repoResponse = await fetch(`${this.baseUrl}/repos/${owner}/${repo}`, {
+          headers: this.getHeaders()
+        });
+        if (repoResponse.ok) {
+          const repoData: any = await repoResponse.json();
+          targetBranch = repoData.default_branch;
+        }
+      }
+      targetBranch = targetBranch || 'main';
+
+      const response = await fetch(`${this.baseUrl}/repos/${owner}/${repo}/git/trees/${targetBranch}?recursive=1`, {
         headers: this.getHeaders()
       });
       if (!response.ok) return [];

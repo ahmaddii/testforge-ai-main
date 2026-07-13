@@ -1,0 +1,1223 @@
+{
+  "config": {
+    "argv": [
+      "/home/malikahmadrasheed/.nvm/versions/node/v22.22.2/bin/node",
+      "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/node_modules/.bin/playwright",
+      "test",
+      "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki",
+      "--config=/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/playwright.config.ts",
+      "--reporter=json"
+    ],
+    "configFile": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/playwright.config.ts",
+    "rootDir": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.61.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "run-1783922220766-movdki/pr-1.spec.ts",
+      "file": "run-1783922220766-movdki/pr-1.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "PulsarX Landing Page Functionality",
+          "file": "run-1783922220766-movdki/pr-1.spec.ts",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should have the correct title",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 92,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-13T05:59:26.436Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2e5bcf662299df5f7812-5f9055b55ca4342694e9",
+              "file": "run-1783922220766-movdki/pr-1.spec.ts",
+              "line": 18,
+              "column": 7
+            },
+            {
+              "title": "should display the \"Back to top\" button after scrolling down",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5012,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeHidden\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByLabel('Back to top')\nExpected: hidden\nReceived: visible\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeHidden\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('Back to top')\u001b[22m\n\u001b[2m    14 × locator resolved to <button aria-label=\"Back to top\" class=\"inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary-foreground hover:bg-primary/90 h-10 w-10 fixed bottom-8 right-8 rounded-full shadow-2xl bg-gradient-to-r from-primary to-accent hover:fro…>…</button>\u001b[22m\n\u001b[2m       - unexpected value \"visible\"\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeHidden\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByLabel('Back to top')\nExpected: hidden\nReceived: visible\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeHidden\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('Back to top')\u001b[22m\n\u001b[2m    14 × locator resolved to <button aria-label=\"Back to top\" class=\"inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary-foreground hover:bg-primary/90 h-10 w-10 fixed bottom-8 right-8 rounded-full shadow-2xl bg-gradient-to-r from-primary to-accent hover:fro…>…</button>\u001b[22m\n\u001b[2m       - unexpected value \"visible\"\u001b[22m\n\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:257:50",
+                        "location": {
+                          "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                          "column": 50,
+                          "line": 257
+                        },
+                        "snippet": "  255 |   test('should display the \"Back to top\" button after scrolling down', async () => {\n  256 |     // Initially, the button is hidden by styling (opacity-0, pointer-events-none)\n> 257 |     await expect(page.getByLabel('Back to top')).toBeHidden();\n      |                                                  ^\n  258 |\n  259 |     // Scroll down the page\n  260 |     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight / 2));"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                            "column": 50,
+                            "line": 257
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeHidden\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByLabel('Back to top')\nExpected: hidden\nReceived: visible\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeHidden\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('Back to top')\u001b[22m\n\u001b[2m    14 × locator resolved to <button aria-label=\"Back to top\" class=\"inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-primary-foreground hover:bg-primary/90 h-10 w-10 fixed bottom-8 right-8 rounded-full shadow-2xl bg-gradient-to-r from-primary to-accent hover:fro…>…</button>\u001b[22m\n\u001b[2m       - unexpected value \"visible\"\u001b[22m\n\n\n  255 |   test('should display the \"Back to top\" button after scrolling down', async () => {\n  256 |     // Initially, the button is hidden by styling (opacity-0, pointer-events-none)\n> 257 |     await expect(page.getByLabel('Back to top')).toBeHidden();\n      |                                                  ^\n  258 |\n  259 |     // Scroll down the page\n  260 |     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight / 2));\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:257:50"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-13T06:00:34.870Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-032b7-button-after-scrolling-down-chromium/error-context.md"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-032b7-button-after-scrolling-down-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                        "column": 50,
+                        "line": 257
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "2e5bcf662299df5f7812-37ddf68172d1c0120627",
+              "file": "run-1783922220766-movdki/pr-1.spec.ts",
+              "line": 255,
+              "column": 7
+            }
+          ],
+          "suites": [
+            {
+              "title": "Navigation Bar",
+              "file": "run-1783922220766-movdki/pr-1.spec.ts",
+              "line": 22,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should display the main navigation links",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 164,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('link', { name: 'PulsarX' })\nExpected: visible\nError: strict mode violation: getByRole('link', { name: 'PulsarX' }) resolved to 3 elements:\n    1) <a href=\"#home\" class=\"flex items-center gap-2 group relative\">…</a> aka getByRole('navigation').getByRole('link', { name: 'PulsarX Logo PulsarX' })\n    2) <a href=\"mailto:pulsarx.inc@gmail.com\" class=\"jsx-52a1e3b25473c0c8 group flex items-start gap-4 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-border/30 hover:border-primary/30 transition-all duration-300 hover:scale-[1.02]\">…</a> aka getByRole('link', { name: 'Email pulsarx.inc@gmail.com' })\n    3) <a href=\"#home\" class=\"flex items-center gap-3 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'PulsarX Logo PulsarX' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: 'PulsarX' })\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('link', { name: 'PulsarX' })\nExpected: visible\nError: strict mode violation: getByRole('link', { name: 'PulsarX' }) resolved to 3 elements:\n    1) <a href=\"#home\" class=\"flex items-center gap-2 group relative\">…</a> aka getByRole('navigation').getByRole('link', { name: 'PulsarX Logo PulsarX' })\n    2) <a href=\"mailto:pulsarx.inc@gmail.com\" class=\"jsx-52a1e3b25473c0c8 group flex items-start gap-4 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-border/30 hover:border-primary/30 transition-all duration-300 hover:scale-[1.02]\">…</a> aka getByRole('link', { name: 'Email pulsarx.inc@gmail.com' })\n    3) <a href=\"#home\" class=\"flex items-center gap-3 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'PulsarX Logo PulsarX' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: 'PulsarX' })\u001b[22m\n\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:24:65",
+                            "location": {
+                              "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                              "column": 65,
+                              "line": 24
+                            },
+                            "snippet": "  22 |   test.describe('Navigation Bar', () => {\n  23 |     test('should display the main navigation links', async () => {\n> 24 |       await expect(page.getByRole('link', { name: 'PulsarX' })).toBeVisible();\n     |                                                                 ^\n  25 |       await expect(page.getByRole('link', { name: 'Home', exact: true })).toBeVisible();\n  26 |       await expect(page.getByRole('link', { name: 'About', exact: true })).toBeVisible();\n  27 |       await expect(page.getByRole('link', { name: 'Services', exact: true })).toBeVisible();"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                                "column": 65,
+                                "line": 24
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('link', { name: 'PulsarX' })\nExpected: visible\nError: strict mode violation: getByRole('link', { name: 'PulsarX' }) resolved to 3 elements:\n    1) <a href=\"#home\" class=\"flex items-center gap-2 group relative\">…</a> aka getByRole('navigation').getByRole('link', { name: 'PulsarX Logo PulsarX' })\n    2) <a href=\"mailto:pulsarx.inc@gmail.com\" class=\"jsx-52a1e3b25473c0c8 group flex items-start gap-4 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 border border-border/30 hover:border-primary/30 transition-all duration-300 hover:scale-[1.02]\">…</a> aka getByRole('link', { name: 'Email pulsarx.inc@gmail.com' })\n    3) <a href=\"#home\" class=\"flex items-center gap-3 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'PulsarX Logo PulsarX' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: 'PulsarX' })\u001b[22m\n\n\n  22 |   test.describe('Navigation Bar', () => {\n  23 |     test('should display the main navigation links', async () => {\n> 24 |       await expect(page.getByRole('link', { name: 'PulsarX' })).toBeVisible();\n     |                                                                 ^\n  25 |       await expect(page.getByRole('link', { name: 'Home', exact: true })).toBeVisible();\n  26 |       await expect(page.getByRole('link', { name: 'About', exact: true })).toBeVisible();\n  27 |       await expect(page.getByRole('link', { name: 'Services', exact: true })).toBeVisible();\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:24:65"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-13T05:59:27.790Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-21171-y-the-main-navigation-links-chromium/error-context.md"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-21171-y-the-main-navigation-links-chromium/error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                            "column": 65,
+                            "line": 24
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "2e5bcf662299df5f7812-1ec7e0babbc32b00e7f3",
+                  "file": "run-1783922220766-movdki/pr-1.spec.ts",
+                  "line": 23,
+                  "column": 9
+                },
+                {
+                  "title": "should navigate to the About section when \"About\" link is clicked",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 1,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 266,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-13T05:59:29.403Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "2e5bcf662299df5f7812-2db973261d45d9f49043",
+                  "file": "run-1783922220766-movdki/pr-1.spec.ts",
+                  "line": 34,
+                  "column": 9
+                },
+                {
+                  "title": "should navigate to the Contact section when \"Contact\" link is clicked",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 1,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 173,
+                          "error": {
+                            "message": "Error: locator.click: Error: strict mode violation: getByRole('link', { name: 'Contact', exact: true }) resolved to 2 elements:\n    1) <a href=\"#contact\" class=\"relative group px-4 py-2 rounded-full font-medium transition-all duration-300 inline-block text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('navigation').getByRole('link', { name: 'Contact' })\n    2) <a href=\"#contact\" class=\"text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'Contact' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Contact', exact: true })\u001b[22m\n",
+                            "stack": "Error: locator.click: Error: strict mode violation: getByRole('link', { name: 'Contact', exact: true }) resolved to 2 elements:\n    1) <a href=\"#contact\" class=\"relative group px-4 py-2 rounded-full font-medium transition-all duration-300 inline-block text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('navigation').getByRole('link', { name: 'Contact' })\n    2) <a href=\"#contact\" class=\"text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'Contact' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Contact', exact: true })\u001b[22m\n\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:41:70",
+                            "location": {
+                              "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                              "column": 70,
+                              "line": 41
+                            },
+                            "snippet": "  39 |\n  40 |     test('should navigate to the Contact section when \"Contact\" link is clicked', async () => {\n> 41 |       await page.getByRole('link', { name: 'Contact', exact: true }).click();\n     |                                                                      ^\n  42 |       await page.waitForLoadState('domcontentloaded');\n  43 |       await expect(page.getByRole('heading', { name: 'Get In Touch' })).toBeVisible();\n  44 |     });"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                                "column": 70,
+                                "line": 41
+                              },
+                              "message": "Error: locator.click: Error: strict mode violation: getByRole('link', { name: 'Contact', exact: true }) resolved to 2 elements:\n    1) <a href=\"#contact\" class=\"relative group px-4 py-2 rounded-full font-medium transition-all duration-300 inline-block text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('navigation').getByRole('link', { name: 'Contact' })\n    2) <a href=\"#contact\" class=\"text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group\">…</a> aka getByRole('contentinfo').getByRole('link', { name: 'Contact' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Contact', exact: true })\u001b[22m\n\n\n  39 |\n  40 |     test('should navigate to the Contact section when \"Contact\" link is clicked', async () => {\n> 41 |       await page.getByRole('link', { name: 'Contact', exact: true }).click();\n     |                                                                      ^\n  42 |       await page.waitForLoadState('domcontentloaded');\n  43 |       await expect(page.getByRole('heading', { name: 'Get In Touch' })).toBeVisible();\n  44 |     });\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:41:70"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-13T05:59:30.922Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-4a365-hen-Contact-link-is-clicked-chromium/error-context.md"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-4a365-hen-Contact-link-is-clicked-chromium/error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                            "column": 70,
+                            "line": 41
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "2e5bcf662299df5f7812-324718a8f13c3cdba648",
+                  "file": "run-1783922220766-movdki/pr-1.spec.ts",
+                  "line": 40,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Hero Section (#home)",
+              "file": "run-1783922220766-movdki/pr-1.spec.ts",
+              "line": 47,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should display hero section content and call to action buttons",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 313,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('link', { name: 'Get Started', exact: true })\nExpected: visible\nError: strict mode violation: getByRole('link', { name: 'Get Started', exact: true }) resolved to 2 elements:\n    1) <a href=\"mailto:pulsarx.inc@gmail.com\" class=\"inline-flex items-center justify-center rounded-full bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20 h-9 px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105\">Get Started</a> aka getByRole('navigation').getByRole('link', { name: 'Get Started' })\n    2) <a href=\"mailto:pulsarx.inc@gmail.com\" class=\"jsx-1b8803086b7f2507 inline-flex items-center justify-center text-base px-6 py-3 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all duration-300 hover:scale-105\">…</a> aka locator('#home').getByRole('link', { name: 'Get Started' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: 'Get Started', exact: true })\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('link', { name: 'Get Started', exact: true })\nExpected: visible\nError: strict mode violation: getByRole('link', { name: 'Get Started', exact: true }) resolved to 2 elements:\n    1) <a href=\"mailto:pulsarx.inc@gmail.com\" class=\"inline-flex items-center justify-center rounded-full bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20 h-9 px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105\">Get Started</a> aka getByRole('navigation').getByRole('link', { name: 'Get Started' })\n    2) <a href=\"mailto:pulsarx.inc@gmail.com\" class=\"jsx-1b8803086b7f2507 inline-flex items-center justify-center text-base px-6 py-3 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all duration-300 hover:scale-105\">…</a> aka locator('#home').getByRole('link', { name: 'Get Started' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: 'Get Started', exact: true })\u001b[22m\n\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:55:82",
+                            "location": {
+                              "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                              "column": 82,
+                              "line": 55
+                            },
+                            "snippet": "  53 |       await expect(page.getByRole('heading', { name: 'Transforming Ideas into Digital Reality' })).toBeVisible();\n  54 |       await expect(page.getByText(/We build scalable, high-performance software solutions/)).toBeVisible();\n> 55 |       await expect(page.getByRole('link', { name: 'Get Started', exact: true })).toBeVisible();\n     |                                                                                  ^\n  56 |       await expect(page.getByRole('button', { name: 'Contact Us', exact: true })).toBeVisible();\n  57 |     });\n  58 |"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                                "column": 82,
+                                "line": 55
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('link', { name: 'Get Started', exact: true })\nExpected: visible\nError: strict mode violation: getByRole('link', { name: 'Get Started', exact: true }) resolved to 2 elements:\n    1) <a href=\"mailto:pulsarx.inc@gmail.com\" class=\"inline-flex items-center justify-center rounded-full bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20 h-9 px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105\">Get Started</a> aka getByRole('navigation').getByRole('link', { name: 'Get Started' })\n    2) <a href=\"mailto:pulsarx.inc@gmail.com\" class=\"jsx-1b8803086b7f2507 inline-flex items-center justify-center text-base px-6 py-3 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all duration-300 hover:scale-105\">…</a> aka locator('#home').getByRole('link', { name: 'Get Started' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: 'Get Started', exact: true })\u001b[22m\n\n\n  53 |       await expect(page.getByRole('heading', { name: 'Transforming Ideas into Digital Reality' })).toBeVisible();\n  54 |       await expect(page.getByText(/We build scalable, high-performance software solutions/)).toBeVisible();\n> 55 |       await expect(page.getByRole('link', { name: 'Get Started', exact: true })).toBeVisible();\n     |                                                                                  ^\n  56 |       await expect(page.getByRole('button', { name: 'Contact Us', exact: true })).toBeVisible();\n  57 |     });\n  58 |\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:55:82"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-13T05:59:32.592Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-5a627--and-call-to-action-buttons-chromium/error-context.md"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-5a627--and-call-to-action-buttons-chromium/error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                            "column": 82,
+                            "line": 55
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "2e5bcf662299df5f7812-c729689a5f1fdd68bf76",
+                  "file": "run-1783922220766-movdki/pr-1.spec.ts",
+                  "line": 48,
+                  "column": 9
+                },
+                {
+                  "title": "should display key statistics in hero section",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 3,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 5047,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('100+ Projects Delivered')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('100+ Projects Delivered')\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('100+ Projects Delivered')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('100+ Projects Delivered')\u001b[22m\n\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:60:63",
+                            "location": {
+                              "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                              "column": 63,
+                              "line": 60
+                            },
+                            "snippet": "  58 |\n  59 |     test('should display key statistics in hero section', async () => {\n> 60 |       await expect(page.getByText('100+ Projects Delivered')).toBeVisible();\n     |                                                               ^\n  61 |       await expect(page.getByText('50+ Global Clients')).toBeVisible();\n  62 |       await expect(page.getByText('99.9% Uptime Guarantee')).toBeVisible();\n  63 |       await expect(page.getByText('2x ROI Average')).toBeVisible();"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                                "column": 63,
+                                "line": 60
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('100+ Projects Delivered')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('100+ Projects Delivered')\u001b[22m\n\n\n  58 |\n  59 |     test('should display key statistics in hero section', async () => {\n> 60 |       await expect(page.getByText('100+ Projects Delivered')).toBeVisible();\n     |                                                               ^\n  61 |       await expect(page.getByText('50+ Global Clients')).toBeVisible();\n  62 |       await expect(page.getByText('99.9% Uptime Guarantee')).toBeVisible();\n  63 |       await expect(page.getByText('2x ROI Average')).toBeVisible();\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:60:63"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-13T05:59:35.658Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-5a3d8--statistics-in-hero-section-chromium/error-context.md"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-5a3d8--statistics-in-hero-section-chromium/error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                            "column": 63,
+                            "line": 60
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "2e5bcf662299df5f7812-8cbea17e5764ff1a29a5",
+                  "file": "run-1783922220766-movdki/pr-1.spec.ts",
+                  "line": 59,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "About Section (#about)",
+              "file": "run-1783922220766-movdki/pr-1.spec.ts",
+              "line": 67,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should display about section content and mission/vision statements",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 4,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 5112,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('heading', { name: 'About Us' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { name: 'About Us' })\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('heading', { name: 'About Us' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { name: 'About Us' })\u001b[22m\n\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:72:69",
+                            "location": {
+                              "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                              "column": 69,
+                              "line": 72
+                            },
+                            "snippet": "  70 |       await page.waitForLoadState('networkidle');\n  71 |\n> 72 |       await expect(page.getByRole('heading', { name: 'About Us' })).toBeVisible();\n     |                                                                     ^\n  73 |       await expect(page.getByRole('heading', { name: 'Discover PulsarX' })).toBeVisible();\n  74 |       await expect(page.getByRole('heading', { name: 'Our Story' })).toBeVisible();\n  75 |       await expect(page.getByText(/Founded with a passion for innovation/)).toBeVisible();"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                                "column": 69,
+                                "line": 72
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('heading', { name: 'About Us' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { name: 'About Us' })\u001b[22m\n\n\n  70 |       await page.waitForLoadState('networkidle');\n  71 |\n> 72 |       await expect(page.getByRole('heading', { name: 'About Us' })).toBeVisible();\n     |                                                                     ^\n  73 |       await expect(page.getByRole('heading', { name: 'Discover PulsarX' })).toBeVisible();\n  74 |       await expect(page.getByRole('heading', { name: 'Our Story' })).toBeVisible();\n  75 |       await expect(page.getByText(/Founded with a passion for innovation/)).toBeVisible();\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:72:69"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-13T05:59:42.997Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-34e75-d-mission-vision-statements-chromium/error-context.md"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-34e75-d-mission-vision-statements-chromium/error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                            "column": 69,
+                            "line": 72
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "2e5bcf662299df5f7812-fc336778f415ac8f18aa",
+                  "file": "run-1783922220766-movdki/pr-1.spec.ts",
+                  "line": 68,
+                  "column": 9
+                },
+                {
+                  "title": "should display about section statistics",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 5,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 5050,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('500+ Happy Clients')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('500+ Happy Clients')\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('500+ Happy Clients')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('500+ Happy Clients')\u001b[22m\n\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:85:58",
+                            "location": {
+                              "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                              "column": 58,
+                              "line": 85
+                            },
+                            "snippet": "  83 |\n  84 |     test('should display about section statistics', async () => {\n> 85 |       await expect(page.getByText('500+ Happy Clients')).toBeVisible();\n     |                                                          ^\n  86 |       await expect(page.getByText('1000+ Projects Completed')).toBeVisible();\n  87 |       await expect(page.getByText('98% Success Rate')).toBeVisible();\n  88 |       await expect(page.getByText('5+ Years Experience')).toBeVisible();"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                                "column": 58,
+                                "line": 85
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('500+ Happy Clients')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('500+ Happy Clients')\u001b[22m\n\n\n  83 |\n  84 |     test('should display about section statistics', async () => {\n> 85 |       await expect(page.getByText('500+ Happy Clients')).toBeVisible();\n     |                                                          ^\n  86 |       await expect(page.getByText('1000+ Projects Completed')).toBeVisible();\n  87 |       await expect(page.getByText('98% Success Rate')).toBeVisible();\n  88 |       await expect(page.getByText('5+ Years Experience')).toBeVisible();\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:85:58"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-13T05:59:50.443Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-12a3e-ay-about-section-statistics-chromium/error-context.md"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-12a3e-ay-about-section-statistics-chromium/error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                            "column": 58,
+                            "line": 85
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "2e5bcf662299df5f7812-353f25a4ca7d9994ba43",
+                  "file": "run-1783922220766-movdki/pr-1.spec.ts",
+                  "line": 84,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Services Section (#services)",
+              "file": "run-1783922220766-movdki/pr-1.spec.ts",
+              "line": 92,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should display services section heading and service cards",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 286,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-13T05:59:57.878Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "2e5bcf662299df5f7812-e349ad7cc23709f6900f",
+                  "file": "run-1783922220766-movdki/pr-1.spec.ts",
+                  "line": 93,
+                  "column": 9
+                },
+                {
+                  "title": "should display features for \"Web Development\" service",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 1117,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('div').filter({ hasText: /^Web DevelopmentCrafting responsive, high-performance websites tailored to your business needs/ }).first().getByRole('button', { name: 'Learn More' })\nExpected: visible\nError: strict mode violation: locator('div').filter({ hasText: /^Web DevelopmentCrafting responsive, high-performance websites tailored to your business needs/ }).first().getByRole('button', { name: 'Learn More' }) resolved to 6 elements:\n    1) <button class=\"jsx-52a1e3b25473c0c8 group/btn inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300\">…</button> aka getByRole('button', { name: 'Learn More' }).first()\n    2) <button class=\"jsx-52a1e3b25473c0c8 group/btn inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300\">…</button> aka getByRole('button', { name: 'Learn More' }).nth(1)\n    3) <button class=\"jsx-52a1e3b25473c0c8 group/btn inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300\">…</button> aka getByRole('button', { name: 'Learn More' }).nth(2)\n    4) <button class=\"jsx-52a1e3b25473c0c8 group/btn inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300\">…</button> aka getByRole('button', { name: 'Learn More' }).nth(3)\n    5) <button class=\"jsx-52a1e3b25473c0c8 group/btn inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300\">…</button> aka getByRole('button', { name: 'Learn More' }).nth(4)\n    6) <button class=\"jsx-52a1e3b25473c0c8 group/btn inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300\">…</button> aka getByRole('button', { name: 'Learn More' }).nth(5)\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('div').filter({ hasText: /^Web DevelopmentCrafting responsive, high-performance websites tailored to your business needs/ }).first().getByRole('button', { name: 'Learn More' })\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('div').filter({ hasText: /^Web DevelopmentCrafting responsive, high-performance websites tailored to your business needs/ }).first().getByRole('button', { name: 'Learn More' })\nExpected: visible\nError: strict mode violation: locator('div').filter({ hasText: /^Web DevelopmentCrafting responsive, high-performance websites tailored to your business needs/ }).first().getByRole('button', { name: 'Learn More' }) resolved to 6 elements:\n    1) <button class=\"jsx-52a1e3b25473c0c8 group/btn inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300\">…</button> aka getByRole('button', { name: 'Learn More' }).first()\n    2) <button class=\"jsx-52a1e3b25473c0c8 group/btn inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300\">…</button> aka getByRole('button', { name: 'Learn More' }).nth(1)\n    3) <button class=\"jsx-52a1e3b25473c0c8 group/btn inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300\">…</button> aka getByRole('button', { name: 'Learn More' }).nth(2)\n    4) <button class=\"jsx-52a1e3b25473c0c8 group/btn inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300\">…</button> aka getByRole('button', { name: 'Learn More' }).nth(3)\n    5) <button class=\"jsx-52a1e3b25473c0c8 group/btn inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300\">…</button> aka getByRole('button', { name: 'Learn More' }).nth(4)\n    6) <button class=\"jsx-52a1e3b25473c0c8 group/btn inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300\">…</button> aka getByRole('button', { name: 'Learn More' }).nth(5)\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('div').filter({ hasText: /^Web DevelopmentCrafting responsive, high-performance websites tailored to your business needs/ }).first().getByRole('button', { name: 'Learn More' })\u001b[22m\n\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:115:76",
+                            "location": {
+                              "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                              "column": 76,
+                              "line": 115
+                            },
+                            "snippet": "  113 |       await expect(webDevCard.getByText('Fast Performance')).toBeVisible();\n  114 |       await expect(webDevCard.getByText('SEO Optimized')).toBeVisible();\n> 115 |       await expect(webDevCard.getByRole('button', { name: 'Learn More' })).toBeVisible();\n      |                                                                            ^\n  116 |     });\n  117 |   });\n  118 |"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                                "column": 76,
+                                "line": 115
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('div').filter({ hasText: /^Web DevelopmentCrafting responsive, high-performance websites tailored to your business needs/ }).first().getByRole('button', { name: 'Learn More' })\nExpected: visible\nError: strict mode violation: locator('div').filter({ hasText: /^Web DevelopmentCrafting responsive, high-performance websites tailored to your business needs/ }).first().getByRole('button', { name: 'Learn More' }) resolved to 6 elements:\n    1) <button class=\"jsx-52a1e3b25473c0c8 group/btn inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300\">…</button> aka getByRole('button', { name: 'Learn More' }).first()\n    2) <button class=\"jsx-52a1e3b25473c0c8 group/btn inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300\">…</button> aka getByRole('button', { name: 'Learn More' }).nth(1)\n    3) <button class=\"jsx-52a1e3b25473c0c8 group/btn inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300\">…</button> aka getByRole('button', { name: 'Learn More' }).nth(2)\n    4) <button class=\"jsx-52a1e3b25473c0c8 group/btn inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300\">…</button> aka getByRole('button', { name: 'Learn More' }).nth(3)\n    5) <button class=\"jsx-52a1e3b25473c0c8 group/btn inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300\">…</button> aka getByRole('button', { name: 'Learn More' }).nth(4)\n    6) <button class=\"jsx-52a1e3b25473c0c8 group/btn inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300\">…</button> aka getByRole('button', { name: 'Learn More' }).nth(5)\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('div').filter({ hasText: /^Web DevelopmentCrafting responsive, high-performance websites tailored to your business needs/ }).first().getByRole('button', { name: 'Learn More' })\u001b[22m\n\n\n  113 |       await expect(webDevCard.getByText('Fast Performance')).toBeVisible();\n  114 |       await expect(webDevCard.getByText('SEO Optimized')).toBeVisible();\n> 115 |       await expect(webDevCard.getByRole('button', { name: 'Learn More' })).toBeVisible();\n      |                                                                            ^\n  116 |     });\n  117 |   });\n  118 |\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:115:76"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-13T05:59:59.610Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-cf8e8-for-Web-Development-service-chromium/error-context.md"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-cf8e8-for-Web-Development-service-chromium/error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                            "column": 76,
+                            "line": 115
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "2e5bcf662299df5f7812-79ce17d1e93c33b8628f",
+                  "file": "run-1783922220766-movdki/pr-1.spec.ts",
+                  "line": 107,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Projects Section (#projects)",
+              "file": "run-1783922220766-movdki/pr-1.spec.ts",
+              "line": 119,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should display projects section heading and project cards",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 7,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 274,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-13T06:00:02.174Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "2e5bcf662299df5f7812-99f453ae3658011a9123",
+                  "file": "run-1783922220766-movdki/pr-1.spec.ts",
+                  "line": 120,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Testimonials Section (#testimonials)",
+              "file": "run-1783922220766-movdki/pr-1.spec.ts",
+              "line": 133,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should display testimonials section heading and at least one testimonial",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 7,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 589,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”')\nExpected: visible\nError: strict mode violation: getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”') resolved to 4 elements:\n    1) <p class=\"text-lg italic text-muted-foreground\">…</p> aka getByText('“PulsarX transformed our').first()\n    2) <p class=\"text-lg italic text-muted-foreground\">…</p> aka getByText('“PulsarX transformed our').nth(1)\n    3) <p class=\"text-lg italic text-muted-foreground\">…</p> aka getByText('“PulsarX transformed our').nth(2)\n    4) <p class=\"text-lg italic text-muted-foreground\">…</p> aka getByText('“PulsarX transformed our').nth(3)\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”')\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”')\nExpected: visible\nError: strict mode violation: getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”') resolved to 4 elements:\n    1) <p class=\"text-lg italic text-muted-foreground\">…</p> aka getByText('“PulsarX transformed our').first()\n    2) <p class=\"text-lg italic text-muted-foreground\">…</p> aka getByText('“PulsarX transformed our').nth(1)\n    3) <p class=\"text-lg italic text-muted-foreground\">…</p> aka getByText('“PulsarX transformed our').nth(2)\n    4) <p class=\"text-lg italic text-muted-foreground\">…</p> aka getByText('“PulsarX transformed our').nth(3)\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”')\u001b[22m\n\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:139:159",
+                            "location": {
+                              "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                              "column": 159,
+                              "line": 139
+                            },
+                            "snippet": "  137 |\n  138 |       await expect(page.getByRole('heading', { name: 'Trusted by Visionaries' })).toBeVisible();\n> 139 |       await expect(page.getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”')).toBeVisible();\n      |                                                                                                                                                               ^\n  140 |       await expect(page.getByText('Faraz Ali')).toBeVisible();\n  141 |       await expect(page.getByText('CEO, Innovatech')).toBeVisible();\n  142 |     });"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                                "column": 159,
+                                "line": 139
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”')\nExpected: visible\nError: strict mode violation: getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”') resolved to 4 elements:\n    1) <p class=\"text-lg italic text-muted-foreground\">…</p> aka getByText('“PulsarX transformed our').first()\n    2) <p class=\"text-lg italic text-muted-foreground\">…</p> aka getByText('“PulsarX transformed our').nth(1)\n    3) <p class=\"text-lg italic text-muted-foreground\">…</p> aka getByText('“PulsarX transformed our').nth(2)\n    4) <p class=\"text-lg italic text-muted-foreground\">…</p> aka getByText('“PulsarX transformed our').nth(3)\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”')\u001b[22m\n\n\n  137 |\n  138 |       await expect(page.getByRole('heading', { name: 'Trusted by Visionaries' })).toBeVisible();\n> 139 |       await expect(page.getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”')).toBeVisible();\n      |                                                                                                                                                               ^\n  140 |       await expect(page.getByText('Faraz Ali')).toBeVisible();\n  141 |       await expect(page.getByText('CEO, Innovatech')).toBeVisible();\n  142 |     });\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:139:159"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-13T06:00:03.722Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-4b659-nd-at-least-one-testimonial-chromium/error-context.md"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-4b659-nd-at-least-one-testimonial-chromium/error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                            "column": 159,
+                            "line": 139
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "2e5bcf662299df5f7812-8a98228ae51e59e2b394",
+                  "file": "run-1783922220766-movdki/pr-1.spec.ts",
+                  "line": 134,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Contact Section (#contact)",
+              "file": "run-1783922220766-movdki/pr-1.spec.ts",
+              "line": 145,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should display contact form with input fields and submit button",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 8,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 289,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('heading', { name: 'Get In Touch' })\nExpected: visible\nError: strict mode violation: getByRole('heading', { name: 'Get In Touch' }) resolved to 2 elements:\n    1) <h2 class=\"jsx-52a1e3b25473c0c8 text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6\">…</h2> aka locator('#contact').getByRole('heading', { name: 'Get In Touch' })\n    2) <h3 class=\"jsx-ea7afea7e16944aa text-lg font-semibold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent flex items-center gap-2\">…</h3> aka getByRole('contentinfo').getByRole('heading', { name: 'Get In Touch' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { name: 'Get In Touch' })\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('heading', { name: 'Get In Touch' })\nExpected: visible\nError: strict mode violation: getByRole('heading', { name: 'Get In Touch' }) resolved to 2 elements:\n    1) <h2 class=\"jsx-52a1e3b25473c0c8 text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6\">…</h2> aka locator('#contact').getByRole('heading', { name: 'Get In Touch' })\n    2) <h3 class=\"jsx-ea7afea7e16944aa text-lg font-semibold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent flex items-center gap-2\">…</h3> aka getByRole('contentinfo').getByRole('heading', { name: 'Get In Touch' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { name: 'Get In Touch' })\u001b[22m\n\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:150:73",
+                            "location": {
+                              "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                              "column": 73,
+                              "line": 150
+                            },
+                            "snippet": "  148 |       await page.waitForLoadState('networkidle');\n  149 |\n> 150 |       await expect(page.getByRole('heading', { name: 'Get In Touch' })).toBeVisible();\n      |                                                                         ^\n  151 |       await expect(page.getByRole('heading', { name: 'Send us a message' })).toBeVisible();\n  152 |\n  153 |       const fullNameInput = page.getByLabel('Full Name');"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                                "column": 73,
+                                "line": 150
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('heading', { name: 'Get In Touch' })\nExpected: visible\nError: strict mode violation: getByRole('heading', { name: 'Get In Touch' }) resolved to 2 elements:\n    1) <h2 class=\"jsx-52a1e3b25473c0c8 text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6\">…</h2> aka locator('#contact').getByRole('heading', { name: 'Get In Touch' })\n    2) <h3 class=\"jsx-ea7afea7e16944aa text-lg font-semibold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent flex items-center gap-2\">…</h3> aka getByRole('contentinfo').getByRole('heading', { name: 'Get In Touch' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { name: 'Get In Touch' })\u001b[22m\n\n\n  148 |       await page.waitForLoadState('networkidle');\n  149 |\n> 150 |       await expect(page.getByRole('heading', { name: 'Get In Touch' })).toBeVisible();\n      |                                                                         ^\n  151 |       await expect(page.getByRole('heading', { name: 'Send us a message' })).toBeVisible();\n  152 |\n  153 |       const fullNameInput = page.getByLabel('Full Name');\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:150:73"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-13T06:00:05.730Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-18cfb-ut-fields-and-submit-button-chromium/error-context.md"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-18cfb-ut-fields-and-submit-button-chromium/error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                            "column": 73,
+                            "line": 150
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "2e5bcf662299df5f7812-dad229534c00f28ff9fc",
+                  "file": "run-1783922220766-movdki/pr-1.spec.ts",
+                  "line": 146,
+                  "column": 9
+                },
+                {
+                  "title": "should display \"Book a Call\" section with a link",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 9,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 5058,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('heading', { name: 'Book a Call' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { name: 'Book a Call' })\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('heading', { name: 'Book a Call' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { name: 'Book a Call' })\u001b[22m\n\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:175:72",
+                            "location": {
+                              "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                              "column": 72,
+                              "line": 175
+                            },
+                            "snippet": "  173 |       await page.waitForLoadState('networkidle');\n  174 |\n> 175 |       await expect(page.getByRole('heading', { name: 'Book a Call' })).toBeVisible();\n      |                                                                        ^\n  176 |       await expect(page.getByText(/Prefer to talk directly\\? Schedule a free 15-minute consultation with our experts\\./)).toBeVisible();\n  177 |       const scheduleMeetingLink = page.getByRole('link', { name: 'Schedule Meeting' });\n  178 |       await expect(scheduleMeetingLink).toBeVisible();"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                                "column": 72,
+                                "line": 175
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('heading', { name: 'Book a Call' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { name: 'Book a Call' })\u001b[22m\n\n\n  173 |       await page.waitForLoadState('networkidle');\n  174 |\n> 175 |       await expect(page.getByRole('heading', { name: 'Book a Call' })).toBeVisible();\n      |                                                                        ^\n  176 |       await expect(page.getByText(/Prefer to talk directly\\? Schedule a free 15-minute consultation with our experts\\./)).toBeVisible();\n  177 |       const scheduleMeetingLink = page.getByRole('link', { name: 'Schedule Meeting' });\n  178 |       await expect(scheduleMeetingLink).toBeVisible();\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:175:72"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-13T06:00:09.308Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-11fd4--a-Call-section-with-a-link-chromium/error-context.md"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-11fd4--a-Call-section-with-a-link-chromium/error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                            "column": 72,
+                            "line": 175
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "2e5bcf662299df5f7812-eeee72c252628c3e0a48",
+                  "file": "run-1783922220766-movdki/pr-1.spec.ts",
+                  "line": 171,
+                  "column": 9
+                },
+                {
+                  "title": "should display \"Contact Info\" and \"Quick Info\"",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 10,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 5067,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('heading', { name: 'Contact Info' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { name: 'Contact Info' })\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('heading', { name: 'Contact Info' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { name: 'Contact Info' })\u001b[22m\n\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:186:73",
+                            "location": {
+                              "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                              "column": 73,
+                              "line": 186
+                            },
+                            "snippet": "  184 |       await page.waitForLoadState('networkidle');\n  185 |\n> 186 |       await expect(page.getByRole('heading', { name: 'Contact Info' })).toBeVisible();\n      |                                                                         ^\n  187 |       await expect(page.getByRole('link', { name: 'pulsarx.inc@gmail.com' })).toBeVisible();\n  188 |       await expect(page.getByRole('link', { name: '+92 304 7058585' })).toBeVisible();\n  189 |       await expect(page.getByRole('link', { name: 'Street 55 I8/3 Islamabad, Pakistan, WEB 40404' })).toBeVisible();"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                                "column": 73,
+                                "line": 186
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('heading', { name: 'Contact Info' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { name: 'Contact Info' })\u001b[22m\n\n\n  184 |       await page.waitForLoadState('networkidle');\n  185 |\n> 186 |       await expect(page.getByRole('heading', { name: 'Contact Info' })).toBeVisible();\n      |                                                                         ^\n  187 |       await expect(page.getByRole('link', { name: 'pulsarx.inc@gmail.com' })).toBeVisible();\n  188 |       await expect(page.getByRole('link', { name: '+92 304 7058585' })).toBeVisible();\n  189 |       await expect(page.getByRole('link', { name: 'Street 55 I8/3 Islamabad, Pakistan, WEB 40404' })).toBeVisible();\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:186:73"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-13T06:00:16.696Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-526f2-ontact-Info-and-Quick-Info--chromium/error-context.md"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-526f2-ontact-Info-and-Quick-Info--chromium/error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                            "column": 73,
+                            "line": 186
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "2e5bcf662299df5f7812-4f19d6e44451790309be",
+                  "file": "run-1783922220766-movdki/pr-1.spec.ts",
+                  "line": 182,
+                  "column": 9
+                },
+                {
+                  "title": "should display \"Follow Us\" social media links",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 11,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 5063,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('heading', { name: 'Follow Us' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { name: 'Follow Us' })\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('heading', { name: 'Follow Us' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { name: 'Follow Us' })\u001b[22m\n\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:204:70",
+                            "location": {
+                              "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                              "column": 70,
+                              "line": 204
+                            },
+                            "snippet": "  202 |       await page.waitForLoadState('networkidle');\n  203 |\n> 204 |       await expect(page.getByRole('heading', { name: 'Follow Us' })).toBeVisible();\n      |                                                                      ^\n  205 |       await expect(page.getByLabel('LinkedIn')).toBeVisible();\n  206 |       await expect(page.getByLabel('LinkedIn')).toHaveAttribute('href', 'https://www.linkedin.com/in/malik-ahmad-rasheed-3768902a9/');\n  207 |       await expect(page.getByLabel('Twitter')).toBeVisible();"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                                "column": 70,
+                                "line": 204
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('heading', { name: 'Follow Us' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { name: 'Follow Us' })\u001b[22m\n\n\n  202 |       await page.waitForLoadState('networkidle');\n  203 |\n> 204 |       await expect(page.getByRole('heading', { name: 'Follow Us' })).toBeVisible();\n      |                                                                      ^\n  205 |       await expect(page.getByLabel('LinkedIn')).toBeVisible();\n  206 |       await expect(page.getByLabel('LinkedIn')).toHaveAttribute('href', 'https://www.linkedin.com/in/malik-ahmad-rasheed-3768902a9/');\n  207 |       await expect(page.getByLabel('Twitter')).toBeVisible();\n    at /home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:204:70"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-13T06:00:24.125Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-b9a89-ollow-Us-social-media-links-chromium/error-context.md"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/test-results/run-1783922220766-movdki-p-b9a89-ollow-Us-social-media-links-chromium/error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/home/malikahmadrasheed/Downloads/testforge-ai-main/backend/src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts",
+                            "column": 70,
+                            "line": 204
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "2e5bcf662299df5f7812-bd1b7d9bd9bf82755acc",
+                  "file": "run-1783922220766-movdki/pr-1.spec.ts",
+                  "line": 200,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Footer Section",
+              "file": "run-1783922220766-movdki/pr-1.spec.ts",
+              "line": 218,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should display footer content, links, and newsletter signup",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 12,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 1596,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-13T06:00:31.846Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "2e5bcf662299df5f7812-f222310431ab31b136c2",
+                  "file": "run-1783922220766-movdki/pr-1.spec.ts",
+                  "line": 219,
+                  "column": 9
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-07-13T05:59:25.192Z",
+    "duration": 74858.381,
+    "expected": 5,
+    "skipped": 0,
+    "unexpected": 13,
+    "flaky": 0
+  }
+}

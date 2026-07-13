@@ -6,22 +6,22 @@
 
 # Test info
 
-- Name: run-1783772330303-y7navd/pr-1.spec.ts >> PulsarX Landing Page Functionality >> should display contact information and quick info
-- Location: src/temp_tests/run-1783772330303-y7navd/pr-1.spec.ts:259:7
+- Name: run-1783922220766-movdki/pr-1.spec.ts >> PulsarX Landing Page Functionality >> About Section (#about) >> should display about section statistics
+- Location: src/temp_tests/run-1783922220766-movdki/pr-1.spec.ts:84:9
 
 # Error details
 
 ```
 Error: expect(locator).toBeVisible() failed
 
-Locator: getByRole('heading', { name: 'Contact Info' })
+Locator: getByText('500+ Happy Clients')
 Expected: visible
 Timeout: 5000ms
 Error: element(s) not found
 
 Call log:
   - Expect "toBeVisible" with timeout 5000ms
-  - waiting for getByRole('heading', { name: 'Contact Info' })
+  - waiting for getByText('500+ Happy Clients')
 
 ```
 
@@ -564,206 +564,190 @@ Call log:
 # Test source
 
 ```ts
-  164 | 
-  165 |     // Verify 'Learn More' buttons are present for services
-  166 |     const learnMoreButtons = page.locator('.jsx-52a1e3b25473c0c8 button:has-text("Learn More")');
-  167 |     await expect(learnMoreButtons).toHaveCount(6);
-  168 | 
-  169 |     await expect(page.getByRole('button', { name: 'Get in Touch' })).toBeVisible();
-  170 |   });
-  171 | 
-  172 |   test('should display project cards with details in Projects section', async () => {
-  173 |     // Navigate to Projects section using the desktop navigation link
-  174 |     await page.getByRole('navigation').getByRole('link', { name: 'Projects', exact: true }).click();
-  175 |     await page.waitForLoadState('networkidle');
-  176 | 
-  177 |     // Nebula Dashboard
-  178 |     await expect(page.getByRole('heading', { name: 'Nebula Dashboard' })).toBeVisible();
-  179 |     await expect(page.getByText('A high-performance analytics dashboard for visualizing complex datasets in real-time.')).toBeVisible();
-  180 |     await expect(page.getByText('React')).toBeVisible();
-  181 |     await expect(page.getByText('Next.js')).toBeVisible();
-  182 |     await expect(page.getByText('Tailwind')).toBeVisible();
-  183 |     await expect(page.getByText('Recharts')).toBeVisible();
-  184 |     await expect(page.getByRole('link', { name: 'View Case Study' }).first()).toBeVisible();
+  1   | import { test, expect, Page } from '@playwright/test';
+  2   | 
+  3   | const BASE_URL = 'http://127.0.0.1:6513';
+  4   | 
+  5   | test.describe('PulsarX Landing Page Functionality', () => {
+  6   |   let page: Page;
+  7   | 
+  8   |   test.beforeAll(async ({ browser }) => {
+  9   |     page = await browser.newPage();
+  10  |     await page.goto(BASE_URL);
+  11  |     await page.waitForLoadState('networkidle');
+  12  |   });
+  13  | 
+  14  |   test.afterAll(async () => {
+  15  |     await page.close();
+  16  |   });
+  17  | 
+  18  |   test('should have the correct title', async () => {
+  19  |     await expect(page).toHaveTitle('PulsarX | Where Innovation Meets Excellence');
+  20  |   });
+  21  | 
+  22  |   test.describe('Navigation Bar', () => {
+  23  |     test('should display the main navigation links', async () => {
+  24  |       await expect(page.getByRole('link', { name: 'PulsarX' })).toBeVisible();
+  25  |       await expect(page.getByRole('link', { name: 'Home', exact: true })).toBeVisible();
+  26  |       await expect(page.getByRole('link', { name: 'About', exact: true })).toBeVisible();
+  27  |       await expect(page.getByRole('link', { name: 'Services', exact: true })).toBeVisible();
+  28  |       await expect(page.getByRole('link', { name: 'Projects', exact: true })).toBeVisible();
+  29  |       await expect(page.getByRole('link', { name: 'Testimonials', exact: true })).toBeVisible();
+  30  |       await expect(page.getByRole('link', { name: 'Contact', exact: true })).toBeVisible();
+  31  |       await expect(page.getByRole('link', { name: 'Get Started', exact: true })).toBeVisible();
+  32  |     });
+  33  | 
+  34  |     test('should navigate to the About section when "About" link is clicked', async () => {
+  35  |       await page.getByRole('link', { name: 'About', exact: true }).click();
+  36  |       await page.waitForLoadState('domcontentloaded'); // DOM change as it scrolls
+  37  |       await expect(page.getByRole('heading', { name: 'Discover PulsarX' })).toBeVisible();
+  38  |     });
+  39  | 
+  40  |     test('should navigate to the Contact section when "Contact" link is clicked', async () => {
+  41  |       await page.getByRole('link', { name: 'Contact', exact: true }).click();
+  42  |       await page.waitForLoadState('domcontentloaded');
+  43  |       await expect(page.getByRole('heading', { name: 'Get In Touch' })).toBeVisible();
+  44  |     });
+  45  |   });
+  46  | 
+  47  |   test.describe('Hero Section (#home)', () => {
+  48  |     test('should display hero section content and call to action buttons', async () => {
+  49  |       await page.goto(BASE_URL + '#home'); // Ensure we are at the home section
+  50  |       await page.waitForLoadState('networkidle');
+  51  | 
+  52  |       await expect(page.getByText('Leading Software Development Agency')).toBeVisible();
+  53  |       await expect(page.getByRole('heading', { name: 'Transforming Ideas into Digital Reality' })).toBeVisible();
+  54  |       await expect(page.getByText(/We build scalable, high-performance software solutions/)).toBeVisible();
+  55  |       await expect(page.getByRole('link', { name: 'Get Started', exact: true })).toBeVisible();
+  56  |       await expect(page.getByRole('button', { name: 'Contact Us', exact: true })).toBeVisible();
+  57  |     });
+  58  | 
+  59  |     test('should display key statistics in hero section', async () => {
+  60  |       await expect(page.getByText('100+ Projects Delivered')).toBeVisible();
+  61  |       await expect(page.getByText('50+ Global Clients')).toBeVisible();
+  62  |       await expect(page.getByText('99.9% Uptime Guarantee')).toBeVisible();
+  63  |       await expect(page.getByText('2x ROI Average')).toBeVisible();
+  64  |     });
+  65  |   });
+  66  | 
+  67  |   test.describe('About Section (#about)', () => {
+  68  |     test('should display about section content and mission/vision statements', async () => {
+  69  |       await page.goto(BASE_URL + '#about');
+  70  |       await page.waitForLoadState('networkidle');
+  71  | 
+  72  |       await expect(page.getByRole('heading', { name: 'About Us' })).toBeVisible();
+  73  |       await expect(page.getByRole('heading', { name: 'Discover PulsarX' })).toBeVisible();
+  74  |       await expect(page.getByRole('heading', { name: 'Our Story' })).toBeVisible();
+  75  |       await expect(page.getByText(/Founded with a passion for innovation/)).toBeVisible();
+  76  |       await expect(page.getByRole('heading', { name: 'Our Mission' })).toBeVisible();
+  77  |       await expect(page.getByText(/To empower businesses with cutting-edge digital solutions/)).toBeVisible();
+  78  |       await expect(page.getByRole('heading', { name: 'Our Vision' })).toBeVisible();
+  79  |       await expect(page.getByText(/To be a leading digital partner, recognized for our creativity/)).toBeVisible();
+  80  |       await expect(page.getByRole('link', { name: 'Learn More About Us' })).toBeVisible();
+  81  |       await expect(page.getByRole('link', { name: 'Learn More About Us' })).toHaveAttribute('href', 'https://www.linkedin.com/in/malik-ahmad-rasheed-3768902a9/');
+  82  |     });
+  83  | 
+  84  |     test('should display about section statistics', async () => {
+> 85  |       await expect(page.getByText('500+ Happy Clients')).toBeVisible();
+      |                                                          ^ Error: expect(locator).toBeVisible() failed
+  86  |       await expect(page.getByText('1000+ Projects Completed')).toBeVisible();
+  87  |       await expect(page.getByText('98% Success Rate')).toBeVisible();
+  88  |       await expect(page.getByText('5+ Years Experience')).toBeVisible();
+  89  |     });
+  90  |   });
+  91  | 
+  92  |   test.describe('Services Section (#services)', () => {
+  93  |     test('should display services section heading and service cards', async () => {
+  94  |       await page.goto(BASE_URL + '#services');
+  95  |       await page.waitForLoadState('networkidle');
+  96  | 
+  97  |       await expect(page.getByRole('heading', { name: 'Our Services' })).toBeVisible();
+  98  |       await expect(page.getByRole('heading', { name: 'Web Development' })).toBeVisible();
+  99  |       await expect(page.getByRole('heading', { name: 'App Development' })).toBeVisible();
+  100 |       await expect(page.getByRole('heading', { name: 'UI/UX Design' })).toBeVisible();
+  101 |       await expect(page.getByRole('heading', { name: 'Digital Strategy' })).toBeVisible();
+  102 |       await expect(page.getByRole('heading', { name: 'AI Solutions' })).toBeVisible();
+  103 |       await expect(page.getByRole('heading', { name: 'Consultancy' })).toBeVisible();
+  104 |       await expect(page.locator('section').filter({ hasText: 'Need a custom solution? We\'re here to help.Get in Touch' }).getByRole('button', { name: 'Get in Touch' })).toBeVisible();
+  105 |     });
+  106 | 
+  107 |     test('should display features for "Web Development" service', async () => {
+  108 |       await page.goto(BASE_URL + '#services');
+  109 |       await page.waitForLoadState('networkidle');
+  110 | 
+  111 |       const webDevCard = page.locator('div').filter({ hasText: /^Web DevelopmentCrafting responsive, high-performance websites tailored to your business needs/ }).first();
+  112 |       await expect(webDevCard.getByText('Responsive Design')).toBeVisible();
+  113 |       await expect(webDevCard.getByText('Fast Performance')).toBeVisible();
+  114 |       await expect(webDevCard.getByText('SEO Optimized')).toBeVisible();
+  115 |       await expect(webDevCard.getByRole('button', { name: 'Learn More' })).toBeVisible();
+  116 |     });
+  117 |   });
+  118 | 
+  119 |   test.describe('Projects Section (#projects)', () => {
+  120 |     test('should display projects section heading and project cards', async () => {
+  121 |       await page.goto(BASE_URL + '#projects');
+  122 |       await page.waitForLoadState('networkidle');
+  123 | 
+  124 |       await expect(page.getByRole('heading', { name: 'Featured Masterpieces' })).toBeVisible();
+  125 |       await expect(page.getByText('Explore a selection of our most impactful projects, where innovation meets execution.')).toBeVisible();
+  126 |       await expect(page.getByRole('heading', { name: 'Nebula Dashboard' })).toBeVisible();
+  127 |       await expect(page.getByRole('heading', { name: 'Quantum Commerce' })).toBeVisible();
+  128 |       await expect(page.getByRole('heading', { name: 'Cyber Sentinel' })).toBeVisible();
+  129 |       await expect(page.getByRole('link', { name: 'View Case Study' }).first()).toBeVisible();
+  130 |     });
+  131 |   });
+  132 | 
+  133 |   test.describe('Testimonials Section (#testimonials)', () => {
+  134 |     test('should display testimonials section heading and at least one testimonial', async () => {
+  135 |       await page.goto(BASE_URL + '#testimonials');
+  136 |       await page.waitForLoadState('networkidle');
+  137 | 
+  138 |       await expect(page.getByRole('heading', { name: 'Trusted by Visionaries' })).toBeVisible();
+  139 |       await expect(page.getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”')).toBeVisible();
+  140 |       await expect(page.getByText('Faraz Ali')).toBeVisible();
+  141 |       await expect(page.getByText('CEO, Innovatech')).toBeVisible();
+  142 |     });
+  143 |   });
+  144 | 
+  145 |   test.describe('Contact Section (#contact)', () => {
+  146 |     test('should display contact form with input fields and submit button', async () => {
+  147 |       await page.goto(BASE_URL + '#contact');
+  148 |       await page.waitForLoadState('networkidle');
+  149 | 
+  150 |       await expect(page.getByRole('heading', { name: 'Get In Touch' })).toBeVisible();
+  151 |       await expect(page.getByRole('heading', { name: 'Send us a message' })).toBeVisible();
+  152 | 
+  153 |       const fullNameInput = page.getByLabel('Full Name');
+  154 |       await expect(fullNameInput).toBeVisible();
+  155 |       await expect(fullNameInput).toHaveAttribute('placeholder', 'John Doe');
+  156 |       await expect(fullNameInput).toHaveAttribute('required', '');
+  157 | 
+  158 |       const emailInput = page.getByLabel('Email Address');
+  159 |       await expect(emailInput).toBeVisible();
+  160 |       await expect(emailInput).toHaveAttribute('placeholder', 'john@example.com');
+  161 |       await expect(emailInput).toHaveAttribute('required', '');
+  162 | 
+  163 |       const messageTextarea = page.getByLabel('Message');
+  164 |       await expect(messageTextarea).toBeVisible();
+  165 |       await expect(messageTextarea).toHaveAttribute('placeholder', 'Tell us about your project...');
+  166 |       await expect(messageTextarea).toHaveAttribute('required', '');
+  167 | 
+  168 |       await expect(page.getByRole('button', { name: 'Send Message' })).toBeVisible();
+  169 |     });
+  170 | 
+  171 |     test('should display "Book a Call" section with a link', async () => {
+  172 |       await page.goto(BASE_URL + '#contact');
+  173 |       await page.waitForLoadState('networkidle');
+  174 | 
+  175 |       await expect(page.getByRole('heading', { name: 'Book a Call' })).toBeVisible();
+  176 |       await expect(page.getByText(/Prefer to talk directly\? Schedule a free 15-minute consultation with our experts\./)).toBeVisible();
+  177 |       const scheduleMeetingLink = page.getByRole('link', { name: 'Schedule Meeting' });
+  178 |       await expect(scheduleMeetingLink).toBeVisible();
+  179 |       await expect(scheduleMeetingLink).toHaveAttribute('href', 'https://calendly.com/');
+  180 |     });
+  181 | 
+  182 |     test('should display "Contact Info" and "Quick Info"', async () => {
+  183 |       await page.goto(BASE_URL + '#contact');
+  184 |       await page.waitForLoadState('networkidle');
   185 | 
-  186 |     // Quantum Commerce
-  187 |     await expect(page.getByRole('heading', { name: 'Quantum Commerce' })).toBeVisible();
-  188 |     await expect(page.getByText('Next-generation e-commerce platform with AI-driven product recommendations')).toBeVisible();
-  189 |     await expect(page.getByText('TypeScript')).toBeVisible();
-  190 |     await expect(page.getByText('Node.js')).toBeVisible();
-  191 |     await expect(page.getByText('GraphQL')).toBeVisible();
-  192 |     await expect(page.getByText('Stripe')).toBeVisible();
-  193 | 
-  194 |     // Cyber Sentinel
-  195 |     await expect(page.getByRole('heading', { name: 'Cyber Sentinel' })).toBeVisible();
-  196 |     await expect(page.getByText('AI-powered cybersecurity threat detection system.')).toBeVisible();
-  197 |     await expect(page.getByText('Python')).toBeVisible();
-  198 |     await expect(page.getByText('TensorFlow')).toBeVisible();
-  199 |     await expect(page.getByText('FastAPI')).toBeVisible();
-  200 |     await expect(page.getByText('Docker')).toBeVisible();
-  201 |   });
-  202 | 
-  203 |   test('should display testimonials in the testimonials section', async () => {
-  204 |     // Navigate to Testimonials section using the desktop navigation link
-  205 |     await page.getByRole('navigation').getByRole('link', { name: 'Testimonials', exact: true }).click();
-  206 |     await page.waitForLoadState('networkidle');
-  207 | 
-  208 |     await expect(page.getByRole('heading', { name: 'Trusted by Visionaries' })).toBeVisible();
-  209 |     // Check for specific testimonial text and author
-  210 |     await expect(page.getByText('“PulsarX transformed our online presence. Their team is professional, creative, and delivered beyond our expectations!”')).toBeVisible();
-  211 |     await expect(page.getByText('Faraz Ali')).toBeVisible();
-  212 |     await expect(page.getByText('CEO, Innovatech')).toBeVisible();
-  213 | 
-  214 |     // Since it's a marquee, check for other testimonials to ensure content is loaded.
-  215 |     await expect(page.getByText('“The app they developed for us is fantastic. User-friendly, robust, and has significantly improved our customer engagement.”')).toBeVisible();
-  216 |     await expect(page.getByText('John Smith')).toBeVisible();
-  217 |   });
-  218 | 
-  219 |   test('should display contact form fields and submission button', async () => {
-  220 |     // Navigate to Contact section using the desktop navigation link
-  221 |     await page.getByRole('navigation').getByRole('link', { name: 'Contact', exact: true }).click();
-  222 |     await page.waitForLoadState('networkidle');
-  223 | 
-  224 |     await expect(page.getByRole('heading', { name: 'Send us a message' })).toBeVisible();
-  225 |     const nameInput = page.getByLabel('Full Name');
-  226 |     const emailInput = page.getByLabel('Email Address');
-  227 |     const messageTextarea = page.getByLabel('Message');
-  228 |     const sendMessageButton = page.getByRole('button', { name: 'Send Message' });
-  229 | 
-  230 |     await expect(nameInput).toBeVisible();
-  231 |     await expect(nameInput).toHaveAttribute('placeholder', 'John Doe');
-  232 |     await expect(nameInput).toHaveAttribute('required', '');
-  233 | 
-  234 |     await expect(emailInput).toBeVisible();
-  235 |     await expect(emailInput).toHaveAttribute('placeholder', 'john@example.com');
-  236 |     await expect(emailInput).toHaveAttribute('required', '');
-  237 |     await expect(emailInput).toHaveAttribute('type', 'email');
-  238 | 
-  239 |     await expect(messageTextarea).toBeVisible();
-  240 |     await expect(messageTextarea).toHaveAttribute('placeholder', 'Tell us about your project...');
-  241 |     await expect(messageTextarea).toHaveAttribute('required', '');
-  242 | 
-  243 |     await expect(sendMessageButton).toBeVisible();
-  244 |   });
-  245 | 
-  246 |   test('should display Book a Call section with external link', async () => {
-  247 |     // Navigate to Contact section using the desktop navigation link
-  248 |     await page.getByRole('navigation').getByRole('link', { name: 'Contact', exact: true }).click();
-  249 |     await page.waitForLoadState('networkidle');
-  250 | 
-  251 |     await expect(page.getByRole('heading', { name: 'Book a Call' })).toBeVisible();
-  252 |     await expect(page.getByText('Prefer to talk directly? Schedule a free 15-minute consultation with our experts.')).toBeVisible();
-  253 |     const scheduleMeetingButton = page.getByRole('link', { name: 'Schedule Meeting' });
-  254 |     await expect(scheduleMeetingButton).toBeVisible();
-  255 |     await expect(scheduleMeetingButton).toHaveAttribute('href', 'https://calendly.com/');
-  256 |     await expect(scheduleMeetingButton).toHaveAttribute('target', '_blank');
-  257 |   });
-  258 | 
-  259 |   test('should display contact information and quick info', async () => {
-  260 |     // Navigate to Contact section using the desktop navigation link
-  261 |     await page.getByRole('navigation').getByRole('link', { name: 'Contact', exact: true }).click();
-  262 |     await page.waitForLoadState('networkidle');
-  263 | 
-> 264 |     await expect(page.getByRole('heading', { name: 'Contact Info' })).toBeVisible();
-      |                                                                       ^ Error: expect(locator).toBeVisible() failed
-  265 |     const emailLink = page.getByRole('link', { name: 'pulsarx.inc@gmail.com' });
-  266 |     await expect(emailLink).toBeVisible();
-  267 |     await expect(emailLink).toHaveAttribute('href', 'mailto:pulsarx.inc@gmail.com');
-  268 | 
-  269 |     const phoneLink = page.getByRole('link', { name: '+92 304 7058585' });
-  270 |     await expect(phoneLink).toBeVisible();
-  271 |     await expect(phoneLink).toHaveAttribute('href', 'tel:+923047058585');
-  272 | 
-  273 |     await expect(page.getByText('Street 55 I8/3 Islamabad, Pakistan, WEB 40404')).toBeVisible();
-  274 | 
-  275 |     await expect(page.getByRole('heading', { name: 'Quick Info' })).toBeVisible();
-  276 |     await expect(page.getByText('< 24 hours')).toBeVisible();
-  277 |     await expect(page.getByText('PKT (UTC+5)')).toBeVisible();
-  278 |     await expect(page.getByText('English, Urdu')).toBeVisible();
-  279 |   });
-  280 | 
-  281 |   test('should display social media links in contact section', async () => {
-  282 |     // Navigate to Contact section using the desktop navigation link
-  283 |     await page.getByRole('navigation').getByRole('link', { name: 'Contact', exact: true }).click();
-  284 |     await page.waitForLoadState('networkidle');
-  285 | 
-  286 |     await expect(page.getByRole('heading', { name: 'Follow Us' }).first()).toBeVisible(); // First to differentiate from footer
-  287 |     const linkedInLink = page.locator('a[aria-label="LinkedIn"]').first();
-  288 |     await expect(linkedInLink).toBeVisible();
-  289 |     await expect(linkedInLink).toHaveAttribute('href', 'https://www.linkedin.com/in/malik-ahmad-rasheed-3768902a9/');
-  290 | 
-  291 |     const twitterLink = page.locator('a[aria-label="Twitter"]').first();
-  292 |     await expect(twitterLink).toBeVisible();
-  293 |     await expect(twitterLink).toHaveAttribute('href', 'https://x.com/');
-  294 | 
-  295 |     const gitHubLink = page.locator('a[aria-label="GitHub"]').first();
-  296 |     await expect(gitHubLink).toBeVisible();
-  297 |     await expect(gitHubLink).toHaveAttribute('href', 'https://github.com/ahmaddii');
-  298 | 
-  299 |     const emailSocialLink = page.locator('a[aria-label="Email"]').first();
-  300 |     await expect(emailSocialLink).toBeVisible();
-  301 |     await expect(emailSocialLink).toHaveAttribute('href', 'mailto:contact@pulsarx.com');
-  302 |   });
-  303 | 
-  304 |   test('should display footer content, links, and newsletter subscription', async () => {
-  305 |     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight)); // Scroll to bottom
-  306 |     await page.waitForLoadState('networkidle');
-  307 | 
-  308 |     await expect(page.getByRole('link', { name: 'PulsarX' }).last()).toBeVisible(); // Footer logo
-  309 |     await expect(page.getByText('Illuminating the digital universe with innovative solutions. We transform visions into reality through cutting-edge technology and creative excellence.')).toBeVisible();
-  310 |     await expect(page.getByText('Crafting digital excellence since 2024')).toBeVisible();
-  311 | 
-  312 |     // Quick Links in footer
-  313 |     await expect(page.getByRole('heading', { name: 'Quick Links' })).toBeVisible();
-  314 |     await expect(page.locator('footer').getByRole('link', { name: 'Home' })).toBeVisible();
-  315 |     await expect(page.locator('footer').getByRole('link', { name: 'About Us' })).toBeVisible();
-  316 |     await expect(page.locator('footer').getByRole('link', { name: 'Services' })).toBeVisible();
-  317 |     await expect(page.locator('footer').getByRole('link', { name: 'Portfolio' })).toBeVisible();
-  318 |     await expect(page.locator('footer').getByRole('link', { name: 'Contact' }).last()).toBeVisible(); // Last contact link in footer
-  319 | 
-  320 |     // Services links in footer
-  321 |     await expect(page.getByRole('heading', { name: 'Services' }).last()).toBeVisible(); // Last Services heading
-  322 |     await expect(page.getByRole('link', { name: 'Web Development', exact: true }).last()).toBeVisible();
-  323 |     await expect(page.getByRole('link', { name: 'App Development', exact: true }).last()).toBeVisible();
-  324 |     await expect(page.getByRole('link', { name: 'UI/UX Design', exact: true }).last()).toBeVisible();
-  325 |     await expect(page.getByRole('link', { name: 'Consulting', exact: true }).last()).toBeVisible();
-  326 | 
-  327 |     // Get In Touch in footer
-  328 |     await expect(page.getByRole('heading', { name: 'Get In Touch' }).last()).toBeVisible();
-  329 |     await expect(page.getByText('Islamabad, Punjab, PK')).toBeVisible();
-  330 |     await expect(page.locator('footer').getByText('+92 304 7058585')).toBeVisible();
-  331 |     await expect(page.locator('footer').getByText('pulsarx.inc@gmail.com')).toBeVisible();
-  332 | 
-  333 |     // Social media links in footer
-  334 |     await expect(page.getByText('Follow us on social media')).toBeVisible();
-  335 |     await expect(page.locator('footer a[aria-label="LinkedIn"]')).toBeVisible();
-  336 |     await expect(page.locator('footer a[aria-label="Twitter"]')).toBeVisible();
-  337 |     await expect(page.locator('footer a[aria-label="GitHub"]')).toBeVisible();
-  338 |     await expect(page.locator('footer a[aria-label="Email"]')).toBeVisible(); // Email icon in footer
-  339 | 
-  340 |     // Newsletter Subscription
-  341 |     await expect(page.getByRole('heading', { name: 'Stay Updated' })).toBeVisible();
-  342 |     await expect(page.getByText('Subscribe to our newsletter for the latest updates and insights')).toBeVisible();
-  343 |     const emailInput = page.getByPlaceholder('Enter your email');
-  344 |     await expect(emailInput).toBeVisible();
-  345 |     await expect(emailInput).toHaveAttribute('type', 'email');
-  346 |     await expect(page.getByRole('button', { name: 'Subscribe' })).toBeVisible();
-  347 | 
-  348 |     // Copyright and policy links
-  349 |     await expect(page.getByText('© 2026 PulsarX. All rights reserved to Pakistan 🇵🇰')).toBeVisible();
-  350 |     await expect(page.getByRole('link', { name: 'Privacy Policy' })).toBeVisible();
-  351 |     await expect(page.getByRole('link', { name: 'Terms of Service' })).toBeVisible();
-  352 |     await expect(page.getByRole('link', { name: 'Cookies' })).toBeVisible();
-  353 |   });
-  354 | 
-  355 |   test('Back to top button should appear on scroll and be clickable', async () => {
-  356 |     // Check it's initially hidden
-  357 |     const backToTopButton = page.getByRole('button', { name: 'Back to top' });
-  358 |     await expect(backToTopButton).toBeHidden();
-  359 | 
-  360 |     // Scroll down to make it visible
-  361 |     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-  362 |     await page.waitForLoadState('networkidle');
-  363 |     await expect(backToTopButton).toBeVisible(); // It will become visible after scrolling
-  364 | 
 ```
