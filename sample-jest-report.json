@@ -1,0 +1,47 @@
+{
+  "numFailedTests": 1,
+  "numPassedTests": 3,
+  "numTotalTests": 4,
+  "testResults": [
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": [
+            "Authentication Service"
+          ],
+          "title": "Should successfully log in with valid credentials",
+          "status": "passed",
+          "duration": 142
+        },
+        {
+          "ancestorTitles": [
+            "Authentication Service"
+          ],
+          "title": "Should reject expired JWT tokens",
+          "status": "failed",
+          "duration": 432,
+          "failureMessages": [
+            "Expected 401 but got 200"
+          ]
+        },
+        {
+          "ancestorTitles": [
+            "Shopping Cart Logic"
+          ],
+          "title": "Should accurately calculate total price with tax",
+          "status": "passed",
+          "duration": 58
+        },
+        {
+          "ancestorTitles": [
+            "Shopping Cart Logic"
+          ],
+          "title": "Should apply discount codes correctly",
+          "status": "passed",
+          "duration": 105
+        }
+      ],
+      "name": "/tests/auth-cart.spec.js"
+    }
+  ]
+}

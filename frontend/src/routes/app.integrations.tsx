@@ -21,6 +21,10 @@ export const Route = createFileRoute("/app/integrations")({
 function IntegrationsPage() {
   const { projects, fetchData, user, billing } = useApp();
   const [isSlackDialogOpen, setIsSlackDialogOpen] = useState(false);
+  const [selectedProjectId, setSelectedProjectId] = useState<string>("");
+  const [webhookUrl, setWebhookUrl] = useState<string>("");
+  const [isSaving, setIsSaving] = useState(false);
+
   const handleOpenSlack = () => {
     setIsSlackDialogOpen(true);
   };
@@ -67,8 +71,8 @@ function IntegrationsPage() {
       description: 'Send real-time QA notifications to your team channels.',
       icon: <img src="/integrations/slack.png" alt="Slack" className="h-8 w-8 object-contain" />,
       status: hasSlack ? 'Active' : 'Not Connected',
-      statusColor: hasSlack 
-        ? 'text-green-500 bg-green-500/10 border-green-500/20' 
+      statusColor: hasSlack
+        ? 'text-green-500 bg-green-500/10 border-green-500/20'
         : 'text-slate-400 bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/10',
       action: hasSlack ? 'Configure' : 'Connect'
     },
@@ -115,9 +119,9 @@ function IntegrationsPage() {
                 <span className="text-[10px] font-bold text-slate-400 dark:text-white/20 uppercase tracking-widest">
                   {item.id === 'slack' && projects.some(p => p.slack_webhook_url) ? 'ACTIVE' : 'NOT CONNECTED'}
                 </span>
-                <Button 
-                  variant={item.status === 'Active' || (item.id === 'slack') ? "secondary" : "outline"} 
-                  size="sm" 
+                <Button
+                  variant={item.status === 'Active' || (item.id === 'slack') ? "secondary" : "outline"}
+                  size="sm"
                   disabled={item.status === 'Coming Soon' && item.id !== 'slack'}
                   onClick={item.id === 'slack' ? handleOpenSlack : undefined}
                   className={`rounded-full px-6 font-semibold ${item.status === 'Active' || item.id === 'slack' ? 'bg-primary/10 text-primary border-primary/20 hover:bg-primary/20' : 'border-slate-200 dark:border-white/10'}`}
@@ -183,7 +187,7 @@ function IntegrationsPage() {
 
             <div className="space-y-2">
               <Label className="text-sm font-semibold text-slate-600 dark:text-white/70">Slack Webhook URL</Label>
-              <Input 
+              <Input
                 value={webhookUrl}
                 onChange={(e) => setWebhookUrl(e.target.value)}
                 placeholder="https://hooks.slack.com/services/..."
@@ -197,8 +201,8 @@ function IntegrationsPage() {
 
           <DialogFooter>
             <Button variant="ghost" onClick={() => setIsSlackDialogOpen(false)} className="rounded-full">Cancel</Button>
-            <Button 
-              onClick={saveSlackConfig} 
+            <Button
+              onClick={saveSlackConfig}
               disabled={isSaving || !selectedProjectId}
               className="gradient-bg text-primary-foreground rounded-full shadow-none px-8"
             >
@@ -214,8 +218,8 @@ function IntegrationsPage() {
       <div className="rounded-3xl border border-dashed border-slate-200 dark:border-white/10 p-8 text-center bg-slate-50/50 dark:bg-white/[0.02] relative z-10 overflow-hidden">
         <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2 relative z-10">Missing an integration?</h3>
         <p className="text-sm text-slate-500 dark:text-white/50 mb-6 relative z-10">Let us know which tools your team uses and we'll prioritize building them.</p>
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           className="text-primary hover:text-primary hover:bg-primary/10 rounded-full font-bold relative z-10"
           onClick={() => {
             const subject = encodeURIComponent(`Integration Request from ${user?.name || user?.email}`);

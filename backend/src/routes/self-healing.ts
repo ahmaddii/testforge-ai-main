@@ -151,6 +151,78 @@ router.post('/scan', authenticate, async (req: Request, res: Response) => {
 });
 
 /**
+ * POST /self-healing/webhook
+ * Public endpoint to simulate a CI/CD Webhook for failed tests.
+ */
+router.post('/webhook', async (req: Request, res: Response) => {
+  const { projectId } = req.query;
+  const project_id = typeof projectId === 'string' ? projectId : undefined;
+  
+  const { branch, commitSha, workflowName, actor } = req.body;
+
+  let owner = "malikahmadrasheed";
+  let repo = "testforge-ai-main";
+  let contextStr = "";
+  let ownerId = null;
+
+  if (project_id) {
+    const { data: pData } = await supabase.from('projects').select('*').eq('id', project_id).single();
+    if (pData?.repo_url) {
+      const parsed = GitHubService.parseUrl(pData.repo_url);
+      if (parsed) {
+        owner = parsed.owner;
+        repo = parsed.repo;
+        contextStr = await GitHubService.getProjectContext(owner, repo).catch(() => "");
+      }
+      ownerId = pData.user_id;
+    }
+  }
+
+  const suggestions = await ASTHealingService.scanProjectDOM(owner, repo, contextStr);
+
+  if (!suggestions || suggestions.length === 0) {
+    return res.status(200).json({ status: "No drift detected." });
+  }
+
+  const newScanJobs = suggestions.map((s, idx) => ({
+    id: `webhook-heal-${Date.now()}-${idx}`,
+    project_id: project_id || "proj-1",
+    user_id: ownerId || "demo-user",
+    test_case_id: `tc-webhook-${Date.now()}-${idx}`,
+    test_case_title: s.test_case_title,
+    status: "Pending Approval",
+    confidence: s.confidence,
+    broken_selector: s.broken_selector,
+    healed_selector: s.healed_selector,
+    dom_diff_snippet: s.dom_diff_snippet,
+    branch: branch || "main",
+    commit_sha: commitSha || "a1b2c3d",
+    workflow_name: workflowName || "CI Pipeline",
+    actor: actor || "github-actions",
+    created_at: new Date(Date.now() - idx * 60000).toISOString()
+  }));
+
+  console.log(`[Webhook] Preparing to insert jobs for project_id: ${project_id}, ownerId: ${ownerId}`);
+  console.log(`[Webhook] newScanJobs before insertion:`, JSON.stringify(newScanJobs, null, 2));
+
+  const { data, error } = await supabase
+    .from('self_healing_jobs')
+    .insert(newScanJobs)
+    .select();
+
+  if (error) {
+    console.error(`[Webhook] Supabase insert failed:`, JSON.stringify(error, null, 2));
+    const existing = getFallbackJobs();
+    const updated = [...newScanJobs, ...existing];
+    saveFallbackJobs(updated);
+  } else {
+    console.log(`[Webhook] Supabase insert succeeded. Inserted data:`, JSON.stringify(data, null, 2));
+  }
+
+  res.status(201).json({ status: "Webhook processed, healing jobs created.", jobs: data || newScanJobs });
+});
+
+/**
  * PATCH /self-healing/:id/apply
  */
 router.patch('/:id/apply', authenticate, async (req: Request, res: Response) => {

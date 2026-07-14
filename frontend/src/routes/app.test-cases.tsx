@@ -72,7 +72,7 @@ function TestCasesPage() {
   };
 
   const projectRequirements = useMemo(() => 
-    requirements.filter(r => r.project_id === project_id), 
+    project_id === "all" ? requirements : requirements.filter(r => r.project_id === project_id), 
     [requirements, project_id]
   );
 
@@ -212,7 +212,10 @@ function TestCasesPage() {
           <p className="text-slate-500 dark:text-white/50 text-sm md:text-base">AI-generated, editable, exportable test plans for your repository.</p>
         </div>
         <div className="flex items-center gap-3">
-          <Select value={project_id} onValueChange={setProjectId}>
+          <Select value={project_id} onValueChange={(val) => {
+            setProjectId(val);
+            setTargetReqId("all");
+          }}>
             <SelectTrigger className="w-40 sm:w-48 h-10 bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-900 dark:text-white rounded-full focus:ring-primary/20">
               <SelectValue placeholder="Select project" />
             </SelectTrigger>

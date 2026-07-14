@@ -50,14 +50,26 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
     const fallback = getFallbackDefects();
     return res.json(fallback);
   }
-  res.json(data || []);
+
+  const processedData = (data || []).map((d: any) => {
+    let reqId = null;
+    let desc = d.description || '';
+    const reqMatch = desc.match(/<!--REQ:(.*?)-->/);
+    if (reqMatch) {
+      reqId = reqMatch[1];
+      desc = desc.replace(reqMatch[0], '').trim();
+    }
+    return { ...d, requirement_id: reqId, description: desc };
+  });
+
+  res.json(processedData);
 });
 
 /**
  * POST /defects
  */
 router.post('/', authenticate, async (req: Request, res: Response) => {
-  const { test_case_id, title, description, severity, status } = req.body;
+  const { test_case_id, requirement_id, title, description, severity, status } = req.body;
   let ownerId = await getPrimaryOwnerId(req.user!.id);
   let validProjectId = req.body.project_id;
   if (validProjectId) {
@@ -69,11 +81,16 @@ router.post('/', authenticate, async (req: Request, res: Response) => {
     }
   }
 
+  let finalDesc = description || '';
+  if (requirement_id) {
+    finalDesc += `\n\n<!--REQ:${requirement_id}-->`;
+  }
+
   const newDefect = { 
     project_id: validProjectId, 
     test_case_id: test_case_id || null, 
     title: title || 'New Defect', 
-    description: description || '', 
+    description: finalDesc, 
     severity: severity || 'Major', 
     status: status || 'Open',
     user_id: ownerId,
@@ -94,7 +111,15 @@ router.post('/', authenticate, async (req: Request, res: Response) => {
     return res.status(201).json(created);
   }
   
-  res.status(201).json(data);
+  let resultReqId = null;
+  let resultDesc = data.description || '';
+  const reqMatch = resultDesc.match(/<!--REQ:(.*?)-->/);
+  if (reqMatch) {
+    resultReqId = reqMatch[1];
+    resultDesc = resultDesc.replace(reqMatch[0], '').trim();
+  }
+  
+  res.status(201).json({ ...data, requirement_id: resultReqId, description: resultDesc });
 
   // Background notification
   if (validProjectId) {

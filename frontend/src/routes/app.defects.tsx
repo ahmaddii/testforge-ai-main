@@ -22,7 +22,7 @@ export const Route = createFileRoute("/app/defects")({
 });
 
 function DefectsPage() {
-  const { defects, projects, fetchData, loading } = useApp();
+  const { defects, projects, requirements, testCases, fetchData, loading } = useApp();
   const [projectId, setProjectId] = useState("all");
   const [q, setQ] = useState("");
   const [severityFilter, setSeverityFilter] = useState("all");
@@ -32,6 +32,8 @@ function DefectsPage() {
   const [viewingDefect, setViewingDefect] = useState<Defect | null>(null);
   const [newDefect, setNewDefect] = useState({
     project_id: "",
+    requirement_id: "none",
+    test_case_id: "none",
     title: "",
     description: "",
     severity: "Major" as const,
@@ -60,10 +62,14 @@ function DefectsPage() {
     if (!newDefect.title || !newDefect.project_id) return toast.error("Please fill in required fields");
     setSubmitting(true);
     try {
-      await api.post("/defects", newDefect);
+      const payload: any = { ...newDefect };
+      if (payload.requirement_id === "none") delete payload.requirement_id;
+      if (payload.test_case_id === "none") delete payload.test_case_id;
+
+      await api.post("/defects", payload);
       toast.success("Defect logged successfully");
       setIsCreateOpen(false);
-      setNewDefect({ project_id: projects[0]?.id || "", title: "", description: "", severity: "Major" });
+      setNewDefect({ project_id: projects[0]?.id || "", requirement_id: "none", test_case_id: "none", title: "", description: "", severity: "Major" });
       await fetchData();
     } catch (err) {
       toast.error("Failed to log defect");
@@ -134,7 +140,7 @@ function DefectsPage() {
                 <Plus className="mr-2 h-4 w-4" /> Create Defect
               </Button>
             </DialogTrigger>
-            <DialogContent className="bg-[#14120B] border-white/10 text-white sm:max-w-[500px]">
+            <DialogContent className="bg-[#14120B] border-white/10 text-white sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle className="text-2xl font-bold flex items-center gap-2">
                   <Bug className="text-primary h-6 w-6" /> Log New Defect
@@ -160,6 +166,34 @@ function DefectsPage() {
                     value={newDefect.title}
                     onChange={(e) => setNewDefect({...newDefect, title: e.target.value})}
                   />
+                </div>
+                <div className="space-y-2">
+                  <Label>Related Requirement</Label>
+                  <Select value={newDefect.requirement_id} onValueChange={(v) => setNewDefect({...newDefect, requirement_id: v})}>
+                    <SelectTrigger className="bg-white/5 border-white/10 text-white">
+                      <SelectValue placeholder="Select Requirement (Optional)" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-[#14120B] border-white/10 text-white max-h-60">
+                      <SelectItem value="none">None (Optional)</SelectItem>
+                      {requirements.filter(r => r.project_id === newDefect.project_id).map(r => (
+                        <SelectItem key={r.id} value={r.id}>{r.title}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Failed Test Case</Label>
+                  <Select value={newDefect.test_case_id} onValueChange={(v) => setNewDefect({...newDefect, test_case_id: v})}>
+                    <SelectTrigger className="bg-white/5 border-white/10 text-white">
+                      <SelectValue placeholder="Select Test Case (Optional)" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-[#14120B] border-white/10 text-white max-h-60">
+                      <SelectItem value="none">None (Optional)</SelectItem>
+                      {testCases.filter(t => t.project_id === newDefect.project_id).map(t => (
+                        <SelectItem key={t.id} value={t.id}>{t.title}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -344,6 +378,22 @@ function DefectsPage() {
                   <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Date Reported</div>
                   <div className="text-sm font-bold">{viewingDefect && new Date(viewingDefect.created_at).toLocaleDateString()}</div>
                </div>
+               {viewingDefect?.requirement_id && (
+                 <div className="p-4 rounded-2xl bg-white/5 border border-white/10 col-span-2">
+                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Related Requirement</div>
+                    <div className="text-sm font-bold text-primary truncate">
+                      {requirements.find(r => r.id === viewingDefect.requirement_id)?.title || 'Unknown Requirement'}
+                    </div>
+                 </div>
+               )}
+               {viewingDefect?.test_case_id && (
+                 <div className="p-4 rounded-2xl bg-white/5 border border-white/10 col-span-2">
+                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Failed Test Case</div>
+                    <div className="text-sm font-bold text-red-500 truncate">
+                      {testCases.find(t => t.id === viewingDefect.test_case_id)?.title || 'Unknown Test Case'}
+                    </div>
+                 </div>
+               )}
             </div>
 
             <div className="pt-8">

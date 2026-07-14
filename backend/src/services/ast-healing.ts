@@ -51,7 +51,7 @@ export class ASTHealingService {
         const text = result.response.text();
         const cleanJson = text.replace(/```json/g, '').replace(/```/g, '').trim();
         const parsed: SelfHealingSuggestion[] = JSON.parse(cleanJson);
-        if (Array.isArray(parsed)) {
+        if (Array.isArray(parsed) && parsed.length > 0) {
           return parsed;
         }
       } catch (err) {
@@ -69,7 +69,7 @@ export class ASTHealingService {
   private static parseLocalWorkspaceAST(): SelfHealingSuggestion[] {
     const suggestions: SelfHealingSuggestion[] = [];
     try {
-      const activeRoutesDir = path.resolve(__dirname, '../../../../src/routes');
+      const activeRoutesDir = path.resolve(__dirname, '../../../frontend/src/routes');
       if (fs.existsSync(activeRoutesDir)) {
         const files = fs.readdirSync(activeRoutesDir);
         for (const file of files) {

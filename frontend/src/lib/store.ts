@@ -32,6 +32,7 @@ export interface Project {
   description?: string;
   test_case_count?: number;
   slack_webhook_url?: string;
+  branch?: string;
 }
 
 export interface Requirement {
@@ -76,6 +77,7 @@ export interface Defect {
   project_id: string;
   user_id: string;
   test_case_id?: string;
+  requirement_id?: string;
   title: string;
   description: string;
   severity: "Critical" | "Major" | "Minor";
@@ -174,6 +176,10 @@ export interface SelfHealingJob {
   broken_selector: string;
   healed_selector: string;
   dom_diff_snippet: string;
+  commit_sha?: string;
+  branch?: string;
+  workflow_name?: string;
+  actor?: string;
   created_at: string;
 }
 
