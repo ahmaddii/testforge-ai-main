@@ -180,6 +180,9 @@ export interface SelfHealingJob {
   branch?: string;
   workflow_name?: string;
   actor?: string;
+  error_message?: string;
+  screenshot_url?: string;
+  trace_url?: string;
   created_at: string;
 }
 

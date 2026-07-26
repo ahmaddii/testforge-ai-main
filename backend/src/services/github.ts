@@ -15,6 +15,9 @@ export class GitHubService {
       'Accept': 'application/vnd.github.v3+json',
       'User-Agent': 'Speclane-AI-Assistant'
     };
+    if (process.env.GITHUB_TOKEN) {
+      headers['Authorization'] = `token ${process.env.GITHUB_TOKEN}`;
+    }
     return headers;
   }
 
@@ -23,8 +26,12 @@ export class GitHubService {
    */
   static parseUrl(url: string) {
     try {
-      const parts = url.replace('https://github.com/', '').split('/');
-      return { owner: parts[0], repo: parts[1].replace('.git', '') };
+      const cleanUrl = url.replace(/^https?:\/\/(www\.)?github\.com\//, '').replace(/\.git$/, '');
+      const parts = cleanUrl.split('/').filter(Boolean);
+      if (parts.length >= 2) {
+        return { owner: parts[0], repo: parts[1] };
+      }
+      return null;
     } catch (e) {
       return null;
     }

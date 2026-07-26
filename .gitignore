@@ -10,6 +10,7 @@ lerna-debug.log*
 # Root dependencies & build
 node_modules/
 dist/
+# cloudflared tunnel --url http://localhost:3001
 
 # Frontend dependencies & build
 frontend/node_modules/

@@ -25,7 +25,7 @@ function ProjectsPage() {
   const fetchData = useApp((s) => s.fetchData);
   const appLoading = useApp((s) => s.loading);
   const billing = useApp((s) => s.billing);
- 
+
   const projectLimit = billing?.plans?.find((p: any) => p.id === billing?.plan)?.limits?.projects ?? 1;
   const isLimitReached = projectLimit !== -1 && projects.length >= projectLimit;
   const [open, setOpen] = useState(false);
@@ -52,7 +52,7 @@ function ProjectsPage() {
     setWizardStep(3);
     setInstallProgress(0);
     setInstallStatus("Extracting engine...");
-    
+
     let progress = 0;
     const interval = setInterval(() => {
       progress += Math.floor(Math.random() * 15) + 5;
@@ -85,23 +85,23 @@ function ProjectsPage() {
     if (!name || !repo) return toast.error("Name and repo URL are required");
     setLoading(true);
     try {
-      const res = await api.post('/projects', { 
-        name, 
-        repo_url: repo, 
+      const res = await api.post('/projects', {
+        name,
+        repo_url: repo,
         description: desc,
-        status: "Active" 
+        status: "Active"
       });
       await api.post('/activity', {
         action: `Created new project workspace: ${name}`,
         category: 'Project',
         project_id: res?.id
-      }).catch(() => {});
+      }).catch(() => { });
       await api.post('/notifications', {
         title: "Project Workspace Created",
         message: `Successfully connected repository "${repo}" for automated QA.`,
         type: "success",
         project_id: res?.id
-      }).catch(() => {});
+      }).catch(() => { });
       toast.success("Project created");
       setName(""); setRepo(""); setDesc(""); setOpen(false);
       fetchData().catch(console.error);
@@ -170,18 +170,18 @@ function ProjectsPage() {
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight bg-gradient-to-br from-slate-900 to-slate-800 dark:from-white dark:to-white/60 bg-clip-text text-transparent mb-1">Projects</h1>
           <p className="text-slate-500 dark:text-white/50 text-sm md:text-base">Connect repositories and manage your QA workspaces.</p>
         </div>
-        
+
         {projects.length > 0 && (
           isLimitReached ? (
             <Link to="/app/billing">
               <Button className="gradient-bg text-primary-foreground border border-primary/50 relative group overflow-hidden h-10 px-6 rounded-full font-semibold shadow-none">
-                <Sparkles className="mr-2 h-4 w-4 relative z-10" /> 
+                <Sparkles className="mr-2 h-4 w-4 relative z-10" />
                 <span className="relative z-10">Upgrade to add projects</span>
               </Button>
             </Link>
           ) : (
             <Button onClick={() => setOpen(true)} className="gradient-bg text-primary-foreground border border-primary/50 relative group overflow-hidden h-10 px-6 rounded-full font-semibold hover:scale-[1.02] transition-transform shadow-none">
-              <Plus className="mr-2 h-4 w-4 relative z-10" /> 
+              <Plus className="mr-2 h-4 w-4 relative z-10" />
               <span className="relative z-10">New project</span>
             </Button>
           )
@@ -190,7 +190,7 @@ function ProjectsPage() {
 
       {projects.length === 0 ? (
         <div className="relative overflow-hidden rounded-3xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#14120B] p-16 text-center shadow-none relative z-10 flex flex-col items-center justify-center min-h-[400px]">
-          
+
           <div className="grid h-20 w-20 place-items-center rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-primary mb-6 shadow-none relative z-10">
             <FolderGit2 className="h-10 w-10" />
           </div>
@@ -199,7 +199,7 @@ function ProjectsPage() {
             Connect your first repository to start generating AI-powered test cases and mapping requirements.
           </p>
           <Button onClick={() => setOpen(true)} className="gradient-bg text-primary-foreground border border-primary/50 relative group overflow-hidden h-10 px-6 rounded-full font-semibold mt-6 shadow-none relative z-10 hover:scale-[1.02] transition-transform">
-            <Plus className="mr-2 h-4 w-4 relative z-10" /> 
+            <Plus className="mr-2 h-4 w-4 relative z-10" />
             <span className="relative z-10">Create your first project</span>
           </Button>
         </div>
@@ -208,17 +208,17 @@ function ProjectsPage() {
           {projects.map((p) => (
             <Link key={p.id} to="/app/projects/$projectId" params={{ projectId: p.id }} className="block h-full outline-none">
               <div className="group relative overflow-hidden rounded-3xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#14120B] p-6 shadow-none transition-all hover:-translate-y-1 flex flex-col h-full">
-                
+
                 <div className="flex items-start justify-between mb-6 relative z-10">
                   <div className="grid h-12 w-12 place-items-center rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white group-hover:bg-primary/10 group-hover:text-primary group-hover:border-primary/20 transition-colors">
                     <FolderGit2 className="h-6 w-6" />
                   </div>
                   {getStatusIndicator(p.status)}
                 </div>
-                
+
                 <div className="relative z-10 flex-1">
                   <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{p.name}</h3>
-                  
+
                   <div className="inline-flex items-center gap-2 px-2 py-1 rounded border border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-white/5 text-[11px] font-mono text-slate-400 dark:text-white/40 group-hover:text-slate-600 dark:group-hover:text-white/60 transition-colors mb-6 max-w-full">
                     <Github className="h-3 w-3 shrink-0" />
                     <span className="truncate">{p.repo_url.replace('https://github.com/', '').replace('http://github.com/', '')}</span>
@@ -252,28 +252,28 @@ function ProjectsPage() {
           <div className="space-y-4 py-2">
             <div className="space-y-2">
               <Label className="text-slate-600 dark:text-white/70 font-medium">Project Name</Label>
-              <Input 
-                value={name} 
-                onChange={(e) => setName(e.target.value)} 
-                placeholder="e.g. Checkout Service" 
+              <Input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="e.g. Checkout Service"
                 className="bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:border-primary focus:ring-primary/20 placeholder:text-slate-300 dark:placeholder:text-white/20 h-11 rounded-xl"
               />
             </div>
             <div className="space-y-2">
               <Label className="text-slate-600 dark:text-white/70 font-medium">GitHub Repository URL</Label>
-              <Input 
-                value={repo} 
-                onChange={(e) => setRepo(e.target.value)} 
-                placeholder="https://github.com/org/repo" 
+              <Input
+                value={repo}
+                onChange={(e) => setRepo(e.target.value)}
+                placeholder="https://github.com/org/repo"
                 className="bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:border-primary focus:ring-primary/20 placeholder:text-slate-300 dark:placeholder:text-white/20 h-11 font-mono text-sm rounded-xl"
               />
             </div>
             <div className="space-y-2">
               <Label className="text-slate-600 dark:text-white/70 font-medium">Description (Optional)</Label>
-              <Textarea 
-                value={desc} 
-                onChange={(e) => setDesc(e.target.value)} 
-                rows={2} 
+              <Textarea
+                value={desc}
+                onChange={(e) => setDesc(e.target.value)}
+                rows={2}
                 className="bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:border-primary focus:ring-primary/20 placeholder:text-slate-300 dark:placeholder:text-white/20 resize-none rounded-xl"
                 placeholder="Brief context for the AI..."
               />
@@ -304,7 +304,7 @@ function ProjectsPage() {
                   <div className="text-primary font-bold text-lg tracking-wider flex items-center gap-2">
                     <FolderGit2 className="h-6 w-6 animate-pulse" /> SPECLANE
                   </div>
-                  
+
                   <nav className="space-y-4">
                     {[
                       { step: 1, label: "License Agreement" },
@@ -313,29 +313,27 @@ function ProjectsPage() {
                       { step: 4, label: "Finish Setup" }
                     ].map((s) => (
                       <div key={s.step} className="flex items-center gap-3 text-xs">
-                        <div className={`w-5 h-5 rounded-full flex items-center justify-center font-bold border transition-colors ${
-                          wizardStep === s.step 
-                            ? "bg-primary text-[#14120B] border-primary" 
-                            : wizardStep > s.step 
-                              ? "bg-primary/20 text-primary border-primary/30" 
-                              : "bg-transparent text-white/30 border-white/10"
-                        }`}>
+                        <div className={`w-5 h-5 rounded-full flex items-center justify-center font-bold border transition-colors ${wizardStep === s.step
+                          ? "bg-primary text-[#14120B] border-primary"
+                          : wizardStep > s.step
+                            ? "bg-primary/20 text-primary border-primary/30"
+                            : "bg-transparent text-white/30 border-white/10"
+                          }`}>
                           {s.step}
                         </div>
-                        <span className={`font-medium ${
-                          wizardStep === s.step 
-                            ? "text-white font-semibold" 
-                            : wizardStep > s.step 
-                              ? "text-white/70" 
-                              : "text-white/30"
-                        }`}>
+                        <span className={`font-medium ${wizardStep === s.step
+                          ? "text-white font-semibold"
+                          : wizardStep > s.step
+                            ? "text-white/70"
+                            : "text-white/30"
+                          }`}>
                           {s.label}
                         </span>
                       </div>
                     ))}
                   </nav>
                 </div>
-                
+
                 <div className="text-[10px] text-white/30 font-mono uppercase tracking-widest">
                   v1.0.0-production
                 </div>
@@ -347,7 +345,7 @@ function ProjectsPage() {
                   <div className="flex-1 flex flex-col overflow-hidden">
                     <h3 className="text-lg font-bold text-white mb-1">License Agreement</h3>
                     <p className="text-white/50 text-xs mb-4">Please read the following important information before continuing.</p>
-                    
+
                     <div className="flex-1 bg-white/5 border border-white/10 rounded-xl p-4 overflow-y-auto font-mono text-[10px] text-white/70 leading-relaxed mb-4 scrollbar-thin select-none">
                       <p className="font-bold mb-2">SPECLANE END-USER LICENSE AGREEMENT (EULA)</p>
                       <p className="mb-2">1. SCOPE OF LICENSE: Speclane grants you a non-exclusive, non-transferable, revocable license to utilize the AI automation sandbox and connect git repositories for QA operations.</p>
@@ -357,9 +355,9 @@ function ProjectsPage() {
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <input 
-                        type="checkbox" 
-                        id="agree-license" 
+                      <input
+                        type="checkbox"
+                        id="agree-license"
                         checked={acceptedLicense}
                         onChange={(e) => setAcceptedLicense(e.target.checked)}
                         className="rounded border-white/10 bg-white/5 text-primary focus:ring-primary/20 cursor-pointer"
@@ -376,7 +374,7 @@ function ProjectsPage() {
                     <div>
                       <h3 className="text-lg font-bold text-white mb-1">Select Features</h3>
                       <p className="text-white/50 text-xs mb-4">Choose which Speclane services you wish to activate in this workspace.</p>
-                      
+
                       <div className="space-y-3 bg-white/5 border border-white/10 rounded-xl p-4">
                         <div className="flex items-start gap-3">
                           <input type="checkbox" checked disabled className="rounded border-white/10 bg-white/5 text-primary mt-0.5" />
@@ -404,10 +402,10 @@ function ProjectsPage() {
 
                     <div className="space-y-1.5">
                       <label className="text-[10px] font-semibold text-white/50 uppercase tracking-wider">Destination Directory</label>
-                      <input 
-                        type="text" 
-                        readOnly 
-                        value="/app/workspace/speclane-agent/" 
+                      <input
+                        type="text"
+                        readOnly
+                        value="/app/workspace/speclane-agent/"
                         className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white/70 font-mono outline-none"
                       />
                     </div>
@@ -423,8 +421,8 @@ function ProjectsPage() {
                       </div>
 
                       <div className="w-full h-3 bg-white/5 border border-white/10 rounded-full overflow-hidden p-0.5">
-                        <div 
-                          className="h-full bg-primary rounded-full transition-all duration-300 shadow-[0_0_8px_rgba(251,191,36,0.5)]" 
+                        <div
+                          className="h-full bg-primary rounded-full transition-all duration-300 shadow-[0_0_8px_rgba(251,191,36,0.5)]"
                           style={{ width: `${installProgress}%` }}
                         />
                       </div>
@@ -453,17 +451,17 @@ function ProjectsPage() {
 
             {/* Footer Buttons Row */}
             <div className="h-16 bg-white/5 border-t border-white/10 flex items-center justify-end px-6 gap-2">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => setWizardStep(prev => Math.max(1, prev - 1))}
                 disabled={wizardStep === 1 || wizardStep === 3 || wizardStep === 4}
                 className="h-9 px-4 rounded-lg bg-transparent border-white/10 text-xs text-white/70 hover:bg-white/10 disabled:opacity-30 disabled:hover:bg-transparent shadow-none"
               >
                 &lt; Back
               </Button>
-              
+
               {wizardStep === 1 && (
-                <Button 
+                <Button
                   onClick={() => setWizardStep(2)}
                   disabled={!acceptedLicense}
                   className="h-9 px-4 rounded-lg bg-primary text-[#14120B] hover:bg-primary/90 text-xs font-bold disabled:opacity-30 shadow-none"
@@ -473,7 +471,7 @@ function ProjectsPage() {
               )}
 
               {wizardStep === 2 && (
-                <Button 
+                <Button
                   onClick={startInstallation}
                   className="h-9 px-4 rounded-lg bg-primary text-[#14120B] hover:bg-primary/90 text-xs font-bold shadow-none"
                 >
@@ -482,7 +480,7 @@ function ProjectsPage() {
               )}
 
               {wizardStep === 3 && (
-                <Button 
+                <Button
                   disabled={installProgress < 100}
                   onClick={() => setWizardStep(4)}
                   className="h-9 px-4 rounded-lg bg-primary text-[#14120B] hover:bg-primary/90 text-xs font-bold disabled:opacity-30 shadow-none"
@@ -492,7 +490,7 @@ function ProjectsPage() {
               )}
 
               {wizardStep === 4 && (
-                <Button 
+                <Button
                   onClick={finishWizard}
                   className="h-9 px-4 rounded-lg bg-primary text-[#14120B] hover:bg-primary/90 text-xs font-bold shadow-none"
                 >
@@ -500,7 +498,7 @@ function ProjectsPage() {
                 </Button>
               )}
 
-              <Button 
+              <Button
                 variant="outline"
                 disabled={wizardStep === 3}
                 onClick={() => {

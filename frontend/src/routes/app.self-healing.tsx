@@ -50,39 +50,60 @@ function SelfHealingPage() {
     ? (selfHealingJobs.reduce((acc, curr) => acc + curr.confidence, 0) / selfHealingJobs.length).toFixed(1)
     : "93.4";
 
-  const webhookUrl = `http://localhost:3001/api/self-healing/webhook?projectId=${projects[0]?.id || "demo-project"}`;
+  const webhookUrl = `<CONFIGURE_CI_CD_WEBHOOK_URL>?projectId=${projects[0]?.id || "demo-project"}`;
 
-  const githubActionsYaml = `name: Speclane AI QA Pipeline
+  const githubActionsYaml = `name: Playwright Tests
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [main, develop]
   pull_request:
-    branches: [ "main", "master" ]
+    branches: [main, develop]
 
 jobs:
-  test-and-heal:
+  test:
+    timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
       - name: Install dependencies
         run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
       - name: Run Playwright tests
-        id: test
+        env:
+          PORT: '8081'
         run: npx playwright test
-      
-      - name: Trigger Speclane AI Self-Healing
+
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Send webhook on test failure
         if: failure()
         run: |
-          curl -X POST "${webhookUrl}" \\
-          -H "Content-Type: application/json" \\
-          -d '{
-            "branch": "\${{ github.ref_name }}",
-            "commitSha": "\${{ github.sha }}",
-            "workflowName": "\${{ github.workflow }}",
-            "actor": "\${{ github.actor }}",
-            "status": "failed"
-          }'`;
+          curl -X POST <CONFIGURE_CI_CD_WEBHOOK_URL>?projectId=\${projects[0]?.id || "demo-project"} \\
+            -H "Content-Type: application/json" \\
+            -d '{
+              "branch": "\${{ github.ref_name }}",
+              "commitSha": "\${{ github.sha }}",
+              "workflowName": "\${{ github.workflow }}",
+              "actor": "\${{ github.actor }}",
+              "status": "failed"
+            }'`;
 
   const copyToClipboard = (text: string, type: 'url' | 'yaml') => {
     navigator.clipboard.writeText(text);
@@ -134,8 +155,8 @@ jobs:
                 <div className="bg-amber-500/10 border border-amber-500/20 p-3 rounded-xl flex gap-3 text-amber-600 dark:text-amber-500">
                   <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
                   <div className="text-xs space-y-1">
-                    <p className="font-bold uppercase tracking-wider">Localhost Detected</p>
-                    <p>To receive real webhooks from GitHub Actions, replace <code className="bg-amber-500/20 px-1 rounded font-mono">http://localhost:3001</code> in the URL below with your public Cloudflare Tunnel URL.</p>
+                    <p className="font-bold uppercase tracking-wider">Configure Webhook URL</p>
+                    <p>To receive real webhooks from GitHub Actions, replace <code className="bg-amber-500/20 px-1 rounded font-mono">&lt;CONFIGURE_CI_CD_WEBHOOK_URL&gt;</code> in the URL below with your public Cloudflare Tunnel URL.</p>
                   </div>
                 </div>
 
@@ -352,6 +373,26 @@ jobs:
                     )}
                   </div>
                 </div>
+
+                {job.error_message && (
+                  <div className="p-4 rounded-2xl bg-red-500/5 border border-red-500/20 space-y-2">
+                    <div className="flex items-center justify-between text-red-500 font-bold uppercase text-[10px] tracking-wider font-sans">
+                      <span>Actual Playwright Error</span>
+                    </div>
+                    <div className="p-3 rounded-xl bg-slate-900/10 dark:bg-black/40 text-red-600 dark:text-red-400 font-mono text-xs break-all border border-red-500/10 whitespace-pre-wrap">
+                      {job.error_message}
+                    </div>
+                  </div>
+                )}
+
+                {job.screenshot_url && (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 dark:text-white/60 font-mono uppercase tracking-wider">
+                      <span>Failure Screenshot</span>
+                    </div>
+                    <img src={job.screenshot_url} alt="Test Failure Screenshot" className="rounded-2xl border border-slate-200 dark:border-white/10 w-full max-h-[400px] object-contain bg-slate-50 dark:bg-slate-900/50" />
+                  </div>
+                )}
 
                 {/* Selector Comparison Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 font-mono text-xs">

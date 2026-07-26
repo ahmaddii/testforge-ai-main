@@ -46,7 +46,6 @@ const nav: NavItem[] = [
   { to: "/app/ai-generator", label: "AI Test Generator", icon: Sparkles },
   { to: "/app/test-cases", label: "Test Cases", icon: FlaskConical },
   { to: "/app/runs", label: "Manual AI Runs", icon: Activity },
-  { to: "/app/agent-runs", label: "Automated PR Checks", icon: GitPullRequest },
   { to: "/app/run-comparison", label: "Run Comparison", icon: GitCompare },
   { to: "/app/defects", label: "Defects", icon: Bug },
   { to: "/app/self-healing", label: "AI Self-Healing", icon: Wand2 },
@@ -88,7 +87,6 @@ const navGroups: Array<{ title: string; items: NavItem[] }> = [
       { to: "/app/ai-generator", label: "AI Test Generator", icon: Sparkles, pro: true, requiredFeature: "aiTestGenerator" },
       { to: "/app/test-cases", label: "Test Cases", icon: FlaskConical },
       { to: "/app/runs", label: "Manual AI Runs", icon: Activity },
-      { to: "/app/agent-runs", label: "Automated PR Checks", icon: GitPullRequest },
       { to: "/app/run-comparison", label: "Run Comparison", icon: GitCompare, pro: true, requiredFeature: "runComparison" },
       { to: "/app/defects", label: "Defects", icon: Bug },
       { to: "/app/self-healing", label: "AI Self-Healing", icon: Wand2, pro: true, requiredFeature: "aiTestGenerator" },
@@ -202,7 +200,7 @@ function AppLayout() {
     if (pathname === '/app/chat') {
       setUnreadMessages(0);
     }
-    
+
     if (pathname === '/app/notifications') {
       setHiddenBadgeCount(unreadNotificationsCount);
     } else if (unreadNotificationsCount === 0) {
@@ -273,7 +271,7 @@ function AppLayout() {
       });
 
     const dbChannel = supabase.channel('db-changes');
-    
+
     dbChannel
       .on('postgres_changes', { event: '*', schema: 'public', table: 'projects' }, () => fetchData())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'requirements' }, () => fetchData())
@@ -284,18 +282,18 @@ function AppLayout() {
         if (pathname !== '/app/chat' && payload.new.user_id !== user.id) {
           setUnreadMessages(prev => prev + 1);
           toast.info("New message from team member", {
-             description: payload.new.content.startsWith('[VOICE_NOTE]') ? "Voice Note" : payload.new.content.substring(0, 30) + (payload.new.content.length > 30 ? "..." : ""),
-             action: {
-               label: "View",
-               onClick: () => navigate({ to: "/app/chat" })
-             }
+            description: payload.new.content.startsWith('[VOICE_NOTE]') ? "Voice Note" : payload.new.content.substring(0, 30) + (payload.new.content.length > 30 ? "..." : ""),
+            action: {
+              label: "View",
+              onClick: () => navigate({ to: "/app/chat" })
+            }
           });
         }
       })
       .subscribe();
 
-    return () => { 
-      channel.unsubscribe(); 
+    return () => {
+      channel.unsubscribe();
       dbChannel.unsubscribe();
     };
   }, [user?.id, user?.name, user?.avatar, setOnlineUsers, fetchData, pathname, setUnreadMessages]);
@@ -483,7 +481,7 @@ function AppLayout() {
                 <span className="text-foreground font-semibold">{current?.label || "App"}</span>
               </div>
               <div className="flex-1" />
-              
+
               {/* Presence Bar */}
               <div className="flex items-center -space-x-2 mr-4">
                 <TooltipProvider>
