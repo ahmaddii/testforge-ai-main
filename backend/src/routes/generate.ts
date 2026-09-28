@@ -6,13 +6,6 @@ import { GitHubService } from '../services/github';
 import { z } from 'zod';
 import { getAccessibleOwnerIds } from '../lib/access';
 import { SlackService } from '../services/slack';
-import {
-  assertFeatureAccess,
-  assertGenerationLimit,
-  isBillingLimitError,
-  recordUsage,
-  sendBillingError,
-} from '../lib/billing';
 
 const router = Router();
 
@@ -39,8 +32,6 @@ router.post('/', authenticate, async (req: Request, res: Response) => {
     if (pError || !project) return res.status(404).json({ error: 'Project not found' });
 
     const ownerId = project.user_id;
-    await assertFeatureAccess(ownerId, 'aiTestGenerator', 'Your current plan does not include the AI Test Generator feature. Please upgrade.');
-    await assertGenerationLimit(ownerId);
 
     // 2. Fetch Requirements
     let query = supabase
@@ -94,12 +85,6 @@ router.post('/', authenticate, async (req: Request, res: Response) => {
 
     const { error: iError } = await supabase.from('test_cases').insert(testCasesToInsert);
     if (iError) throw iError;
-    await recordUsage(ownerId, 'generation', 1, {
-      project_id: projectId,
-      report_id: report.id,
-      requirement_id: requirementId || null,
-      generated_cases: cases.length,
-    });
 
     // 7. Update status back to 'Completed'
     await supabase.from('projects').update({ 
@@ -116,7 +101,6 @@ router.post('/', authenticate, async (req: Request, res: Response) => {
 
   } catch (err) {
     console.error(err);
-    if (isBillingLimitError(err)) return sendBillingError(res, err);
     if (err instanceof z.ZodError) return res.status(400).json({ error: err.errors });
     res.status(500).json({ error: 'Failed to generate test cases.' });
   }

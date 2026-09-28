@@ -133,7 +133,6 @@ export function CTA() {
                     <div className="space-y-0.5 pt-1 border-t border-white/5">
                       <div className="text-[7px] font-bold text-white/30 uppercase tracking-widest px-1.5 mb-1">Workspace</div>
                       {[
-                        { label: "Billing", icon: CreditCard, active: false },
                         { label: "Settings", icon: Settings, active: false },
                       ].map((item, idx) => {
                         const Icon = item.icon;
@@ -198,7 +197,7 @@ export function CTA() {
                     <div className="text-[7px] uppercase font-mono text-white/30 tracking-wider font-bold">Recent Runs & Defects</div>
                     {[
                       { title: "Verify Authentication Flow (src/routes/login.tsx)", state: "Passed", icon: CheckCircle2, iconColor: "text-emerald-500", pillBg: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" },
-                      { title: "Verify Billing Subscription Sync (app.billing.tsx)", state: "Failed", icon: AlertTriangle, iconColor: "text-rose-500", pillBg: "bg-rose-500/10 text-rose-400 border border-rose-500/20" },
+                      { title: "Verify Reports Generation (app.reports.tsx)", state: "Failed", icon: AlertTriangle, iconColor: "text-rose-500", pillBg: "bg-rose-500/10 text-rose-400 border border-rose-500/20" },
                     ].map((row, rIdx) => (
                       <div 
                         key={rIdx} 
@@ -267,7 +266,7 @@ export function CTA() {
                   <div className="text-[6px] uppercase font-bold tracking-widest text-white/30">Recent Runs</div>
                   {[
                     { text: "Verify Authentication Flow", active: true },
-                    { text: "Verify Billing Subscription Sync", active: false }
+                    { text: "Verify Reports Generation", active: false }
                   ].map((item, idx) => (
                     <div 
                       key={idx} 

@@ -3,7 +3,6 @@ import { supabase } from '../lib/supabase';
 import { authenticate } from '../middleware/auth';
 import { GitHubService } from '../services/github';
 import { getAccessibleOwnerIds, getProjectWithAccess, getPrimaryOwnerId } from '../lib/access';
-import { assertFeatureAccess, assertProjectLimit, isBillingLimitError, sendBillingError } from '../lib/billing';
 
 const router = Router();
 
@@ -29,7 +28,6 @@ router.post('/', authenticate, async (req: Request, res: Response) => {
   try {
     const { name, repo_url, description } = req.body;
     const workspaceOwnerId = await getPrimaryOwnerId(req.user!.id);
-    await assertProjectLimit(workspaceOwnerId);
 
     const { data, error } = await supabase
       .from('projects')
@@ -40,7 +38,6 @@ router.post('/', authenticate, async (req: Request, res: Response) => {
     if (error) return res.status(500).json({ error: error.message });
     res.json(data);
   } catch (err) {
-    if (isBillingLimitError(err)) return sendBillingError(res, err);
     res.status(500).json({ error: 'Failed to create project' });
   }
 });
@@ -69,7 +66,6 @@ router.patch('/:id', authenticate, async (req: Request, res: Response) => {
     if (error) return res.status(500).json({ error: error.message });
     res.json(data);
   } catch (err) {
-    if (isBillingLimitError(err)) return sendBillingError(res, err);
     res.status(500).json({ error: 'Failed to update project' });
   }
 });

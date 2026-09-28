@@ -57,7 +57,6 @@ const nav: NavItem[] = [
   { to: "/app/team", label: "Team Access", icon: UsersRound },
   { to: "/app/import-export", label: "Data Export", icon: DownloadCloud },
   { to: "/app/integrations", label: "Integrations", icon: PlugZap },
-  { to: "/app/billing", label: "Billing", icon: CreditCard },
   { to: "/app/settings", label: "Settings", icon: Settings },
   { to: "/app/help", label: "Help & Docs", icon: LifeBuoy },
 ];
@@ -113,7 +112,6 @@ const navGroups: Array<{ title: string; items: NavItem[] }> = [
     items: [
       { to: "/app/import-export", label: "Data Export", icon: DownloadCloud, pro: true, requiredFeature: "dataExport" },
       { to: "/app/integrations", label: "Integrations", icon: PlugZap, pro: true, requiredFeature: "slackAlerts" },
-      { to: "/app/billing", label: "Billing", icon: CreditCard },
       { to: "/app/settings", label: "Settings", icon: Settings },
       { to: "/app/help", label: "Help & Docs", icon: LifeBuoy },
     ]

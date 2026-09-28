@@ -63,12 +63,7 @@ function DashboardHome() {
           <p className="text-slate-500 dark:text-white/50 text-sm md:text-base">Overview of your automated QA infrastructure.</p>
         </div>
         <div className="flex items-center gap-3">
-          <Link to="/app/billing">
-            <Button variant="outline" className="border-white/20 dark:border-white/10 bg-white/10 dark:bg-white/5 text-slate-700 dark:text-white hover:bg-white/20 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white h-10 px-6 rounded-full font-semibold transition-all hover:scale-[1.02]">
-              <CreditCard className="mr-2 h-4 w-4" />
-              <span>Manage Subscription</span>
-            </Button>
-          </Link>
+
           <Link to={projects.length > 0 ? "/app/test-cases" : "/app/projects"}>
             <Button className="gradient-bg text-primary-foreground shadow-none border border-primary/50 relative group overflow-hidden h-10 px-6 rounded-full font-semibold">
               <Sparkles className="mr-2 h-4 w-4 relative z-10" /> 

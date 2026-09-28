@@ -44,7 +44,6 @@ import { Route as AppEnvironmentsRouteImport } from './routes/app.environments'
 import { Route as AppDefectsRouteImport } from './routes/app.defects'
 import { Route as AppCoverageRouteImport } from './routes/app.coverage'
 import { Route as AppChatRouteImport } from './routes/app.chat'
-import { Route as AppBillingRouteImport } from './routes/app.billing'
 import { Route as AppAiGeneratorRouteImport } from './routes/app.ai-generator'
 import { Route as AppAgentRunsRouteImport } from './routes/app.agent-runs'
 import { Route as AppActivityRouteImport } from './routes/app.activity'
@@ -229,11 +228,6 @@ const AppChatRoute = AppChatRouteImport.update({
   path: '/chat',
   getParentRoute: () => AppRoute,
 } as any)
-const AppBillingRoute = AppBillingRouteImport.update({
-  id: '/billing',
-  path: '/billing',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppAiGeneratorRoute = AppAiGeneratorRouteImport.update({
   id: '/ai-generator',
   path: '/ai-generator',
@@ -293,7 +287,6 @@ export interface FileRoutesByFullPath {
   '/app/activity': typeof AppActivityRoute
   '/app/agent-runs': typeof AppAgentRunsRoute
   '/app/ai-generator': typeof AppAiGeneratorRoute
-  '/app/billing': typeof AppBillingRoute
   '/app/chat': typeof AppChatRoute
   '/app/coverage': typeof AppCoverageRoute
   '/app/defects': typeof AppDefectsRoute
@@ -337,7 +330,6 @@ export interface FileRoutesByTo {
   '/app/activity': typeof AppActivityRoute
   '/app/agent-runs': typeof AppAgentRunsRoute
   '/app/ai-generator': typeof AppAiGeneratorRoute
-  '/app/billing': typeof AppBillingRoute
   '/app/chat': typeof AppChatRoute
   '/app/coverage': typeof AppCoverageRoute
   '/app/defects': typeof AppDefectsRoute
@@ -384,7 +376,6 @@ export interface FileRoutesById {
   '/app/activity': typeof AppActivityRoute
   '/app/agent-runs': typeof AppAgentRunsRoute
   '/app/ai-generator': typeof AppAiGeneratorRoute
-  '/app/billing': typeof AppBillingRoute
   '/app/chat': typeof AppChatRoute
   '/app/coverage': typeof AppCoverageRoute
   '/app/defects': typeof AppDefectsRoute
@@ -432,7 +423,6 @@ export interface FileRouteTypes {
     | '/app/activity'
     | '/app/agent-runs'
     | '/app/ai-generator'
-    | '/app/billing'
     | '/app/chat'
     | '/app/coverage'
     | '/app/defects'
@@ -476,7 +466,6 @@ export interface FileRouteTypes {
     | '/app/activity'
     | '/app/agent-runs'
     | '/app/ai-generator'
-    | '/app/billing'
     | '/app/chat'
     | '/app/coverage'
     | '/app/defects'
@@ -522,7 +511,6 @@ export interface FileRouteTypes {
     | '/app/activity'
     | '/app/agent-runs'
     | '/app/ai-generator'
-    | '/app/billing'
     | '/app/chat'
     | '/app/coverage'
     | '/app/defects'
@@ -814,13 +802,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppChatRouteImport
       parentRoute: typeof AppRoute
     }
-    '/app/billing': {
-      id: '/app/billing'
-      path: '/billing'
-      fullPath: '/app/billing'
-      preLoaderRoute: typeof AppBillingRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/app/ai-generator': {
       id: '/app/ai-generator'
       path: '/ai-generator'
@@ -898,7 +879,6 @@ interface AppRouteChildren {
   AppActivityRoute: typeof AppActivityRoute
   AppAgentRunsRoute: typeof AppAgentRunsRoute
   AppAiGeneratorRoute: typeof AppAiGeneratorRoute
-  AppBillingRoute: typeof AppBillingRoute
   AppChatRoute: typeof AppChatRoute
   AppCoverageRoute: typeof AppCoverageRoute
   AppDefectsRoute: typeof AppDefectsRoute
@@ -929,7 +909,6 @@ const AppRouteChildren: AppRouteChildren = {
   AppActivityRoute: AppActivityRoute,
   AppAgentRunsRoute: AppAgentRunsRoute,
   AppAiGeneratorRoute: AppAiGeneratorRoute,
-  AppBillingRoute: AppBillingRoute,
   AppChatRoute: AppChatRoute,
   AppCoverageRoute: AppCoverageRoute,
   AppDefectsRoute: AppDefectsRoute,

@@ -20,23 +20,16 @@ function VideoCallPage() {
   const [workspaceOwnerId, setWorkspaceOwnerId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [callEnded, setCallEnded] = useState(false);
-  const [canUseVideo, setCanUseVideo] = useState(false);
 
   useEffect(() => {
     // Auto-collapse sidebar for immersive video experience
-    const wasOpen = isSidebarOpen;
     setOpen(false);
-    
+
     const fetchTeamInfo = async () => {
       try {
-        const [team, billing] = await Promise.all([
-          api.get('/team'),
-          api.get('/billing/subscription'),
-        ]);
+        const team = await api.get('/team');
         const owner = team?.find((m: any) => m.role === 'Owner')?.owner_id || user?.id;
         setWorkspaceOwnerId(owner);
-        const activePlan = billing?.plans?.find((p: any) => p.id === billing?.plan);
-        setCanUseVideo(Boolean(activePlan?.features?.videoCalls));
       } catch (err) {
         console.error("Failed to fetch team info", err);
         setWorkspaceOwnerId(user?.id || 'public');
@@ -47,13 +40,13 @@ function VideoCallPage() {
     fetchTeamInfo();
 
     return () => {
-      // Restore sidebar state when leaving video call
-      if (wasOpen) setOpen(true);
+      // Always open sidebar when leaving video call
+      setOpen(true);
     };
-  }, [user?.id]);
+  }, [user?.id, setOpen]);
 
   // Generate a stable room name for this workspace
-  const roomName = workspaceOwnerId 
+  const roomName = workspaceOwnerId
     ? `Speclane-Workspace-${workspaceOwnerId.replace(/[^a-zA-Z0-9]/g, '')}`
     : 'Speclane-Public-Meeting';
 
@@ -69,7 +62,7 @@ function VideoCallPage() {
             End-to-end encrypted video calls for your QA team.
           </p>
         </div>
-        
+
         <div className="flex items-center gap-3 bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 px-3 py-1.5 rounded-xl backdrop-blur-sm">
           <div className="flex items-center gap-2 text-[10px] font-medium text-slate-600 dark:text-white/70">
             <Shield className="h-3 w-3 text-green-500" />
@@ -93,8 +86,8 @@ function VideoCallPage() {
             <p className="text-slate-500 dark:text-white/50 max-w-md mb-8">
               Your video session has been securely closed. All temporary data for this session has been wiped for your privacy.
             </p>
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               onClick={() => setCallEnded(false)}
               className="rounded-full px-8 h-12 gradient-bg shadow-none hover:scale-105 transition-all gap-2"
             >
@@ -102,29 +95,14 @@ function VideoCallPage() {
               Create Meeting Again
             </Button>
           </div>
-        ) : !loading && !canUseVideo ? (
-          <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center">
-            <div className="h-20 w-20 rounded-full bg-primary/10 flex items-center justify-center mb-6 ring-8 ring-primary/5">
-              <Video className="h-10 w-10 text-primary" />
-            </div>
-            <h2 className="text-2xl font-bold mb-2">Video calls are a Business feature</h2>
-            <p className="text-slate-500 dark:text-white/50 max-w-md mb-8">
-              Upgrade the workspace to Business to unlock secure team video rooms.
-            </p>
-            <Link to="/app/billing">
-              <Button size="lg" className="rounded-full px-8 h-12 gradient-bg shadow-none">
-                View plans
-              </Button>
-            </Link>
-          </div>
         ) : !loading ? (
           <VideoCall roomName={roomName} onLeave={() => setCallEnded(true)} />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-             <div className="flex flex-col items-center gap-3">
-               <div className="h-10 w-10 rounded-full border-4 border-primary border-t-transparent animate-spin" />
-               <p className="text-sm text-slate-500">Securing your meeting room...</p>
-             </div>
+            <div className="flex flex-col items-center gap-3">
+              <div className="h-10 w-10 rounded-full border-4 border-primary border-t-transparent animate-spin" />
+              <p className="text-sm text-slate-500">Securing your meeting room...</p>
+            </div>
           </div>
         )}
       </div>

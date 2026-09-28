@@ -575,12 +575,11 @@ export const useApp = create<AppState>()(
           set({ loading: true });
         }
         try {
-          const [projects, requirements, reports, defects, billing, activities, notifications, releases, environments, testPlans, executionRuns, selfHealingJobs] = await Promise.all([
+          const [projects, requirements, reports, defects, activities, notifications, releases, environments, testPlans, executionRuns, selfHealingJobs] = await Promise.all([
             api.get('/projects'),
             api.get('/requirements'),
             api.get('/reports'),
             api.get('/defects'),
-            api.get('/billing/subscription'),
             api.get('/activity').catch(() => []),
             api.get('/notifications').catch(() => []),
             api.get('/releases').catch(() => []),
@@ -602,7 +601,7 @@ export const useApp = create<AppState>()(
             testPlans: testPlans || [],
             executionRuns: executionRuns || [],
             selfHealingJobs: selfHealingJobs || [],
-            billing: billing || null,
+            billing: { plan: 'business' },
             loading: false,
           });
 

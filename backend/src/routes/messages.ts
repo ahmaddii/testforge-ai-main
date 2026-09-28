@@ -2,7 +2,6 @@ import { Router, Request, Response } from 'express';
 import { supabase } from '../lib/supabase';
 import { authenticate } from '../middleware/auth';
 import { getAccessibleOwnerIds, getPrimaryOwnerId } from '../lib/access';
-import { assertFeatureAccess, isBillingLimitError, sendBillingError } from '../lib/billing';
 
 const router = Router();
 
@@ -59,11 +58,6 @@ router.post('/', authenticate, async (req: Request, res: Response) => {
     if (!content) return res.status(400).json({ error: 'Message content is required' });
 
     const workspaceOwnerId = await getPrimaryOwnerId(req.user!.id);
-    await assertFeatureAccess(
-      workspaceOwnerId,
-      'teamCollaboration',
-      'Team chat is available on the Pro and Business plans.'
-    );
 
     const { data, error } = await supabase
       .from('messages')
@@ -78,7 +72,6 @@ router.post('/', authenticate, async (req: Request, res: Response) => {
     if (error) return res.status(500).json({ error: error.message });
     res.json(data);
   } catch (err) {
-    if (isBillingLimitError(err)) return sendBillingError(res, err);
     res.status(500).json({ error: 'Failed to send message' });
   }
 });

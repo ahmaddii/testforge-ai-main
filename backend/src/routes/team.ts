@@ -2,7 +2,6 @@ import { Router, Request, Response } from 'express';
 import { z } from 'zod';
 import { authenticate } from '../middleware/auth';
 import { supabase } from '../lib/supabase';
-import { assertTeamMemberLimit, isBillingLimitError, sendBillingError } from '../lib/billing';
 
 const router = Router();
 
@@ -77,8 +76,6 @@ router.post('/invite', authenticate, async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'You cannot invite yourself.' });
     }
 
-    await assertTeamMemberLimit(ownerId);
-
     const { data, error } = await supabase
       .from('team_members')
       .insert({
@@ -109,7 +106,6 @@ router.post('/invite', authenticate, async (req: Request, res: Response) => {
 
     res.status(201).json({ ...data, email_sent: emailSent, email_error: emailError });
   } catch (err) {
-    if (isBillingLimitError(err)) return sendBillingError(res, err);
     if (err instanceof z.ZodError) return res.status(400).json({ error: err.errors });
     res.status(500).json({ error: 'Failed to invite team member' });
   }
