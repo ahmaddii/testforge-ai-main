@@ -22,12 +22,12 @@ import { api } from "@/lib/api";
 function ProjectsPage() {
   const navigate = useNavigate();
   const projects = useApp((s) => s.projects);
+  const user = useApp((s) => s.user);
   const fetchData = useApp((s) => s.fetchData);
   const appLoading = useApp((s) => s.loading);
   const billing = useApp((s) => s.billing);
 
-  const projectLimit = billing?.plans?.find((p: any) => p.id === billing?.plan)?.limits?.projects ?? 1;
-  const isLimitReached = projectLimit !== -1 && projects.length >= projectLimit;
+
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [repo, setRepo] = useState("");
@@ -91,16 +91,20 @@ function ProjectsPage() {
         description: desc,
         status: "Active"
       });
+      const actorName = user?.name || user?.email?.split('@')[0] || 'Team member';
       await api.post('/activity', {
-        action: `Created new project workspace: ${name}`,
+        action: `${actorName} created new project workspace: ${name}`,
         category: 'Project',
         project_id: res?.id
       }).catch(() => { });
       await api.post('/notifications', {
         title: "Project Workspace Created",
-        message: `Successfully connected repository "${repo}" for automated QA.`,
+        message: `${actorName} created project "${name}" and connected repository "${repo}".`,
         type: "success",
-        project_id: res?.id
+        project_id: res?.id,
+        actor_name: actorName,
+        actor_avatar: user?.avatar || '',
+        actor_email: user?.email || ''
       }).catch(() => { });
       toast.success("Project created");
       setName(""); setRepo(""); setDesc(""); setOpen(false);
@@ -109,17 +113,7 @@ function ProjectsPage() {
         navigate({ to: "/app/projects/$projectId", params: { projectId: res.id } });
       }
     } catch (err: any) {
-      if (err.code === 'billing_limit_exceeded') {
-        toast.error("Project Limit Reached", {
-          description: "You've reached your plan's project limit. Upgrade to add more.",
-          action: {
-            label: "Upgrade",
-            onClick: () => navigate({ to: "/app/billing" })
-          }
-        });
-      } else {
-        toast.error(err.error || err.message || "Failed to create project");
-      }
+      toast.error(err.error || err.message || "Failed to create project");
     } finally {
       setLoading(false);
     }
@@ -172,19 +166,10 @@ function ProjectsPage() {
         </div>
 
         {projects.length > 0 && (
-          isLimitReached ? (
-            <Link to="/app/billing">
-              <Button className="gradient-bg text-primary-foreground border border-primary/50 relative group overflow-hidden h-10 px-6 rounded-full font-semibold shadow-none">
-                <Sparkles className="mr-2 h-4 w-4 relative z-10" />
-                <span className="relative z-10">Upgrade to add projects</span>
-              </Button>
-            </Link>
-          ) : (
-            <Button onClick={() => setOpen(true)} className="gradient-bg text-primary-foreground border border-primary/50 relative group overflow-hidden h-10 px-6 rounded-full font-semibold hover:scale-[1.02] transition-transform shadow-none">
-              <Plus className="mr-2 h-4 w-4 relative z-10" />
-              <span className="relative z-10">New project</span>
-            </Button>
-          )
+          <Button onClick={() => setOpen(true)} className="gradient-bg text-primary-foreground border border-primary/50 relative group overflow-hidden h-10 px-6 rounded-full font-semibold hover:scale-[1.02] transition-transform shadow-none">
+            <Plus className="mr-2 h-4 w-4 relative z-10" />
+            <span className="relative z-10">New project</span>
+          </Button>
         )}
       </div>
 

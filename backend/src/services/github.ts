@@ -10,13 +10,14 @@ export interface RepoFile {
  */
 export class GitHubService {
   private static baseUrl = 'https://api.github.com';
-  private static getHeaders() {
+
+  private static getHeaders(withAuth = true) {
     const headers: Record<string, string> = {
       'Accept': 'application/vnd.github.v3+json',
       'User-Agent': 'Speclane-AI-Assistant'
     };
-    if (process.env.GITHUB_TOKEN) {
-      headers['Authorization'] = `token ${process.env.GITHUB_TOKEN}`;
+    if (withAuth && process.env.GITHUB_TOKEN && process.env.GITHUB_TOKEN.trim() !== '') {
+      headers['Authorization'] = `token ${process.env.GITHUB_TOKEN.trim()}`;
     }
     return headers;
   }
@@ -44,9 +45,15 @@ export class GitHubService {
     try {
       let targetBranch = branch;
       if (!targetBranch) {
-        const repoResponse = await fetch(`${this.baseUrl}/repos/${owner}/${repo}`, {
-          headers: this.getHeaders()
+        let repoResponse = await fetch(`${this.baseUrl}/repos/${owner}/${repo}`, {
+          headers: this.getHeaders(true)
         });
+        if (repoResponse.status === 401) {
+          // Token expired or invalid, retry unauthenticated
+          repoResponse = await fetch(`${this.baseUrl}/repos/${owner}/${repo}`, {
+            headers: this.getHeaders(false)
+          });
+        }
         if (repoResponse.ok) {
           const repoData: any = await repoResponse.json();
           targetBranch = repoData.default_branch;
@@ -54,12 +61,28 @@ export class GitHubService {
       }
       targetBranch = targetBranch || 'main';
 
-      const response = await fetch(`${this.baseUrl}/repos/${owner}/${repo}/git/trees/${targetBranch}?recursive=1`, {
-        headers: this.getHeaders()
+      let response = await fetch(`${this.baseUrl}/repos/${owner}/${repo}/git/trees/${targetBranch}?recursive=1`, {
+        headers: this.getHeaders(true)
       });
+      if (response.status === 401) {
+        response = await fetch(`${this.baseUrl}/repos/${owner}/${repo}/git/trees/${targetBranch}?recursive=1`, {
+          headers: this.getHeaders(false)
+        });
+      }
+      if (!response.ok) {
+        // Try fallback to 'master' if 'main' was assumed
+        if (targetBranch === 'main') {
+          response = await fetch(`${this.baseUrl}/repos/${owner}/${repo}/git/trees/master?recursive=1`, {
+            headers: this.getHeaders(false)
+          });
+        }
+      }
       if (!response.ok) return [];
       const data: any = await response.json();
-      return data.tree || [];
+      return (data.tree || []).map((item: any) => ({
+        ...item,
+        type: item.type === 'tree' ? 'dir' : (item.type === 'blob' ? 'file' : item.type)
+      }));
     } catch (e) {
       console.error('GitHub API Error:', e);
       return [];
@@ -71,9 +94,14 @@ export class GitHubService {
    */
   static async getFileContent(owner: string, repo: string, path: string): Promise<string | null> {
     try {
-      const response = await fetch(`${this.baseUrl}/repos/${owner}/${repo}/contents/${path}`, {
-        headers: this.getHeaders()
+      let response = await fetch(`${this.baseUrl}/repos/${owner}/${repo}/contents/${path}`, {
+        headers: this.getHeaders(true)
       });
+      if (response.status === 401) {
+        response = await fetch(`${this.baseUrl}/repos/${owner}/${repo}/contents/${path}`, {
+          headers: this.getHeaders(false)
+        });
+      }
       if (!response.ok) return null;
       const data: any = await response.json();
       if (data.encoding === 'base64') {

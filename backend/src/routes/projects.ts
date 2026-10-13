@@ -10,15 +10,48 @@ const router = Router();
  * GET /projects
  */
 router.get('/', authenticate, async (req: Request, res: Response) => {
-  const ownerIds = await getAccessibleOwnerIds(req.user!.id);
-  const { data, error } = await supabase
+  const userId = req.user!.id;
+  const ownerIds = await getAccessibleOwnerIds(userId);
+  let query = supabase
     .from('projects')
     .select('*')
-    .in('user_id', ownerIds)
-    .order('created_at', { ascending: false });
+    .in('user_id', ownerIds);
+
+  // Check if user is an invited member assigned to a specific project
+  try {
+    const { data: memberRows } = await supabase
+      .from('team_members')
+      .select('project_id')
+      .eq('member_id', userId)
+      .eq('status', 'active');
+
+    const specificProjects = (memberRows || [])
+      .map((r: any) => r.project_id)
+      .filter(Boolean);
+
+    const hasGlobalAccess = (memberRows || []).some((r: any) => !r.project_id);
+    if (specificProjects.length > 0 && !hasGlobalAccess && !ownerIds.includes(userId)) {
+      query = query.in('id', specificProjects);
+    }
+  } catch (_) {}
+
+  const { data, error } = await query.order('created_at', { ascending: false });
   
   if (error) return res.status(500).json({ error: error.message });
   res.json(data);
+});
+
+/**
+ * GET /projects/:id
+ */
+router.get('/:id', authenticate, async (req: Request, res: Response) => {
+  try {
+    const { project, error } = await getProjectWithAccess(req.params.id, req.user!.id);
+    if (error || !project) return res.status(404).json({ error: 'Project not found' });
+    res.json(project);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch project' });
+  }
 });
 
 /**

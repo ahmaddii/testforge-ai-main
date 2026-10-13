@@ -60,6 +60,10 @@ export const generateTestCases = async (requirements: any[], projectInfo: any, c
         "priority": "Low" | "Medium" | "High"
       }
     ]
+
+    STRICT SCHEMA RULES:
+    1. "type" field MUST be strictly lowercase: "positive", "negative", or "edge". NEVER put "High", "Medium", or "Low" in "type"!
+    2. "priority" field MUST be strictly: "Low", "Medium", or "High".
     Do not include any other text or markdown formatting in your response.
   `;
 
@@ -71,7 +75,27 @@ export const generateTestCases = async (requirements: any[], projectInfo: any, c
 
       // Attempt to parse JSON. Sometimes LLMs wrap it in ```json ... ```
       const cleanJson = text.replace(/```json/g, '').replace(/```/g, '').trim();
-      return JSON.parse(cleanJson);
+      const parsed = JSON.parse(cleanJson);
+      if (Array.isArray(parsed)) {
+        return parsed.map((item: any) => {
+          let t = typeof item.type === 'string' ? item.type.toLowerCase().trim() : 'positive';
+          if (!['positive', 'negative', 'edge'].includes(t)) {
+            t = t.includes('neg') ? 'negative' : (t.includes('edge') ? 'edge' : 'positive');
+          }
+          let p = typeof item.priority === 'string' ? item.priority.trim() : 'High';
+          const pLower = p.toLowerCase();
+          if (pLower === 'low') p = 'Low';
+          else if (pLower === 'medium' || pLower === 'med') p = 'Medium';
+          else p = 'High';
+
+          return {
+            ...item,
+            type: t,
+            priority: p,
+          };
+        });
+      }
+      return parsed;
     } catch (err) {
       const isRetryable = isRetryableGeminiError(err);
       const isLastAttempt = attempt === MAX_RETRIES;

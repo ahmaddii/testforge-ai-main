@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { PageSkeleton } from "@/components/page-skeleton";
-import { PaywallOverlay } from "@/components/paywall-overlay";
 
 export const Route = createFileRoute("/app/import-export")({
   component: DataExportPage,
@@ -15,10 +14,8 @@ export const Route = createFileRoute("/app/import-export")({
 });
 
 function DataExportPage() {
-  const { projects, testCases, requirements, defects, testPlans, executionRuns, fetchData, loading, billing } = useApp();
+  const { projects, testCases, requirements, defects, testPlans, executionRuns, fetchData, loading } = useApp();
   const [targetProjectId, setTargetProjectId] = useState<string>("");
-
-  const isFreePlan = !billing || billing.plan === "free";
 
   useEffect(() => {
     fetchData();
@@ -153,33 +150,23 @@ function DataExportPage() {
           </p>
         </div>
 
-        {!isFreePlan && (
-          <div className="flex flex-col items-start sm:items-end gap-1.5">
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Target Project Scope:</label>
-            <Select value={targetProjectId} onValueChange={setTargetProjectId}>
-              <SelectTrigger className="w-64 bg-white dark:bg-white/5 border-slate-200 dark:border-white/10 rounded-full text-slate-900 dark:text-white font-bold h-11 px-4 shadow-sm">
-                <SelectValue placeholder="Select Project" />
-              </SelectTrigger>
-              <SelectContent className="bg-white dark:bg-[#14120B] border-slate-200 dark:border-white/10 text-slate-900 dark:text-white rounded-2xl font-medium">
-                <SelectItem value="all" className="focus:bg-slate-50 dark:focus:bg-white/10 font-bold">All Workspace Projects</SelectItem>
-                {projects.map((p) => (
-                  <SelectItem key={p.id} value={p.id} className="focus:bg-slate-50 dark:focus:bg-white/10 font-medium">{p.name}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        )}
+        <div className="flex flex-col items-start sm:items-end gap-1.5">
+          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Target Project Scope:</label>
+          <Select value={targetProjectId} onValueChange={setTargetProjectId}>
+            <SelectTrigger className="w-64 bg-white dark:bg-white/5 border-slate-200 dark:border-white/10 rounded-full text-slate-900 dark:text-white font-bold h-11 px-4 shadow-sm">
+              <SelectValue placeholder="Select Project" />
+            </SelectTrigger>
+            <SelectContent className="bg-white dark:bg-[#14120B] border-slate-200 dark:border-white/10 text-slate-900 dark:text-white rounded-2xl font-medium">
+              <SelectItem value="all" className="focus:bg-slate-50 dark:focus:bg-white/10 font-bold">All Workspace Projects</SelectItem>
+              {projects.map((p) => (
+                <SelectItem key={p.id} value={p.id} className="focus:bg-slate-50 dark:focus:bg-white/10 font-medium">{p.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
-      {isFreePlan ? (
-        <PaywallOverlay
-          title="Data Export is a Paid Feature"
-          description="Upgrade your workspace to Starter, Pro, or Enterprise to generate full offline JSON archives and spreadsheet CSV backups of your repository data."
-          planRequired="Starter"
-          icon={<DownloadCloud className="h-10 w-10 text-primary animate-pulse" />}
-        />
-      ) : (
-        <div className="relative z-10">
+      <div className="relative z-10">
           {/* Real Export Panel */}
           <div className="bg-white dark:bg-[#14120B] p-8 md:p-10 rounded-3xl border border-slate-200 dark:border-white/10 shadow-none space-y-8 relative overflow-hidden border-t-4 border-t-primary">
             <div className="space-y-6">
@@ -235,7 +222,6 @@ function DataExportPage() {
             </div>
           </div>
         </div>
-      )}
     </div>
   );
 }

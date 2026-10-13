@@ -122,12 +122,12 @@ function AdminInquiriesPage() {
 
   const filteredInquiries = useMemo(() => {
     return inquiries.filter((item) => {
-      const matchesSearch = 
+      const matchesSearch =
         item.name.toLowerCase().includes(search.toLowerCase()) ||
         item.email.toLowerCase().includes(search.toLowerCase()) ||
         item.company.toLowerCase().includes(search.toLowerCase()) ||
         item.message.toLowerCase().includes(search.toLowerCase());
-      
+
       if (statusFilter === "all") return matchesSearch;
       return matchesSearch && item.status === statusFilter;
     });
@@ -289,7 +289,7 @@ function AdminInquiriesPage() {
               </div>
             </div>
           </CardHeader>
-          
+
           <CardContent className="p-0">
             <Table>
               <TableHeader className="bg-slate-50 dark:bg-white/[0.02] border-b border-slate-200 dark:border-white/10">
@@ -322,8 +322,8 @@ function AdminInquiriesPage() {
                   </TableRow>
                 ) : (
                   filteredInquiries.map((item) => (
-                    <TableRow 
-                      key={item.id} 
+                    <TableRow
+                      key={item.id}
                       className="border-b border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors cursor-pointer group"
                       onClick={() => setSelectedInquiry(item)}
                     >

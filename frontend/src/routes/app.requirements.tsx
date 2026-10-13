@@ -33,7 +33,7 @@ const statusStyle: Record<ReqStatus, string> = {
 import { api } from "@/lib/api";
 
 function RequirementsPage() {
-  const { requirements, projects, fetchData, loading } = useApp();
+  const { requirements, projects, user, fetchData, loading } = useApp();
 
   // Ensure data is loaded on mount
   useEffect(() => {
@@ -80,33 +80,42 @@ function RequirementsPage() {
         project_id: form.project_id || null
       };
 
+      const actorName = user?.name || user?.email?.split('@')[0] || 'Team member';
+      const actorMeta = {
+        actor_name: actorName,
+        actor_avatar: user?.avatar || '',
+        actor_email: user?.email || '',
+      };
+
       if (editId) {
         await api.patch(`/requirements/${editId}`, payload);
         await api.post('/activity', {
-          action: `Updated requirement: ${form.title}`,
+          action: `${actorName} updated requirement: ${form.title}`,
           category: 'Requirement',
           project_id: form.project_id || null
         }).catch(() => {});
         await api.post('/notifications', {
           title: "Requirement Updated",
-          message: `Specification "${form.title.substring(0, 50)}" was updated.`,
+          message: `${actorName} updated requirement specification "${form.title.substring(0, 50)}".`,
           type: "info",
-          project_id: form.project_id || null
+          project_id: form.project_id || null,
+          ...actorMeta
         }).catch(() => {});
         toast.success("Updated");
       }
       else {
         await api.post('/requirements', payload);
         await api.post('/activity', {
-          action: `Added requirement: ${form.title}`,
+          action: `${actorName} added requirement: ${form.title}`,
           category: 'Requirement',
           project_id: form.project_id || null
         }).catch(() => {});
         await api.post('/notifications', {
           title: "Requirement Registered",
-          message: `New specification "${form.title.substring(0, 50)}" registered for AI analysis.`,
+          message: `${actorName} registered new specification "${form.title.substring(0, 50)}" for AI analysis.`,
           type: "success",
-          project_id: form.project_id || null
+          project_id: form.project_id || null,
+          ...actorMeta
         }).catch(() => {});
         toast.success("Requirement added");
       }

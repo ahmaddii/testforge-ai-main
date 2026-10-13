@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
-import { Sparkles, Wand2, ArrowRight, CheckCircle2, Copy, FileText, PlusCircle, Check, Zap } from "lucide-react";
+import { useState, useEffect, useMemo } from "react";
+import { Sparkles, Wand2, ArrowRight, CheckCircle2, Copy, FileText, PlusCircle, Check, Zap, FolderGit2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -8,7 +8,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useApp } from "@/lib/store";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
-import { PaywallOverlay } from "@/components/paywall-overlay";
 
 export const Route = createFileRoute("/app/ai-generator")({
   component: AIGeneratorPage,
@@ -30,6 +29,7 @@ function AIGeneratorPage() {
   const fetchData = useApp((s) => s.fetchData);
   const addTestCase = useApp((s) => s.addTestCase);
   const billing = useApp((s) => s.billing);
+  const [selectedProjectId, setSelectedProjectId] = useState<string>(projects[0]?.id || "");
   const [selectedReq, setSelectedReq] = useState<string>("");
   const [customPrompt, setCustomPrompt] = useState<string>("");
   const [generating, setGenerating] = useState<boolean>(false);
@@ -37,7 +37,15 @@ function AIGeneratorPage() {
   const [savedIds, setSavedIds] = useState<string[]>([]);
   const [limitError, setLimitError] = useState<{ plan?: string; limit?: number } | null>(null);
 
-  const isFreePlan = !billing || billing.plan === "free";
+  useEffect(() => {
+    if (projects.length > 0 && !selectedProjectId) {
+      setSelectedProjectId(projects[0].id);
+    }
+  }, [projects, selectedProjectId]);
+
+  const filteredRequirements = useMemo(() => {
+    return selectedProjectId ? requirements.filter(r => r.project_id === selectedProjectId) : requirements;
+  }, [requirements, selectedProjectId]);
 
   const handleGenerate = async () => {
     if (!selectedReq && !customPrompt) {
@@ -45,8 +53,9 @@ function AIGeneratorPage() {
       return;
     }
 
-    const projectId = projects[0]?.id;
-    if (!projectId) {
+    const targetReq = requirements.find(r => r.id === selectedReq);
+    const targetProjectId = targetReq?.project_id || selectedProjectId || projects[0]?.id;
+    if (!targetProjectId) {
       toast.error("No active project found in workspace. Please create a project first.");
       return;
     }
@@ -60,7 +69,7 @@ function AIGeneratorPage() {
       // If user typed a custom prompt instead of choosing an existing requirement, create one on the fly!
       if (!targetReqId && customPrompt) {
         const newReq = await api.post('/requirements', {
-          project_id: projectId,
+          project_id: targetProjectId,
           title: customPrompt.length > 40 ? customPrompt.substring(0, 40) + "..." : customPrompt,
           description: customPrompt,
           priority: "High",
@@ -71,7 +80,7 @@ function AIGeneratorPage() {
 
       // Call the live AI generation backend!
       await api.post('/generate', {
-        project_id: projectId,
+        project_id: targetProjectId,
         requirement_id: targetReqId ? targetReqId : undefined,
       });
 
@@ -90,13 +99,6 @@ function AIGeneratorPage() {
         steps: tc.steps ? tc.steps.split('\n') : ["Execute verification steps"],
         expected: tc.expected || "Assert successful outcome",
       })));
-
-      await api.post('/notifications', {
-        title: "AI Analysis Complete",
-        message: `Gemini 2.5 successfully synthesized ${newlyGenerated.length} automated test scenarios for your workspace.`,
-        type: "success",
-        project_id: projectId
-      }).catch(() => { });
 
       toast.success(selectedReq === "ALL" ? "Gemini AI analyzed all workspace requirements and generated full test suite!" : "Gemini AI successfully analyzed requirement and synthesized test cases!");
     } catch (err: any) {
@@ -144,62 +146,82 @@ function AIGeneratorPage() {
         </div>
       </div>
 
-      {isFreePlan ? (
-        <PaywallOverlay
-          title="AI Test Generator is a Paid Feature"
-          description="Upgrade your workspace plan to unlock Google Gemini 2.5 Pro autonomous test synthesis, deep AST requirement analysis, and auto-healing test suites."
-          planRequired="Starter"
-          icon={<Wand2 className="h-10 w-10 text-primary animate-pulse" />}
-        />
-      ) : (
-        <>
-          {/* Generator Form Card */}
-          <div className="bg-white dark:bg-[#14120B] p-8 rounded-3xl border border-slate-200 dark:border-white/10 shadow-none space-y-6 relative z-10">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Requirement Selector */}
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-700 dark:text-white/80 uppercase tracking-wider flex items-center gap-1.5">
-                  <FileText className="h-4 w-4 text-primary" /> Select Active Requirement
-                </label>
-                <Select
-                  value={selectedReq}
-                  onValueChange={(val) => {
-                    setSelectedReq(val);
-                    setCustomPrompt("");
-                  }}
-                >
-                  <SelectTrigger className="w-full h-12 px-4 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/5 text-slate-900 dark:text-white text-sm font-semibold shadow-sm">
-                    <SelectValue placeholder="Choose Requirements" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white dark:bg-[#14120B] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white rounded-2xl shadow-2xl z-50 max-h-80">
-                    <SelectItem value="ALL" className="focus:bg-slate-50 dark:focus:bg-white/10 text-xs font-bold py-3">
-                      Analyze All Workspace Requirements (Full Suite)
-                    </SelectItem>
-                    {requirements.map((r) => (
-                      <SelectItem key={r.id} value={r.id} className="focus:bg-slate-50 dark:focus:bg-white/10 text-xs font-medium py-2.5">
-                        REQ-{r.id.substring(0, 4)}: {r.title}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+      {/* Generator Form Card */}
+      <div className="bg-white dark:bg-[#14120B] p-8 rounded-3xl border border-slate-200 dark:border-white/10 shadow-none space-y-6 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Project Selector */}
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-slate-700 dark:text-white/80 uppercase tracking-wider flex items-center gap-1.5">
+              <FolderGit2 className="h-4 w-4 text-primary" /> Select Project
+            </label>
+            <Select
+              value={selectedProjectId}
+              onValueChange={(val) => {
+                setSelectedProjectId(val);
+                setSelectedReq("");
+              }}
+            >
+              <SelectTrigger className="w-full h-12 px-4 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/5 text-slate-900 dark:text-white text-sm font-semibold shadow-sm">
+                <SelectValue placeholder="Choose Project" />
+              </SelectTrigger>
+              <SelectContent className="bg-white dark:bg-[#14120B] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white rounded-2xl shadow-2xl z-50">
+                {projects.map((p) => (
+                  <SelectItem key={p.id} value={p.id} className="focus:bg-slate-50 dark:focus:bg-white/10 text-xs font-medium py-2.5">
+                    {p.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-              {/* Custom Prompt */}
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-700 dark:text-white/80 uppercase tracking-wider flex items-center gap-1.5">
-                  <Sparkles className="h-4 w-4 text-primary" /> Or Paste User Story / Feature Spec
-                </label>
-                <Input
-                  placeholder="e.g. As a premium user, I want multi-factor auth via WebAuthn passkeys..."
-                  value={customPrompt}
-                  onChange={(e) => {
-                    setCustomPrompt(e.target.value);
-                    setSelectedReq("");
-                  }}
-                  className="h-12 rounded-2xl border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/5 px-4 font-medium text-sm text-slate-900 dark:text-white"
-                />
-              </div>
-            </div>
+          {/* Requirement Selector */}
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-slate-700 dark:text-white/80 uppercase tracking-wider flex items-center gap-1.5">
+              <FileText className="h-4 w-4 text-primary" /> Select Requirement
+            </label>
+            <Select
+              value={selectedReq}
+              onValueChange={(val) => {
+                setSelectedReq(val);
+                setCustomPrompt("");
+                const reqObj = requirements.find(r => r.id === val);
+                if (reqObj && reqObj.project_id) {
+                  setSelectedProjectId(reqObj.project_id);
+                }
+              }}
+            >
+              <SelectTrigger className="w-full h-12 px-4 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/5 text-slate-900 dark:text-white text-sm font-semibold shadow-sm">
+                <SelectValue placeholder="Choose Requirement" />
+              </SelectTrigger>
+              <SelectContent className="bg-white dark:bg-[#14120B] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white rounded-2xl shadow-2xl z-50 max-h-80">
+                <SelectItem value="ALL" className="focus:bg-slate-50 dark:focus:bg-white/10 text-xs font-bold py-3">
+                  All Project Requirements (Full Suite)
+                </SelectItem>
+                {filteredRequirements.map((r) => (
+                  <SelectItem key={r.id} value={r.id} className="focus:bg-slate-50 dark:focus:bg-white/10 text-xs font-medium py-2.5">
+                    {r.title}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Custom Prompt */}
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-slate-700 dark:text-white/80 uppercase tracking-wider flex items-center gap-1.5">
+              <Sparkles className="h-4 w-4 text-primary" /> Or Custom User Story
+            </label>
+            <Input
+              placeholder="e.g. As a shopper, I want to checkout..."
+              value={customPrompt}
+              onChange={(e) => {
+                setCustomPrompt(e.target.value);
+                setSelectedReq("");
+              }}
+              className="h-12 rounded-2xl border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/5 px-4 font-medium text-sm text-slate-900 dark:text-white"
+            />
+          </div>
+        </div>
 
             <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-white/10">
               <div className="text-xs text-slate-500 dark:text-white/50">
@@ -212,11 +234,11 @@ function AIGeneratorPage() {
               >
                 {generating ? (
                   <>
-                    <Sparkles className="h-5 w-5 animate-spin" /> Synthesizing Suite...
+                    <Sparkles className="h-5 w-5 animate-spin" /> Generating Tests with Gemini...
                   </>
                 ) : (
                   <>
-                    <Wand2 className="h-5 w-5" /> Synthesize Test Suite
+                    <Wand2 className="h-5 w-5" /> Generate Tests with Gemini
                   </>
                 )}
               </Button>
@@ -304,8 +326,6 @@ function AIGeneratorPage() {
               </div>
             </div>
           )}
-        </>
-      )}
     </div>
   );
 }

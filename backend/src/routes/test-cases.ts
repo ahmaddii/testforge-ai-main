@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { supabase } from '../lib/supabase';
 import { authenticate } from '../middleware/auth';
 import { getAccessibleOwnerIds, getProjectWithAccess, getPrimaryOwnerId } from '../lib/access';
+import { normalizeTestType, normalizeTestPriority } from './generate';
 import fs from 'fs';
 import path from 'path';
 
@@ -128,7 +129,10 @@ router.post('/', authenticate, async (req: Request, res: Response) => {
     id: req.body.id || `tc-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
     project_id: validProjectId,
     user_id: ownerId,
-    created_at: req.body.created_at || new Date().toISOString()
+    type: normalizeTestType(req.body?.type, req.body?.title, req.body?.expected),
+    priority: normalizeTestPriority(req.body?.priority),
+    status: (req.body?.status === 'Passed' || req.body?.status === 'Failed') ? req.body.status : 'Pending',
+    created_at: req.body?.created_at || new Date().toISOString()
   };
 
   const { data, error } = await supabase

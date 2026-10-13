@@ -9,8 +9,6 @@ import { toast } from "sonner";
 import { api } from "@/lib/api";
 import { supabase } from "@/lib/supabase";
 import { uploadToStorage } from "@/lib/storage";
-import { PaywallOverlay } from "@/components/paywall-overlay";
-import { MessagesSquare } from "lucide-react";
 
 export const Route = createFileRoute("/app/chat")({
   component: ChatPage,
@@ -158,9 +156,6 @@ const VoiceMessage = ({ src, isMe }: { src: string, isMe: boolean }) => {
 function ChatPage() {
   const user = useApp((s) => s.user);
   const onlineUsers = useApp((s) => s.onlineUsers);
-  const billing = useApp((s) => s.billing);
-  
-  const canUseChat = billing?.plan === 'pro' || billing?.plan === 'business';
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(true);
@@ -561,14 +556,6 @@ function ChatPage() {
           )}
         </div>
       </Card>
-      {!canUseChat && (
-        <PaywallOverlay 
-          title="Team Collaboration"
-          description="Unlock real-time messaging, voice notes, and collaborative QA rooms for your whole team."
-          planRequired="Pro"
-          icon={<MessagesSquare className="h-10 w-10 text-primary" />}
-        />
-      )}
     </div>
   );
 }

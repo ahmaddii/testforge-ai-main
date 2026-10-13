@@ -10,8 +10,6 @@ import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
-import { PaywallOverlay } from "@/components/paywall-overlay";
-import { Webhook as WebhookIcon } from "lucide-react";
 
 export const Route = createFileRoute("/app/integrations")({
   component: IntegrationsPage,

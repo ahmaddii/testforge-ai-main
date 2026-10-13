@@ -19,17 +19,54 @@ export const Route = createFileRoute("/app")({
   component: AppLayout,
   beforeLoad: () => {
     if (typeof window === "undefined") return;
-    if (window.location.hash.includes("access_token") || window.location.hash.includes("refresh_token") || window.location.search.includes("code")) {
+    if (
+      window.location.hash.includes("access_token") ||
+      window.location.hash.includes("refresh_token") ||
+      window.location.search.includes("code")
+    ) {
       return;
     }
+
+    // 1. Check speclane-store for active user
     try {
       const raw = localStorage.getItem("speclane-store");
-      if (!raw) throw new Error("no");
-      const parsed = JSON.parse(raw);
-      if (!parsed?.state?.user) throw new Error("no");
-    } catch {
-      throw redirect({ to: "/login" });
-    }
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed?.state?.user?.id || parsed?.state?.user?.email) {
+          return;
+        }
+      }
+    } catch (_) {}
+
+    // 2. Check Supabase auth token in localStorage (sb-*-auth-token)
+    try {
+      const sbKey = Object.keys(localStorage).find((k) => k.startsWith("sb-") && k.endsWith("-auth-token"));
+      if (sbKey) {
+        const rawSb = localStorage.getItem(sbKey);
+        if (rawSb) {
+          const parsedSb = JSON.parse(rawSb);
+          if (parsedSb?.access_token || parsedSb?.user?.id) {
+            // Backfill speclane-store immediately so store subscribers have the session
+            try {
+              const currentStore = JSON.parse(localStorage.getItem("speclane-store") || '{"state":{}}');
+              if (!currentStore.state?.user && parsedSb.user) {
+                currentStore.state = currentStore.state || {};
+                currentStore.state.user = {
+                  id: parsedSb.user.id,
+                  email: parsedSb.user.email,
+                  name: parsedSb.user.user_metadata?.full_name || parsedSb.user.email?.split("@")[0],
+                  avatar: parsedSb.user.user_metadata?.avatar_url,
+                };
+                localStorage.setItem("speclane-store", JSON.stringify(currentStore));
+              }
+            } catch (_) {}
+            return;
+          }
+        }
+      }
+    } catch (_) {}
+
+    throw redirect({ to: "/login" });
   },
 });
 
@@ -143,50 +180,16 @@ function AppLayout() {
   }, [notifications]);
 
   const activeFeatures = useMemo(() => {
-    const currentPlan = billing?.plan || "free";
-    const defaultFeaturesMap: Record<string, Record<string, boolean>> = {
-      free: {
-        slackAlerts: false,
-        teamCollaboration: false,
-        videoCalls: false,
-        advancedReports: false,
-        aiTestGenerator: false,
-        runComparison: false,
-        dataExport: false,
-      },
-      starter: {
-        slackAlerts: false,
-        teamCollaboration: false,
-        videoCalls: false,
-        advancedReports: true,
-        aiTestGenerator: true,
-        runComparison: true,
-        dataExport: true,
-      },
-      pro: {
-        slackAlerts: true,
-        teamCollaboration: true,
-        videoCalls: false,
-        advancedReports: true,
-        aiTestGenerator: true,
-        runComparison: true,
-        dataExport: true,
-      },
-      business: {
-        slackAlerts: true,
-        teamCollaboration: true,
-        videoCalls: true,
-        advancedReports: true,
-        aiTestGenerator: true,
-        runComparison: true,
-        dataExport: true,
-      }
+    return {
+      slackAlerts: true,
+      teamCollaboration: true,
+      videoCalls: true,
+      advancedReports: true,
+      aiTestGenerator: true,
+      runComparison: true,
+      dataExport: true,
     };
-
-    const planDetails = billing?.plans?.find((p: any) => p.id === currentPlan);
-    const resolved: Record<string, boolean> = planDetails?.features || defaultFeaturesMap[currentPlan] || defaultFeaturesMap.free;
-    return resolved;
-  }, [billing]);
+  }, []);
   const pathname = useRouterState({ select: (r) => r.location.pathname });
   const [isBootSyncing, setIsBootSyncing] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -214,11 +217,12 @@ function AppLayout() {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
         const currentUser = session.user;
+        const cachedAvatar = localStorage.getItem(`speclane_avatar_${currentUser.id}`) || localStorage.getItem("speclane_user_avatar") || undefined;
         setUser({
           id: currentUser.id,
           email: currentUser.email!,
           name: currentUser.user_metadata?.full_name || currentUser.email?.split("@")[0],
-          avatar: currentUser.user_metadata?.avatar_url
+          avatar: currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.avatar || cachedAvatar
         });
       }
     });
@@ -229,11 +233,12 @@ function AppLayout() {
         navigate({ to: "/login" });
       } else if (session?.user) {
         const currentUser = session.user;
+        const cachedAvatar = localStorage.getItem(`speclane_avatar_${currentUser.id}`) || localStorage.getItem("speclane_user_avatar") || undefined;
         setUser({
           id: currentUser.id,
           email: currentUser.email!,
           name: currentUser.user_metadata?.full_name || currentUser.email?.split("@")[0],
-          avatar: currentUser.user_metadata?.avatar_url
+          avatar: currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.avatar || cachedAvatar
         });
         fetchData();
       }
@@ -276,6 +281,37 @@ function AppLayout() {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'test_cases' }, () => fetchData())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'defects' }, () => fetchData())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'reports' }, () => fetchData())
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications' }, (payload: any) => {
+        fetchData();
+        const item = payload.new;
+        if (item) {
+          let text = item.message || '';
+          let actor = '';
+          if (typeof text === 'string' && text.trim().startsWith('{')) {
+            try {
+              const parsed = JSON.parse(text);
+              text = parsed.text || text;
+              actor = parsed.actor_name || '';
+            } catch {}
+          }
+          const toastTitle = actor ? `${actor} • ${item.title || "Workspace Update"}` : (item.title || "Workspace Notification");
+          if (item.type === 'error' || item.type === 'critical') {
+            toast.error(toastTitle, { description: text });
+          } else if (item.type === 'warning' || item.type === 'alert') {
+            toast.warning(toastTitle, { description: text });
+          } else {
+            toast.success(toastTitle, { description: text });
+          }
+        }
+      })
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'activity' }, (payload: any) => {
+        fetchData();
+        if (payload.new?.action) {
+          toast.info(payload.new.category ? `${payload.new.category} Update` : "Workspace Activity", {
+            description: payload.new.action
+          });
+        }
+      })
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
         if (pathname !== '/app/chat' && payload.new.user_id !== user.id) {
           setUnreadMessages(prev => prev + 1);
@@ -418,7 +454,7 @@ function AppLayout() {
                   <SidebarMenu className="flex flex-col gap-0.5">
                     {group.items.map((n) => {
                       const isActive = n.exact ? pathname === n.to : pathname.startsWith(n.to);
-                      const showProBadge = n.pro && (!n.requiredFeature || !activeFeatures[n.requiredFeature]);
+                      const showProBadge = false;
                       return (
                         <SidebarMenuItem key={n.to} className="relative">
                           <SidebarMenuButton asChild isActive={isActive} tooltip={n.label} className="h-8 py-1.5">
@@ -545,6 +581,80 @@ function AppLayout() {
               </div>
 
               <div className="h-5 w-px bg-border/50 mx-1 hidden sm:block" />
+
+              {/* Workspace Notifications Bell Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="relative h-8 w-8 rounded-full border border-white/10 dark:border-white/10 bg-white/50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 transition-colors flex items-center justify-center text-slate-600 dark:text-white/70">
+                    <Bell className="h-4 w-4" />
+                    {displayNotificationCount > 0 && (
+                      <span className="absolute -top-1 -right-1 flex h-4 min-w-[16px] px-1 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white shadow-sm animate-pulse">
+                        {displayNotificationCount > 9 ? "9+" : displayNotificationCount}
+                      </span>
+                    )}
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-80 sm:w-96 rounded-2xl border-white/10 bg-white dark:bg-[#14120B] p-2 shadow-2xl z-50">
+                  <div className="flex items-center justify-between px-3 py-2 border-b border-slate-100 dark:border-white/10">
+                    <span className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Workspace Activity</span>
+                    <button
+                      onClick={() => markAllNotificationsRead()}
+                      className="text-[10px] text-primary hover:underline font-semibold"
+                    >
+                      Mark all read
+                    </button>
+                  </div>
+                  <div className="max-h-72 overflow-y-auto divide-y divide-slate-100 dark:divide-white/5 py-1">
+                    {notifications && notifications.length > 0 ? (
+                      notifications.slice(0, 5).map((n) => {
+                        const isMe = n.actor_id === user?.id || (!n.actor_id && n.user_id === user?.id);
+                        const av = (isMe && user?.avatar) ? user.avatar : n.actor_avatar;
+                        const name = (isMe && user?.name) ? user.name : (n.actor_name || "Team Member");
+                        return (
+                        <div key={n.id} className="p-3 hover:bg-slate-50 dark:hover:bg-white/5 rounded-xl transition-colors flex items-start gap-3">
+                          <div className="h-8 w-8 rounded-full overflow-hidden shrink-0 border border-primary/20 bg-primary/10 flex items-center justify-center">
+                            {av ? (
+                              <img src={av} alt={name} className="h-full w-full object-cover" />
+                            ) : (
+                              <span className="text-[10px] font-bold text-primary">
+                                {(name?.[0] || "U").toUpperCase()}
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between gap-1 mb-0.5">
+                              <span className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                                {name}
+                              </span>
+                              <span className="text-[10px] text-slate-400 dark:text-white/40 shrink-0">
+                                {new Date(n.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              </span>
+                            </div>
+                            <p className="text-xs text-slate-600 dark:text-white/70 line-clamp-2 leading-relaxed">
+                              {n.message}
+                            </p>
+                          </div>
+                        </div>
+                      );})
+                    ) : (
+                      <div className="py-6 text-center text-xs text-slate-400 dark:text-white/40">
+                        No recent notifications
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-2 border-t border-slate-100 dark:border-white/10">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full text-xs font-semibold h-8 rounded-xl"
+                      onClick={() => navigate({ to: "/app/notifications" })}
+                    >
+                      View all in Notifications
+                    </Button>
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="relative h-8 w-8 rounded-full overflow-hidden shadow-none hover:opacity-90 transition-opacity ml-1 border border-primary/20 bg-primary/10 flex items-center justify-center">

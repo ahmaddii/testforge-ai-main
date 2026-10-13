@@ -7,7 +7,6 @@ import { Video, Users, Shield, Globe } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
-import { PaywallOverlay } from "@/components/paywall-overlay";
 
 export const Route = createFileRoute("/app/video-call")({
   component: VideoCallPage,

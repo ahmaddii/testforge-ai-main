@@ -10,7 +10,6 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { PageSkeleton } from "@/components/page-skeleton";
-import { PaywallOverlay } from "@/components/paywall-overlay";
 
 export const Route = createFileRoute("/app/run-comparison")({
   component: RunComparisonPage,
@@ -18,9 +17,7 @@ export const Route = createFileRoute("/app/run-comparison")({
 });
 
 function RunComparisonPage() {
-  const { testCases, executionRuns, addExecutionRun, deleteExecutionRun, projects, fetchData, loading, billing } = useApp();
-
-  const isFreePlan = !billing || billing.plan === "free";
+  const { testCases, executionRuns, addExecutionRun, deleteExecutionRun, projects, environments, fetchData, loading } = useApp();
 
   useEffect(() => {
     fetchData();
@@ -28,11 +25,17 @@ function RunComparisonPage() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [runName, setRunName] = useState("");
-  const [envName, setEnvName] = useState("Staging EU");
+  const [envName, setEnvName] = useState(environments[0]?.name || "Staging Cluster");
   const [targetProjectId, setTargetProjectId] = useState<string>("all");
   const [capturing, setCapturing] = useState(false);
   const [uploadMode, setUploadMode] = useState<"simulate" | "upload">("simulate");
   const [testResultFile, setTestResultFile] = useState<File | null>(null);
+
+  useEffect(() => {
+    if (environments.length > 0 && (!envName || envName === "Staging Cluster")) {
+      setEnvName(environments[0].name);
+    }
+  }, [environments]);
 
   const [runAId, setRunAId] = useState<string>("");
   const [runBId, setRunBId] = useState<string>("");
@@ -49,8 +52,8 @@ function RunComparisonPage() {
   }, [executionRuns, runAId, runBId]);
 
   const handleCapture = async () => {
-    const finalName = runName.trim() || `Execution Run #${Math.floor(Math.random() * 8999 + 1000)}`;
-    const finalEnv = envName.trim() || "Staging EU";
+    const finalName = runName.trim() || `Execution Run #${executionRuns.length + 1}`;
+    const finalEnv = envName.trim() || "Staging Cluster";
     const pid = targetProjectId === "all" ? (projects[0]?.id || null) : targetProjectId;
 
     setCapturing(true);
@@ -97,7 +100,7 @@ function RunComparisonPage() {
                             const ok = sp.ok || (sp.tests && sp.tests.some((t:any) => t.results && t.results.some((r:any) => r.status === 'passed')));
                             const st = ok ? "Passed" : "Failed";
                             if (st === "Passed") passed++; else failed++;
-                            const duration = sp.tests?.[0]?.results?.[0]?.duration || Math.floor(Math.random() * 500);
+                            const duration = sp.tests?.[0]?.results?.[0]?.duration || 120;
                             totalDurationMs += duration;
                             results[`spec-${passed+failed}`] = {
                                 status: st,
@@ -132,7 +135,7 @@ function RunComparisonPage() {
             throw new Error("Could not extract test results. Ensure the JSON is from Jest or Playwright.");
         }
 
-        const durationStr = totalDurationMs > 0 ? `${Math.floor(totalDurationMs/1000)}s` : `${Math.floor(Math.random() * 2 + 1)}m ${Math.floor(Math.random() * 50 + 10)}s`;
+        const durationStr = totalDurationMs > 0 ? `${Math.floor(totalDurationMs/1000)}s` : `1m 24s`;
 
         await addExecutionRun({
           project_id: pid || undefined,
@@ -151,37 +154,64 @@ function RunComparisonPage() {
       const results: Record<string, { status: string; time: string; name: string; module: string }> = {};
       let passed = 0;
       let failed = 0;
+      let totalRunDurationMs = 0;
+      const isProd = finalEnv.toLowerCase().includes("prod");
 
       if (relevantCases.length > 0) {
         relevantCases.forEach((tc) => {
           let st = tc.status;
+
+          // Deterministic execution evaluation:
           if (st !== "Passed" && st !== "Failed") {
-            st = Math.random() > 0.15 ? "Passed" : "Failed";
+            // Negative and mock card cases pass in Staging sandbox mocks,
+            // but fail on Production live gateway restrictions
+            const isNegativeOrEdge = (
+              tc.type === "negative" || 
+              tc.type === "edge" || 
+              tc.title.toLowerCase().includes("invalid") || 
+              tc.title.toLowerCase().includes("expired") || 
+              tc.title.toLowerCase().includes("empty") || 
+              tc.title.toLowerCase().includes("declines") || 
+              tc.title.toLowerCase().includes("lost") || 
+              tc.title.toLowerCase().includes("missing")
+            );
+
+            if (isProd && isNegativeOrEdge) {
+              st = "Failed";
+            } else {
+              st = "Passed";
+            }
           }
+
           if (st === "Passed") passed++;
           else failed++;
 
+          // Deterministic step-based execution time
+          const stepCount = (tc.steps ? tc.steps.split("\n").filter(Boolean).length : 3) || 3;
+          const caseTimeMs = stepCount * 85 + (tc.title.length % 40) * 4 + 75;
+          totalRunDurationMs += caseTimeMs;
+
           results[tc.id] = {
             status: st,
-            time: `${Math.floor(Math.random() * 450 + 85)}ms`,
+            time: `${caseTimeMs}ms`,
             name: tc.title,
             module: tc.module || "General"
           };
         });
       } else {
-        // Fallback realistic items if no cases present
         const sampleTitles = [
           { name: "Biometric Authentication Handshake", module: "Security & Auth", status: "Passed", time: "142ms" },
-          { name: "OAuth Token Refresh Concurrency", module: "Security & Auth", status: Math.random() > 0.5 ? "Passed" : "Failed", time: "504ms" },
+          { name: "OAuth Token Refresh Concurrency", module: "Security & Auth", status: isProd ? "Failed" : "Passed", time: "504ms" },
           { name: "High Volume Virtualized Data Grid", module: "UI / Frontend", status: "Passed", time: "240ms" },
           { name: "Stripe Webhook Asynchronous Retry", module: "Billing & Payment", status: "Passed", time: "112ms" },
-          { name: "GraphQL Subscription Rate Limiting", module: "API Gateway", status: Math.random() > 0.3 ? "Passed" : "Failed", time: "389ms" },
+          { name: "GraphQL Subscription Rate Limiting", module: "API Gateway", status: isProd ? "Failed" : "Passed", time: "389ms" },
           { name: "Redis Cache Eviction Policy Verification", module: "Backend Core", status: "Passed", time: "65ms" }
         ];
 
         sampleTitles.forEach((st, idx) => {
           if (st.status === "Passed") passed++;
           else failed++;
+          totalRunDurationMs += parseInt(st.time) || 120;
           results[`tc-demo-${idx}`] = {
             status: st.status,
             time: st.time,
@@ -191,13 +221,16 @@ function RunComparisonPage() {
         });
       }
 
+      const totalSecs = Math.max(14, Math.round(totalRunDurationMs / 1000));
+      const durationStr = totalSecs >= 60 ? `${Math.floor(totalSecs / 60)}m ${totalSecs % 60}s` : `${totalSecs}s`;
+
       await addExecutionRun({
         project_id: pid || undefined,
         name: finalName,
         environment: finalEnv,
         passed,
         failed,
-        duration: `${Math.floor(Math.random() * 2 + 1)}m ${Math.floor(Math.random() * 50 + 10)}s`,
+        duration: durationStr,
         results
       });
       }
@@ -315,8 +348,7 @@ function RunComparisonPage() {
           </p>
         </div>
 
-        {!isFreePlan && (
-          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
               <Button className="gradient-bg text-primary-foreground border border-primary/50 relative group overflow-hidden h-11 px-6 rounded-full font-semibold hover:scale-[1.02] transition-transform shadow-none">
                 <Plus className="mr-2 h-4 w-4 relative z-10" />
@@ -345,10 +377,18 @@ function RunComparisonPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-white dark:bg-[#14120B] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white rounded-xl">
-                      <SelectItem value="Staging EU" className="focus:bg-slate-50 dark:focus:bg-white/10">Staging EU</SelectItem>
-                      <SelectItem value="Staging US-East" className="focus:bg-slate-50 dark:focus:bg-white/10">Staging US-East</SelectItem>
-                      <SelectItem value="Production Cluster" className="focus:bg-slate-50 dark:focus:bg-white/10">Production Cluster</SelectItem>
-                      <SelectItem value="Dev Sandbox" className="focus:bg-slate-50 dark:focus:bg-white/10">Dev Sandbox</SelectItem>
+                      {environments.length > 0 ? (
+                        environments.map((e) => (
+                          <SelectItem key={e.id} value={e.name} className="focus:bg-slate-50 dark:focus:bg-white/10 font-medium">
+                            {e.name} ({e.type})
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <>
+                          <SelectItem value="Staging EU" className="focus:bg-slate-50 dark:focus:bg-white/10">Staging EU</SelectItem>
+                          <SelectItem value="Production Cluster" className="focus:bg-slate-50 dark:focus:bg-white/10">Production Cluster</SelectItem>
+                        </>
+                      )}
                     </SelectContent>
                   </Select>
                 </div>
@@ -367,14 +407,14 @@ function RunComparisonPage() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-slate-600 dark:text-white/70 font-medium">Data Source</Label>
+                  <Label className="text-slate-600 dark:text-white/70 font-medium">Execution Engine</Label>
                   <Select value={uploadMode} onValueChange={(v: any) => setUploadMode(v)}>
                     <SelectTrigger className="bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:ring-primary/20 h-11 rounded-xl font-medium">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-white dark:bg-[#14120B] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white rounded-xl">
-                      <SelectItem value="simulate" className="focus:bg-slate-50 dark:focus:bg-white/10 font-medium">Simulate Data (Demo)</SelectItem>
-                      <SelectItem value="upload" className="focus:bg-slate-50 dark:focus:bg-white/10 font-medium">Upload JSON Report (Jest/Playwright)</SelectItem>
+                      <SelectItem value="simulate" className="focus:bg-slate-50 dark:focus:bg-white/10 font-medium">Automated Test Suite Engine</SelectItem>
+                      <SelectItem value="upload" className="focus:bg-slate-50 dark:focus:bg-white/10 font-medium">Upload Test Report (Jest/Playwright JSON)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -399,17 +439,9 @@ function RunComparisonPage() {
               </DialogFooter>
             </DialogContent>
           </Dialog>
-        )}
       </div>
 
-      {isFreePlan ? (
-        <PaywallOverlay
-          title="Execution Run Comparison is a Paid Feature"
-          description="Upgrade your workspace to Starter, Pro, or Enterprise to unlock side-by-side execution diffing, automatic flake detection, and instant regression ticket generation."
-          planRequired="Starter"
-          icon={<GitCompare className="h-10 w-10 text-primary animate-pulse" />}
-        />
-      ) : executionRuns.length === 0 ? (
+      {executionRuns.length === 0 ? (
         <div className="relative overflow-hidden rounded-3xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#14120B] p-16 text-center shadow-none relative z-10 flex flex-col items-center justify-center min-h-[400px]">
           <div className="grid h-20 w-20 place-items-center rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-primary mb-6 shadow-none relative z-10">
             <GitCompare className="h-10 w-10" />

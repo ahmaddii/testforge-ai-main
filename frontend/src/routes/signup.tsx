@@ -50,13 +50,25 @@ function SignupPage() {
       if (error) throw error;
 
       if (data.user) {
+        if (!data.session) {
+          toast.success("Account created successfully!", {
+            description: "Next step: Please check your email to confirm your account, then log in.",
+            duration: 8000,
+          });
+          navigate({ to: "/login" });
+          return;
+        }
+
         setUser({
           id: data.user.id,
           email: data.user.email!,
           name: name || data.user.email?.split("@")[0]
         });
         await fetchData();
-        toast.success("Account Created Successfully !");
+        toast.success("Account created successfully!", {
+          description: "Welcome to Speclane! Next step: connect a repository to create your first QA workspace.",
+          duration: 7000,
+        });
         localStorage.removeItem("speclane_onboarded");
         navigate({ to: "/app/projects" });
       }

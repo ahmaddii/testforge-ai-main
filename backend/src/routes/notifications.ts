@@ -70,6 +70,69 @@ const saveFallbackNotifs = (notifs: any[]) => {
   }
 };
 
+const userMetaCache: Record<string, { name: string; avatar: string; email: string }> = {};
+
+export const getUserMetadata = async (userId: string) => {
+  if (!userId || userId === 'default') return { name: 'Alex QA Manager', avatar: '', email: 'fyp.tester@testforge.com' };
+  if (userMetaCache[userId]) return userMetaCache[userId];
+
+  try {
+    const { data: userObj } = await (supabase.auth.admin as any).getUserById(userId);
+    if (userObj?.user) {
+      const meta = userObj.user.user_metadata || {};
+      const info = {
+        name: meta.full_name || meta.name || userObj.user.email?.split('@')[0] || 'Team Member',
+        avatar: meta.avatar_url || meta.avatar || '',
+        email: userObj.user.email || ''
+      };
+      userMetaCache[userId] = info;
+      return info;
+    }
+  } catch (err) {
+    // Ignore error
+  }
+
+  const fallback = { name: 'Team Member', avatar: '', email: '' };
+  userMetaCache[userId] = fallback;
+  return fallback;
+};
+
+export const unpackNotification = (notif: any, fallbackUser?: { name: string; avatar: string; email: string }) => {
+  if (!notif) return notif;
+  let text = notif.message || '';
+  let actorName = fallbackUser?.name || '';
+  let actorAvatar = fallbackUser?.avatar || '';
+  let actorEmail = fallbackUser?.email || '';
+  let actorId = notif.user_id || '';
+  let action = '';
+
+  if (typeof notif.message === 'string' && notif.message.trim().startsWith('{') && notif.message.trim().endsWith('}')) {
+    try {
+      const parsed = JSON.parse(notif.message);
+      if (parsed && typeof parsed === 'object') {
+        text = parsed.text || text;
+        actorName = parsed.actor_name || actorName;
+        actorAvatar = parsed.actor_avatar || actorAvatar;
+        actorEmail = parsed.actor_email || actorEmail;
+        actorId = parsed.actor_id || actorId;
+        action = parsed.action || action;
+      }
+    } catch {
+      // not JSON
+    }
+  }
+
+  return {
+    ...notif,
+    message: text,
+    actor_name: actorName || 'Team Member',
+    actor_avatar: actorAvatar || '',
+    actor_email: actorEmail || '',
+    actor_id: actorId,
+    action: action || notif.title || 'Workspace Update'
+  };
+};
+
 // GET /api/notifications
 router.get('/', authenticate, async (req: Request, res: Response) => {
   const ownerIds = await getAccessibleOwnerIds(req.user!.id);
@@ -82,10 +145,20 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
   if (error) {
     console.error('SQL Error in GET /notifications (Supabase):', error);
     const fallback = getFallbackNotifs();
-    return res.json(fallback);
+    const enriched = await Promise.all(fallback.map(async (n: any) => {
+      const meta = await getUserMetadata(n.user_id);
+      return unpackNotification(n, meta);
+    }));
+    return res.json(enriched);
   }
 
-  res.json(data || []);
+  const rows = data || [];
+  const enriched = await Promise.all(rows.map(async (n: any) => {
+    const meta = await getUserMetadata(n.user_id);
+    return unpackNotification(n, meta);
+  }));
+
+  res.json(enriched);
 });
 
 // POST /api/notifications
@@ -101,9 +174,26 @@ router.post('/', authenticate, async (req: Request, res: Response) => {
     }
   }
 
+  const userMeta = await getUserMetadata(req.user!.id);
+  const actorName = req.body.actor_name || userMeta.name;
+  const actorAvatar = req.body.actor_avatar || userMeta.avatar;
+  const actorEmail = req.body.actor_email || userMeta.email || req.user?.email || '';
+  const rawMessage = req.body.message || req.body.description || '';
+  const action = req.body.action || req.body.title || 'Workspace Update';
+
+  // Package message with actor metadata safely
+  const messagePayload = JSON.stringify({
+    text: rawMessage,
+    actor_name: actorName,
+    actor_avatar: actorAvatar,
+    actor_email: actorEmail,
+    actor_id: req.user!.id,
+    action
+  });
+
   const newNotif = {
     title: req.body.title || 'New Alert',
-    message: req.body.message || req.body.description || '',
+    message: messagePayload,
     type: req.body.type || 'info',
     project_id: validProjectId,
     user_id: ownerId,
@@ -122,10 +212,10 @@ router.post('/', authenticate, async (req: Request, res: Response) => {
     const notifs = getFallbackNotifs();
     const created = { id: `notif-${Date.now()}`, ...newNotif };
     saveFallbackNotifs([created, ...notifs]);
-    return res.status(201).json(created);
+    return res.status(201).json(unpackNotification(created, { name: actorName, avatar: actorAvatar, email: actorEmail }));
   }
 
-  res.status(201).json(data);
+  res.status(201).json(unpackNotification(data, { name: actorName, avatar: actorAvatar, email: actorEmail }));
 });
 
 // PATCH /api/notifications/:id/read
@@ -143,10 +233,12 @@ router.patch('/:id/read', authenticate, async (req: Request, res: Response) => {
     const updated = notifs.map((n: any) => n.id === id ? { ...n, read: true } : n);
     saveFallbackNotifs(updated);
     const target = updated.find((n: any) => n.id === id);
-    return res.json(target || { id, read: true });
+    const meta = await getUserMetadata(target?.user_id || req.user!.id);
+    return res.json(unpackNotification(target || { id, read: true }, meta));
   }
 
-  res.json(data);
+  const meta = await getUserMetadata(data?.user_id || req.user!.id);
+  res.json(unpackNotification(data, meta));
 });
 
 // PATCH /api/notifications/read-all

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Bell, CheckCircle2, AlertOctagon, AlertCircle, Clock, Trash2, Filter } from "lucide-react";
+import { Bell, CheckCircle2, AlertOctagon, AlertCircle, Clock, Trash2, Filter, User, FolderGit2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/lib/store";
 
@@ -10,6 +10,8 @@ export const Route = createFileRoute("/app/notifications")({
 
 function NotificationsPage() {
   const notifications = useApp((s) => s.notifications);
+  const user = useApp((s) => s.user);
+  const projects = useApp((s) => s.projects);
   const markAllRead = useApp((s) => s.markAllNotificationsRead);
   const markRead = useApp((s) => s.markNotificationRead);
   const deleteNotif = useApp((s) => s.deleteNotification);
@@ -21,6 +23,12 @@ function NotificationsPage() {
     return true;
   });
 
+  const getProjectName = (pid?: string) => {
+    if (!pid) return null;
+    const p = projects.find((proj) => proj.id === pid);
+    return p ? p.name : null;
+  };
+
   return (
     <div className="container mx-auto p-4 sm:p-6 space-y-8 max-w-7xl relative">
 
@@ -31,7 +39,7 @@ function NotificationsPage() {
             <Bell className="h-8 w-8 text-primary" /> Workspace Notifications
           </h1>
           <p className="text-slate-500 dark:text-white/50 text-sm md:text-base">
-            Real-time alerts for failed execution suites, new defect logs, and sprint deadlines.
+            Track who performed actions, AI generations, test runs, and defect updates across your workspace.
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -78,6 +86,11 @@ function NotificationsPage() {
         {filtered.length > 0 ? (
           filtered.map((item) => {
             const dateStr = new Date(item.created_at).toLocaleString();
+            const projName = getProjectName(item.project_id);
+            const isMe = item.actor_id === user?.id || (!item.actor_id && item.user_id === user?.id);
+            const displayAvatar = (isMe && user?.avatar) ? user.avatar : item.actor_avatar;
+            const displayName = (isMe && user?.name) ? user.name : (item.actor_name || "Team Member");
+
             return (
               <div
                 key={item.id}
@@ -88,41 +101,85 @@ function NotificationsPage() {
                     : "bg-white/80 dark:bg-[#14120B]/80 border-slate-200 dark:border-white/10 opacity-80 hover:opacity-100"
                 }`}
               >
-                {/* Icon badge */}
-                <div
-                  className={`p-3.5 rounded-2xl shrink-0 border flex items-center justify-center ${
-                    item.type === "critical" || item.type === "defect"
-                      ? "bg-red-500/10 text-red-500 border-red-500/20"
-                      : item.type === "warning" || item.type === "alert"
-                      ? "bg-amber-500/10 text-amber-500 border-amber-500/20"
-                      : item.type === "success"
-                      ? "bg-green-500/10 text-green-500 border-green-500/20"
-                      : "bg-primary/10 text-primary border-primary/20"
-                  }`}
-                >
-                  {(item.type === "critical" || item.type === "defect") && <AlertOctagon className="h-5 w-5" />}
-                  {(item.type === "warning" || item.type === "alert") && <AlertCircle className="h-5 w-5" />}
-                  {item.type === "success" && <CheckCircle2 className="h-5 w-5 text-green-500" />}
-                  {(item.type === "info" || item.type === "sprint") && <Clock className="h-5 w-5 text-primary" />}
+                {/* User Avatar with Type sub-badge */}
+                <div className="relative shrink-0 mt-0.5">
+                  <div className="h-12 w-12 rounded-2xl overflow-hidden border-2 border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 shadow-sm flex items-center justify-center">
+                    {displayAvatar ? (
+                      <img src={displayAvatar} alt={displayName} className="h-full w-full object-cover" />
+                    ) : (
+                      <div className="h-full w-full grid place-items-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white text-sm font-extrabold shadow-inner">
+                        {(displayName?.[0] || item.actor_email?.[0] || "U").toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+                  <div
+                    className={`absolute -bottom-1 -right-1 h-5 w-5 rounded-full border-2 border-white dark:border-[#14120B] flex items-center justify-center text-[10px] ${
+                      item.type === "critical" || item.type === "defect"
+                        ? "bg-red-500 text-white"
+                        : item.type === "warning" || item.type === "alert"
+                        ? "bg-amber-500 text-white"
+                        : item.type === "success"
+                        ? "bg-emerald-500 text-white"
+                        : "bg-primary text-primary-foreground"
+                    }`}
+                  >
+                    {item.type === "success" ? (
+                      <CheckCircle2 className="h-3 w-3" />
+                    ) : item.type === "critical" || item.type === "defect" ? (
+                      <AlertOctagon className="h-3 w-3" />
+                    ) : (
+                      <Clock className="h-3 w-3" />
+                    )}
+                  </div>
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2.5 mb-1.5 flex-wrap">
-                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold tracking-wider uppercase bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-white/80 border border-slate-200 dark:border-white/10">
+                  <div className="flex items-center gap-2 mb-2 flex-wrap">
+                    {/* Actor Identity Badge */}
+                    <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-white border border-slate-200 dark:border-white/10 shadow-sm">
+                      <User className="h-3 w-3 text-primary shrink-0" />
+                      <span className="truncate max-w-[160px]">{displayName}</span>
+                    </div>
+
+                    {/* Project Tag */}
+                    {projName && (
+                      <span className="flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
+                        <FolderGit2 className="h-3 w-3" />
+                        {projName}
+                      </span>
+                    )}
+
+                    {/* Event Type Badge */}
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold tracking-wider uppercase bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-white/60 border border-slate-200 dark:border-white/10">
                       {item.type.toUpperCase()}
                     </span>
+
                     {!item.read && (
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black tracking-wider uppercase bg-primary text-primary-foreground shadow-sm flex items-center gap-1.5 animate-pulse">
-                        <span className="h-1.5 w-1.5 rounded-full bg-primary-foreground inline-block" />
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-black tracking-wider uppercase bg-primary text-primary-foreground shadow-sm flex items-center gap-1 animate-pulse">
+                        <span className="h-1.5 w-1.5 rounded-full bg-white inline-block" />
                         NEW
                       </span>
                     )}
+
                     <span className="text-xs text-slate-400 dark:text-white/40 font-mono ml-auto">{dateStr}</span>
                   </div>
+
+                  {/* Title & Specific Action Done */}
                   <h3 className="text-base font-bold text-slate-900 dark:text-white tracking-tight mb-1 flex items-center gap-2">
                     {item.title}
                   </h3>
-                  <p className="text-sm text-slate-600 dark:text-white/70 leading-relaxed">{item.message}</p>
+                  <p className="text-sm text-slate-600 dark:text-white/70 leading-relaxed font-normal">
+                    {item.message}
+                  </p>
+
+                  {/* Actor details footer */}
+                  <div className="mt-2 text-[11px] text-slate-400 dark:text-white/40 flex items-center gap-1.5">
+                    <span>Performed by:</span>
+                    <span className="font-semibold text-slate-700 dark:text-white/80">{displayName}</span>
+                    {item.actor_email && (
+                      <span className="text-slate-400 dark:text-white/40">({item.actor_email})</span>
+                    )}
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-2 self-center ml-2">

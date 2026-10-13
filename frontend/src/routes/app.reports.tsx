@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { exportPDF, exportCSV } from "@/lib/export";
 import { toast } from "sonner";
-import { PaywallOverlay } from "@/components/paywall-overlay";
 import { BarChart3 } from "lucide-react";
 
 export const Route = createFileRoute("/app/reports")({
@@ -17,9 +16,7 @@ export const Route = createFileRoute("/app/reports")({
 });
 
 function ReportsPage() {
-  const { reports, testCases, fetchData, loading, billing, deleteReport } = useApp();
-  
-  const canUseReports = billing?.plan !== 'free';
+  const { reports, testCases, fetchData, loading, deleteReport } = useApp();
   
   useEffect(() => {
     fetchData();
@@ -177,14 +174,6 @@ function ReportsPage() {
           )}
         </div>
       </div>
-      {!canUseReports && (
-        <PaywallOverlay 
-          title="Advanced Reporting"
-          description="Unlock PDF downloads, coverage analytics, and historical QA trends for your team."
-          planRequired="Starter"
-          icon={<BarChart3 className="h-10 w-10 text-primary" />}
-        />
-      )}
     </div>
   );
 }

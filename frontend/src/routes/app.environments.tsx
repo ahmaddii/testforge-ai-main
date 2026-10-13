@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useApp } from "@/lib/store";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/app/environments")({
   component: EnvironmentsPage,
@@ -27,6 +28,18 @@ function EnvironmentsPage() {
     await addEnvironment(newEnv);
     setIsOpen(false);
     setNewEnv({ name: "", type: "Staging", url: "" });
+    toast.success(`Cluster environment '${newEnv.name}' registered`);
+  };
+
+  const handleTriggerCheck = async (env: any) => {
+    toast.info(`Executing probe on ${env.name}...`);
+    await triggerCheck(env.id);
+    const updated = useApp.getState().environments.find((e) => e.id === env.id);
+    if (updated?.status === "Healthy") {
+      toast.success(`Cluster verified: ${updated.last_verified}`);
+    } else {
+      toast.warning(`Cluster status: ${updated?.status} (${updated?.last_verified})`);
+    }
   };
 
   return (
@@ -168,9 +181,9 @@ function EnvironmentsPage() {
             </div>
 
             <div className="pt-4 border-t border-slate-100 dark:border-white/10 flex items-center justify-between text-xs text-slate-500 dark:text-white/50 font-mono">
-              <span>Last Run: {env.last_verified}</span>
+              <span className="truncate max-w-[200px]" title={env.last_verified}>Probe: {env.last_verified}</span>
               <div className="flex items-center gap-2">
-                <Button onClick={() => triggerCheck(env.id)} variant="outline" size="sm" className="rounded-full px-4 h-8 text-xs font-bold border-primary/40 text-primary hover:bg-primary hover:text-white transition-all">
+                <Button onClick={() => handleTriggerCheck(env)} variant="outline" size="sm" className="rounded-full px-4 h-8 text-xs font-bold border-primary/40 text-primary hover:bg-primary hover:text-white transition-all">
                   <RefreshCw className="h-3 w-3 mr-1.5" /> Trigger Health Check
                 </Button>
                 <Button onClick={() => deleteEnvironment(env.id)} variant="ghost" size="icon" className="h-8 w-8 rounded-full hover:bg-red-500/10 hover:text-red-500 text-slate-400">

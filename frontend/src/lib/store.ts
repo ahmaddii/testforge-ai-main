@@ -105,6 +105,11 @@ export interface NotificationItem {
   type: string;
   read: boolean;
   created_at: string;
+  actor_name?: string;
+  actor_avatar?: string;
+  actor_email?: string;
+  actor_id?: string;
+  action?: string;
 }
 
 export interface ReleaseMilestone {
@@ -280,7 +285,7 @@ export const useApp = create<AppState>()(
       onlineUsers: [],
       selfHealingJobs: [],
       loading: false,
-      billing: null,
+      billing: { plan: 'business' },
       unreadMessages: 0,
       setBilling: (billing) => set({ billing }),
       setSelfHealingJobs: (selfHealingJobs) => set({ selfHealingJobs }),
@@ -320,16 +325,24 @@ export const useApp = create<AppState>()(
         }
         
         // Also log activity and notification
+        const curUser = get().user;
+        const actorMeta = {
+          actor_name: curUser?.name || curUser?.email?.split('@')[0] || 'Team Member',
+          actor_avatar: curUser?.avatar || '',
+          actor_email: curUser?.email || ''
+        };
+
         api.post('/activity', {
-          action: `Created new test case: ${tc.title.substring(0, 50)}`,
+          action: `${actorMeta.actor_name} created new test case: ${tc.title.substring(0, 50)}`,
           category: 'Test Case',
           project_id: targetPid
         }).catch(() => {});
         api.post('/notifications', {
           title: "Test Case Created",
-          message: `Added scenario: "${tc.title.substring(0, 60)}" to execution suite.`,
+          message: `${actorMeta.actor_name} added scenario: "${tc.title.substring(0, 60)}" to execution suite.`,
           type: "success",
-          project_id: targetPid
+          project_id: targetPid,
+          ...actorMeta
         }).then(() => get().fetchData()).catch(() => {});
       },
       setReports: (reports) => set({ reports }),
@@ -346,24 +359,31 @@ export const useApp = create<AppState>()(
       setEnvironments: (environments) => set({ environments }),
       signOffRelease: async (id) => {
         const targetRel = get().releases.find((r) => r.id === id);
+        const curUser = get().user;
+        const actorName = curUser?.name || curUser?.email?.split('@')[0] || 'Team Member';
         set((state) => ({
           releases: state.releases.map((r) => r.id === id ? { ...r, status: "Released", readiness_score: 100 } : r)
         }));
         await api.patch(`/releases/${id}`, { status: "Released", readiness_score: 100 }).catch(() => {});
         await api.post('/activity', {
-          action: `Signed off release milestone ${targetRel ? targetRel.version : id}`,
+          action: `${actorName} signed off release milestone ${targetRel ? targetRel.version : id}`,
           category: 'Release',
           project_id: get().projects[0]?.id
         }).catch(() => {});
         await api.post('/notifications', {
           title: "Release Approved",
-          message: `Release milestone ${targetRel ? targetRel.version : id} signed off for production deployment.`,
+          message: `${actorName} signed off release milestone ${targetRel ? targetRel.version : id} for production deployment.`,
           type: "success",
-          project_id: get().projects[0]?.id
+          project_id: get().projects[0]?.id,
+          actor_name: actorName,
+          actor_avatar: curUser?.avatar || '',
+          actor_email: curUser?.email || ''
         }).catch(() => {});
         get().fetchData();
       },
       addRelease: async (rel) => {
+        const curUser = get().user;
+        const actorName = curUser?.name || curUser?.email?.split('@')[0] || 'Team Member';
         const res = await api.post('/releases', {
           ...rel,
           status: 'Testing',
@@ -375,15 +395,18 @@ export const useApp = create<AppState>()(
         if (res) {
           set((state) => ({ releases: [res, ...state.releases] }));
           await api.post('/activity', {
-            action: `Registered release milestone: ${rel.version}`,
+            action: `${actorName} registered release milestone: ${rel.version}`,
             category: 'Release',
             project_id: rel.project_id || get().projects[0]?.id
           }).catch(() => {});
           await api.post('/notifications', {
             title: "Release Scheduled",
-            message: `Milestone release ${rel.version} (${rel.title}) scheduled for verification.`,
+            message: `${actorName} scheduled milestone release ${rel.version} (${rel.title}) for verification.`,
             type: "sprint",
-            project_id: rel.project_id || get().projects[0]?.id
+            project_id: rel.project_id || get().projects[0]?.id,
+            actor_name: actorName,
+            actor_avatar: curUser?.avatar || '',
+            actor_email: curUser?.email || ''
           }).catch(() => {});
           get().fetchData();
         }
@@ -395,6 +418,8 @@ export const useApp = create<AppState>()(
         await api.delete(`/releases/${id}`).catch(() => {});
       },
       addEnvironment: async (env) => {
+        const curUser = get().user;
+        const actorName = curUser?.name || curUser?.email?.split('@')[0] || 'Team Member';
         const res = await api.post('/environments', {
           ...env,
           status: 'Healthy',
@@ -405,15 +430,18 @@ export const useApp = create<AppState>()(
         if (res) {
           set((state) => ({ environments: [res, ...state.environments] }));
           await api.post('/activity', {
-            action: `Registered target environment: ${env.name}`,
+            action: `${actorName} registered target environment: ${env.name}`,
             category: 'Environment',
             project_id: env.project_id || get().projects[0]?.id
           }).catch(() => {});
           await api.post('/notifications', {
             title: "Environment Registered",
-            message: `New cluster environment "${env.name}" registered for automated runner testing.`,
+            message: `${actorName} registered new cluster environment "${env.name}" for automated runner testing.`,
             type: "success",
-            project_id: env.project_id || get().projects[0]?.id
+            project_id: env.project_id || get().projects[0]?.id,
+            actor_name: actorName,
+            actor_avatar: curUser?.avatar || '',
+            actor_email: curUser?.email || ''
           }).catch(() => {});
           get().fetchData();
         }
@@ -426,6 +454,8 @@ export const useApp = create<AppState>()(
       },
       setTestPlans: (testPlans) => set({ testPlans }),
       addTestPlan: async (tp) => {
+        const curUser = get().user;
+        const actorName = curUser?.name || curUser?.email?.split('@')[0] || 'Team Member';
         const res = await api.post('/test-plans', {
           ...tp,
           status: 'In Progress',
@@ -437,15 +467,18 @@ export const useApp = create<AppState>()(
         if (res) {
           set((state) => ({ testPlans: [res, ...state.testPlans] }));
           await api.post('/activity', {
-            action: `Created test plan milestone: ${tp.name}`,
+            action: `${actorName} created test plan milestone: ${tp.name}`,
             category: 'Test Plan',
             project_id: tp.project_id || get().projects[0]?.id
           }).catch(() => {});
           await api.post('/notifications', {
             title: "Test Plan Created",
-            message: `Milestone test plan "${tp.name}" (${tp.sprint}) scheduled for verification.`,
+            message: `${actorName} created milestone test plan "${tp.name}" (${tp.sprint}) for verification.`,
             type: "sprint",
-            project_id: tp.project_id || get().projects[0]?.id
+            project_id: tp.project_id || get().projects[0]?.id,
+            actor_name: actorName,
+            actor_avatar: curUser?.avatar || '',
+            actor_email: curUser?.email || ''
           }).catch(() => {});
           get().fetchData();
         }
@@ -458,19 +491,24 @@ export const useApp = create<AppState>()(
       },
       setExecutionRuns: (executionRuns) => set({ executionRuns }),
       addExecutionRun: async (run) => {
+        const curUser = get().user;
+        const actorName = curUser?.name || curUser?.email?.split('@')[0] || 'Team Member';
         const res = await api.post('/execution-runs', run).catch(() => null);
         if (res) {
           set((state) => ({ executionRuns: [res, ...state.executionRuns] }));
           await api.post('/activity', {
-            action: `Created execution snapshot: ${res.name}`,
+            action: `${actorName} created execution snapshot: ${res.name}`,
             category: 'Execution',
             project_id: res.project_id || get().projects[0]?.id
           }).catch(() => {});
           await api.post('/notifications', {
             title: "Execution Snapshot Created",
-            message: `Execution snapshot "${res.name}" successfully recorded in database.`,
+            message: `${actorName} recorded execution snapshot "${res.name}" in database.`,
             type: "success",
-            project_id: res.project_id || get().projects[0]?.id
+            project_id: res.project_id || get().projects[0]?.id,
+            actor_name: actorName,
+            actor_avatar: curUser?.avatar || '',
+            actor_email: curUser?.email || ''
           }).catch(() => {});
           get().fetchData();
         }
@@ -483,13 +521,21 @@ export const useApp = create<AppState>()(
       },
       triggerEnvironmentCheck: async (id) => {
         set((state) => ({
-          environments: state.environments.map((e) => e.id === id ? { ...e, status: "Updating", last_verified: "Running test nodes..." } : e)
+          environments: state.environments.map((e) => e.id === id ? { ...e, status: "Updating", last_verified: "Probing target cluster..." } : e)
         }));
-        await delay(1200);
-        set((state) => ({
-          environments: state.environments.map((e) => e.id === id ? { ...e, status: "Healthy", last_verified: "Just now", success_rate: 100 } : e)
-        }));
-        await api.patch(`/environments/${id}`, { status: "Healthy", last_verified: "Just now", success_rate: 100 }).catch(() => {});
+        try {
+          const res = await api.post(`/environments/${id}/check`, {});
+          if (res && res.id) {
+            set((state) => ({
+              environments: state.environments.map((e) => e.id === id ? { ...e, ...res } : e)
+            }));
+          }
+        } catch (err) {
+          console.error("Health check error:", err);
+          set((state) => ({
+            environments: state.environments.map((e) => e.id === id ? { ...e, status: "Degraded", last_verified: "Probe connection error" } : e)
+          }));
+        }
       },
       markNotificationRead: async (id) => {
         set((state) => ({
@@ -575,7 +621,7 @@ export const useApp = create<AppState>()(
           set({ loading: true });
         }
         try {
-          const [projects, requirements, reports, defects, activities, notifications, releases, environments, testPlans, executionRuns, selfHealingJobs] = await Promise.all([
+          const [projects, requirements, reports, defects, activities, notifications, releases, environments, testPlans, executionRuns, selfHealingJobs, profile] = await Promise.all([
             api.get('/projects'),
             api.get('/requirements'),
             api.get('/reports'),
@@ -587,7 +633,15 @@ export const useApp = create<AppState>()(
             api.get('/test-plans').catch(() => []),
             api.get('/execution-runs').catch(() => []),
             api.get('/self-healing').catch(() => []),
+            api.get('/profile/me').catch(() => null),
           ]);
+
+          if (profile?.avatar) {
+            set((state) => ({
+              user: state.user ? { ...state.user, avatar: profile.avatar, name: profile.name || state.user.name } : state.user
+            }));
+            localStorage.setItem('speclane_user_avatar', profile.avatar);
+          }
 
           set({
             projects: projects || [],

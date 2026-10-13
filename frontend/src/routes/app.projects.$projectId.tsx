@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { ArrowLeft, Github, Loader2, Sparkles, Trash2 } from "lucide-react";
+import { ArrowLeft, Github, Loader2, Sparkles, Trash2, RefreshCw } from "lucide-react";
 import { useApp } from "@/lib/store";
 import { PageSkeleton } from "@/components/page-skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -29,26 +29,35 @@ function ProjectDetail() {
   const [files, setFiles] = useState<any[]>([]);
   const [loadingFiles, setLoadingFiles] = useState(false);
 
-  useEffect(() => {
-    fetchFiles();
-  }, [projectId]);
-
-  if (loading) {
-    return <PageSkeleton cards={3} rows={6} />;
-  }
-
-  const fetchFiles = async () => {
-    if (!project?.repo_url) return;
+  const fetchFiles = async (customRepoUrl?: string) => {
+    const targetUrl = customRepoUrl || repo || project?.repo_url;
+    if (!targetUrl) return;
     setLoadingFiles(true);
     try {
       const data = await api.get(`/projects/${projectId}/files`);
-      setFiles(data);
-    } catch (err) {
+      const fileList = Array.isArray(data) ? data : [];
+      setFiles(fileList);
+    } catch (err: any) {
       console.error("Failed to fetch files", err);
     } finally {
       setLoadingFiles(false);
     }
   };
+
+  useEffect(() => {
+    if (project?.repo_url) {
+      setRepo(project.repo_url);
+      fetchFiles(project.repo_url);
+    } else {
+      // If project is not yet cached in store, fetch it directly
+      api.get(`/projects/${projectId}`).then((p: any) => {
+        if (p?.repo_url) {
+          setRepo(p.repo_url);
+          fetchFiles(p.repo_url);
+        }
+      }).catch(() => {});
+    }
+  }, [projectId, project?.repo_url]);
 
   if (!project) {
     return (
@@ -186,8 +195,18 @@ function ProjectDetail() {
             <CardTitle className="text-base">Repository Files</CardTitle>
             <div className="flex items-center gap-2">
               <Badge variant="outline" className="hidden sm:inline-flex">{files.length} items</Badge>
-              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={fetchFiles} disabled={loadingFiles}>
-                <Loader2 className={`h-4 w-4 ${loadingFiles ? 'animate-spin' : ''}`} />
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-8 w-8 hover:bg-muted/80" 
+                onClick={async () => {
+                  await fetchFiles();
+                  toast.success("Repository files synced");
+                }} 
+                disabled={loadingFiles}
+                title="Sync Repository Files"
+              >
+                <RefreshCw className={`h-4 w-4 ${loadingFiles ? 'animate-spin' : ''}`} />
               </Button>
             </div>
           </CardHeader>

@@ -39,14 +39,12 @@ import { api } from "@/lib/api";
 
 function TestCasesPage() {
   const navigate = useNavigate();
-  const { projects, requirements, testCases, fetchData, loading, billing } = useApp();
+  const { projects, requirements, testCases, user, fetchData, loading, billing } = useApp();
   const [project_id, setProjectId] = useState<string>("all");
   const [q, setQ] = useState("");
   const [targetReqId, setTargetReqId] = useState<string>("all");
  
-  const genLimit = billing?.plans?.find((p: any) => p.id === billing?.plan)?.limits?.monthlyGenerations ?? 1;
-  const genUsage = billing?.usage?.monthlyGenerations ?? 0;
-  const isGenLimitReached = genLimit !== -1 && genUsage >= genLimit;
+
 
   // Ensure data is loaded on mount
   useEffect(() => {
@@ -109,17 +107,7 @@ function TestCasesPage() {
       await fetchData();
       toast.success("AI Generation Complete!");
     } catch (err: any) {
-      if (err.code === 'billing_limit_exceeded') {
-        toast.error("Generation Limit Reached", {
-          description: "You've reached your monthly AI limit. Upgrade to keep generating.",
-          action: {
-            label: "Upgrade",
-            onClick: () => navigate({ to: "/app/billing" })
-          }
-        });
-      } else {
-        toast.error(err.error || err.message || "Generation failed");
-      }
+      toast.error(err.error || err.message || "Generation failed");
     } finally {
       setGenerating(false); 
       setSkeletons(0);
@@ -241,19 +229,10 @@ function TestCasesPage() {
               )}
             </SelectContent>
           </Select>
-          {isGenLimitReached ? (
-            <Link to="/app/billing">
-              <Button className="gradient-bg text-primary-foreground border border-primary/50 relative group overflow-hidden h-10 px-6 rounded-full font-semibold hover:scale-[1.02] transition-transform shadow-none">
-                <Sparkles className="mr-2 h-4 w-4 relative z-10" /> 
-                <span className="relative z-10">Upgrade for more AI</span>
-              </Button>
-            </Link>
-          ) : (
-            <Button onClick={generate} disabled={generating} className="gradient-bg text-primary-foreground border border-primary/50 relative group overflow-hidden h-10 px-6 rounded-full font-semibold hover:scale-[1.02] transition-transform shadow-none">
-              {generating ? <Loader2 className="mr-2 h-4 w-4 animate-spin relative z-10" /> : <Sparkles className="mr-2 h-4 w-4 relative z-10" />}
-              <span className="relative z-10">{generating ? "Generating…" : "Generate with AI"}</span>
-            </Button>
-          )}
+          <Button onClick={generate} disabled={generating} className="gradient-bg text-primary-foreground border border-primary/50 relative group overflow-hidden h-10 px-6 rounded-full font-semibold hover:scale-[1.02] transition-transform shadow-none">
+            {generating ? <Loader2 className="mr-2 h-4 w-4 animate-spin relative z-10" /> : <Sparkles className="mr-2 h-4 w-4 relative z-10" />}
+            <span className="relative z-10">{generating ? "Generating…" : "Generate with AI"}</span>
+          </Button>
         </div>
       </div>
 
@@ -493,16 +472,20 @@ function TestCasesPage() {
                                     severity: "Major"
                                   }).then(async () => {
                                     toast.success("Defect logged in tracker");
+                                    const actorName = user?.name || user?.email?.split('@')[0] || 'Team member';
                                     await api.post('/activity', {
-                                      action: `Logged defect BUG-${editing.id.slice(-4)}: ${editing.title}`,
+                                      action: `${actorName} logged defect BUG-${editing.id.slice(-4)}: ${editing.title}`,
                                       category: 'Defect',
                                       project_id: editing.project_id
                                     }).catch(() => {});
                                     await api.post('/notifications', {
                                       title: `New Defect Logged`,
-                                      message: `BUG-${editing.id.slice(-4)}: ${editing.title} failed verification in ${editing.module} module.`,
+                                      message: `${actorName} logged defect BUG-${editing.id.slice(-4)}: "${editing.title}" in ${editing.module} module.`,
                                       type: 'defect',
-                                      project_id: editing.project_id
+                                      project_id: editing.project_id,
+                                      actor_name: actorName,
+                                      actor_avatar: user?.avatar || '',
+                                      actor_email: user?.email || ''
                                     }).catch(() => {});
                                     await delay(500);
                                     fetchData();
