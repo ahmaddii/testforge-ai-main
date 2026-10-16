@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useApp } from "@/lib/store";
+import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/app/test-plans")({
   component: TestPlansPage,
@@ -16,6 +17,7 @@ function TestPlansPage() {
   const testPlans = useApp((s) => s.testPlans);
   const testCases = useApp((s) => s.testCases);
   const projects = useApp((s) => s.projects);
+  const environments = useApp((s) => s.environments);
   const addTestPlan = useApp((s) => s.addTestPlan);
   const deleteTestPlan = useApp((s) => s.deleteTestPlan);
 
@@ -232,13 +234,23 @@ function TestPlansPage() {
                 <div className="text-xs text-primary/80 dark:text-primary/60 font-medium mb-4 flex items-center gap-1.5">
                   <FolderGit2 className="h-3.5 w-3.5" /> Project: {planProject?.name || "Default Project"}
                 </div>
-                <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-white/50 mb-6 font-medium">
-                  <span className="flex items-center gap-1.5 font-mono">
-                    <Calendar className="h-3.5 w-3.5 text-slate-400" /> {plan.start_date} → {plan.end_date}
-                  </span>
-                  <span className="flex items-center gap-1.5 font-mono text-primary font-bold">
+                <div className="flex items-center gap-2 flex-wrap mb-4">
+                  <span className="flex items-center gap-1.5 font-mono text-xs text-primary font-bold">
                     <Clock className="h-3.5 w-3.5 text-slate-400" /> {planCases.length} Scenarios Mapped
                   </span>
+                  {/* Live environment health for this project */}
+                  {environments.filter(e => !e.project_id || e.project_id === planProject?.id).slice(0, 2).map(env => (
+                    <span key={env.id} className={`flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+                      env.status === 'Healthy' ? 'bg-green-500/10 text-green-600 border-green-500/20' :
+                      env.status === 'Degraded' ? 'bg-red-500/10 text-red-500 border-red-500/20' :
+                      'bg-blue-500/10 text-blue-500 border-blue-500/20'
+                    }`}>
+                      <span className={`h-1.5 w-1.5 rounded-full ${
+                        env.status === 'Healthy' ? 'bg-green-500' : env.status === 'Degraded' ? 'bg-red-500 animate-pulse' : 'bg-blue-500 animate-pulse'
+                      }`} />
+                      {env.name.length > 18 ? env.name.slice(0, 18) + '…' : env.name}: {env.status}
+                    </span>
+                  ))}
                 </div>
 
                 {/* Progress bar */}

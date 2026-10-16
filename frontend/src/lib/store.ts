@@ -222,16 +222,16 @@ interface AppState {
   billing: any | null;
   loading: boolean;
   setBilling: (b: any | null) => void;
-  
+
   unreadMessages: number;
   setUnreadMessages: (count: number | ((prev: number) => number)) => void;
-  
+
   setUser: (u: User | null) => void;
   setTheme: (t: "dark" | "light") => void;
   setLoading: (l: boolean) => void;
-  
+
   fetchData: () => Promise<void>;
-  
+
   setProjects: (p: Project[]) => void;
   setRequirements: (r: Requirement[]) => void;
   setTestCases: (t: TestCase[]) => void;
@@ -323,7 +323,7 @@ export const useApp = create<AppState>()(
         } catch (err) {
           console.error("Failed to persist to backend:", err);
         }
-        
+
         // Also log activity and notification
         const curUser = get().user;
         const actorMeta = {
@@ -336,21 +336,21 @@ export const useApp = create<AppState>()(
           action: `${actorMeta.actor_name} created new test case: ${tc.title.substring(0, 50)}`,
           category: 'Test Case',
           project_id: targetPid
-        }).catch(() => {});
+        }).catch(() => { });
         api.post('/notifications', {
           title: "Test Case Created",
           message: `${actorMeta.actor_name} added scenario: "${tc.title.substring(0, 60)}" to execution suite.`,
           type: "success",
           project_id: targetPid,
           ...actorMeta
-        }).then(() => get().fetchData()).catch(() => {});
+        }).then(() => get().fetchData()).catch(() => { });
       },
       setReports: (reports) => set({ reports }),
       deleteReport: async (id) => {
         set((state) => ({
           reports: state.reports.filter((r) => r.id !== id)
         }));
-        await api.delete(`/reports/${id}`).catch(() => {});
+        await api.delete(`/reports/${id}`).catch(() => { });
       },
       setDefects: (defects) => set({ defects }),
       setActivities: (activities) => set({ activities }),
@@ -364,12 +364,12 @@ export const useApp = create<AppState>()(
         set((state) => ({
           releases: state.releases.map((r) => r.id === id ? { ...r, status: "Released", readiness_score: 100 } : r)
         }));
-        await api.patch(`/releases/${id}`, { status: "Released", readiness_score: 100 }).catch(() => {});
+        await api.patch(`/releases/${id}`, { status: "Released", readiness_score: 100 }).catch(() => { });
         await api.post('/activity', {
           action: `${actorName} signed off release milestone ${targetRel ? targetRel.version : id}`,
           category: 'Release',
           project_id: get().projects[0]?.id
-        }).catch(() => {});
+        }).catch(() => { });
         await api.post('/notifications', {
           title: "Release Approved",
           message: `${actorName} signed off release milestone ${targetRel ? targetRel.version : id} for production deployment.`,
@@ -378,7 +378,7 @@ export const useApp = create<AppState>()(
           actor_name: actorName,
           actor_avatar: curUser?.avatar || '',
           actor_email: curUser?.email || ''
-        }).catch(() => {});
+        }).catch(() => { });
         get().fetchData();
       },
       addRelease: async (rel) => {
@@ -398,7 +398,7 @@ export const useApp = create<AppState>()(
             action: `${actorName} registered release milestone: ${rel.version}`,
             category: 'Release',
             project_id: rel.project_id || get().projects[0]?.id
-          }).catch(() => {});
+          }).catch(() => { });
           await api.post('/notifications', {
             title: "Release Scheduled",
             message: `${actorName} scheduled milestone release ${rel.version} (${rel.title}) for verification.`,
@@ -407,7 +407,7 @@ export const useApp = create<AppState>()(
             actor_name: actorName,
             actor_avatar: curUser?.avatar || '',
             actor_email: curUser?.email || ''
-          }).catch(() => {});
+          }).catch(() => { });
           get().fetchData();
         }
       },
@@ -415,7 +415,7 @@ export const useApp = create<AppState>()(
         set((state) => ({
           releases: state.releases.filter((r) => r.id !== id)
         }));
-        await api.delete(`/releases/${id}`).catch(() => {});
+        await api.delete(`/releases/${id}`).catch(() => { });
       },
       addEnvironment: async (env) => {
         const curUser = get().user;
@@ -433,7 +433,7 @@ export const useApp = create<AppState>()(
             action: `${actorName} registered target environment: ${env.name}`,
             category: 'Environment',
             project_id: env.project_id || get().projects[0]?.id
-          }).catch(() => {});
+          }).catch(() => { });
           await api.post('/notifications', {
             title: "Environment Registered",
             message: `${actorName} registered new cluster environment "${env.name}" for automated runner testing.`,
@@ -442,7 +442,7 @@ export const useApp = create<AppState>()(
             actor_name: actorName,
             actor_avatar: curUser?.avatar || '',
             actor_email: curUser?.email || ''
-          }).catch(() => {});
+          }).catch(() => { });
           get().fetchData();
         }
       },
@@ -450,7 +450,7 @@ export const useApp = create<AppState>()(
         set((state) => ({
           environments: state.environments.filter((e) => e.id !== id)
         }));
-        await api.delete(`/environments/${id}`).catch(() => {});
+        await api.delete(`/environments/${id}`).catch(() => { });
       },
       setTestPlans: (testPlans) => set({ testPlans }),
       addTestPlan: async (tp) => {
@@ -470,7 +470,7 @@ export const useApp = create<AppState>()(
             action: `${actorName} created test plan milestone: ${tp.name}`,
             category: 'Test Plan',
             project_id: tp.project_id || get().projects[0]?.id
-          }).catch(() => {});
+          }).catch(() => { });
           await api.post('/notifications', {
             title: "Test Plan Created",
             message: `${actorName} created milestone test plan "${tp.name}" (${tp.sprint}) for verification.`,
@@ -479,7 +479,7 @@ export const useApp = create<AppState>()(
             actor_name: actorName,
             actor_avatar: curUser?.avatar || '',
             actor_email: curUser?.email || ''
-          }).catch(() => {});
+          }).catch(() => { });
           get().fetchData();
         }
       },
@@ -487,7 +487,7 @@ export const useApp = create<AppState>()(
         set((state) => ({
           testPlans: state.testPlans.filter((p) => p.id !== id)
         }));
-        await api.delete(`/test-plans/${id}`).catch(() => {});
+        await api.delete(`/test-plans/${id}`).catch(() => { });
       },
       setExecutionRuns: (executionRuns) => set({ executionRuns }),
       addExecutionRun: async (run) => {
@@ -500,7 +500,7 @@ export const useApp = create<AppState>()(
             action: `${actorName} created execution snapshot: ${res.name}`,
             category: 'Execution',
             project_id: res.project_id || get().projects[0]?.id
-          }).catch(() => {});
+          }).catch(() => { });
           await api.post('/notifications', {
             title: "Execution Snapshot Created",
             message: `${actorName} recorded execution snapshot "${res.name}" in database.`,
@@ -509,7 +509,7 @@ export const useApp = create<AppState>()(
             actor_name: actorName,
             actor_avatar: curUser?.avatar || '',
             actor_email: curUser?.email || ''
-          }).catch(() => {});
+          }).catch(() => { });
           get().fetchData();
         }
       },
@@ -517,7 +517,7 @@ export const useApp = create<AppState>()(
         set((state) => ({
           executionRuns: state.executionRuns.filter((r) => r.id !== id)
         }));
-        await api.delete(`/execution-runs/${id}`).catch(() => {});
+        await api.delete(`/execution-runs/${id}`).catch(() => { });
       },
       triggerEnvironmentCheck: async (id) => {
         set((state) => ({
@@ -541,19 +541,19 @@ export const useApp = create<AppState>()(
         set((state) => ({
           notifications: state.notifications.map((n) => n.id === id ? { ...n, read: true } : n)
         }));
-        await api.patch(`/notifications/${id}/read`, {}).catch(() => {});
+        await api.patch(`/notifications/${id}/read`, {}).catch(() => { });
       },
       markAllNotificationsRead: async () => {
         set((state) => ({
           notifications: state.notifications.map((n) => ({ ...n, read: true }))
         }));
-        await api.patch(`/notifications/read-all`, {}).catch(() => {});
+        await api.patch(`/notifications/read-all`, {}).catch(() => { });
       },
       deleteNotification: async (id) => {
         set((state) => ({
           notifications: state.notifications.filter((n) => n.id !== id)
         }));
-        await api.delete(`/notifications/${id}`).catch(() => {});
+        await api.delete(`/notifications/${id}`).catch(() => { });
       },
       setOnlineUsers: (onlineUsers) => set({ onlineUsers }),
       setUnreadMessages: (count) => {
@@ -569,19 +569,19 @@ export const useApp = create<AppState>()(
         set((state) => ({
           selfHealingJobs: state.selfHealingJobs.map((j) => j.id === jobId ? { ...j, status: "Healed" } : j)
         }));
-        await api.patch(`/self-healing/${jobId}/apply`, {}).catch(() => {});
+        await api.patch(`/self-healing/${jobId}/apply`, {}).catch(() => { });
         if (job) {
           api.post('/activity', {
             action: `Applied AI self-healing fix for selector: ${job.broken_selector} -> ${job.healed_selector} (${job.confidence}% confidence)`,
             category: 'Self-Healing',
             project_id: job.project_id
-          }).catch(() => {});
+          }).catch(() => { });
           api.post('/notifications', {
             title: "Selector Healed",
             message: `Selector auto-healed in test "${job.test_case_title}" with ${job.confidence}% confidence.`,
             type: "success",
             project_id: job.project_id
-          }).catch(() => {});
+          }).catch(() => { });
         }
         get().fetchData();
       },
@@ -589,7 +589,7 @@ export const useApp = create<AppState>()(
         set((state) => ({
           selfHealingJobs: state.selfHealingJobs.map((j) => j.id === jobId ? { ...j, status: "Failed" } : j)
         }));
-        await api.patch(`/self-healing/${jobId}/reject`, {}).catch(() => {});
+        await api.patch(`/self-healing/${jobId}/reject`, {}).catch(() => { });
         get().fetchData();
       },
       triggerHealingScan: async (project_id) => {
@@ -601,13 +601,13 @@ export const useApp = create<AppState>()(
             action: `Triggered autonomous AI self-healing DOM drift scan across ${newJobs.length} components`,
             category: 'Self-Healing',
             project_id: project_id || get().projects[0]?.id
-          }).catch(() => {});
+          }).catch(() => { });
           api.post('/notifications', {
             title: "Healing Scan Completed",
             message: `DOM drift scan detected ${newJobs.length} broken selectors requiring review.`,
             type: "warning",
             project_id: project_id || get().projects[0]?.id
-          }).catch(() => {});
+          }).catch(() => { });
           get().fetchData();
         }
       },
@@ -671,7 +671,7 @@ export const useApp = create<AppState>()(
                 user: s.user ? { ...s.user, isAdmin: profileInfo.isAdmin ?? true, isSuperAdmin: profileInfo.isSuperAdmin || false, role: profileInfo.role || 'Owner' } : null
               }));
             }
-          } catch (_) {}
+          } catch (_) { }
         } catch (error) {
           console.error("Error fetching data:", error);
         } finally {
@@ -679,7 +679,7 @@ export const useApp = create<AppState>()(
         }
       },
     }),
-    { 
+    {
       name: "speclane-store",
       partialize: (state) => ({ theme: state.theme, user: state.user }),
     }

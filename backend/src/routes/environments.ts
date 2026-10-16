@@ -163,64 +163,71 @@ router.post('/:id/check', authenticate, async (req: Request, res: Response) => {
   }
 
   const startTime = performance.now();
-  let status = 'Healthy';
-  let success_rate = 100;
+  let probeStatus: 'pass' | 'fail' = 'pass';
+  let httpLabel = '';
   let last_verified = '';
-  let active_runners = targetEnv.active_runners || 1;
   let latencyMs = 0;
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 3500);
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
 
     const probeRes = await fetch(rawUrl, {
-      method: 'GET',
+      method: 'HEAD',
       headers: {
-        'User-Agent': 'Speclane-Automated-Runner/1.0 (HealthProbe; Node-Cluster)',
+        'User-Agent': 'TestForge-HealthProbe/2.0',
         'Accept': '*/*'
       },
       signal: controller.signal
     });
     clearTimeout(timeoutId);
-
     latencyMs = Math.round(performance.now() - startTime);
 
-    if (probeRes.status < 400) {
-      status = 'Healthy';
-      success_rate = 100;
-      last_verified = `${latencyMs}ms (HTTP ${probeRes.status}) • Just now`;
-    } else if (probeRes.status < 500) {
-      status = 'Healthy';
-      success_rate = 95;
-      last_verified = `${latencyMs}ms (HTTP ${probeRes.status}) • Just now`;
+    if (probeRes.status < 500) {
+      probeStatus = 'pass';
+      httpLabel = `HTTP ${probeRes.status} • ${latencyMs}ms`;
     } else {
-      status = 'Degraded';
-      success_rate = 50;
-      last_verified = `${latencyMs}ms (HTTP ${probeRes.status} Error) • Just now`;
+      probeStatus = 'fail';
+      httpLabel = `HTTP ${probeRes.status} Server Error • ${latencyMs}ms`;
     }
   } catch (err: any) {
     latencyMs = Math.round(performance.now() - startTime);
+    probeStatus = 'fail';
 
     if (err.name === 'AbortError') {
-      status = 'Degraded';
-      success_rate = 30;
-      last_verified = `Timeout (>3500ms) • Just now`;
+      httpLabel = `Timeout (>${Math.round(latencyMs / 1000 * 10) / 10}s)`;
     } else if (err.code === 'ENOTFOUND' || err.message?.includes('ENOTFOUND')) {
-      // Private / Intranet Cluster Host (e.g. staging.vehloom.com)
-      // Active runner verified node loopback and socket ingress locally
-      status = 'Healthy';
-      success_rate = 100;
-      last_verified = `${latencyMs || 24}ms (Runner Node Online) • Just now`;
+      httpLabel = `DNS Not Found (unreachable host)`;
     } else if (err.code === 'ECONNREFUSED' || err.message?.includes('ECONNREFUSED')) {
-      status = 'Degraded';
-      success_rate = 0;
-      last_verified = `Connection Refused • Just now`;
+      httpLabel = `Connection Refused`;
+    } else if (err.code === 'CERT_HAS_EXPIRED' || err.message?.includes('certificate')) {
+      httpLabel = `SSL Certificate Error`;
     } else {
-      status = 'Healthy';
-      success_rate = 100;
-      last_verified = `${latencyMs || 28}ms (Node Online) • Just now`;
+      httpLabel = `Network Error: ${err.code || err.message?.slice(0, 40) || 'unknown'}`;
     }
   }
+
+  // --- Rolling probe history (last 10 probes) ---
+  const historyFile = path.join(fallbackDir, `probe_history_${id}.json`);
+  let history: { result: 'pass' | 'fail'; ts: number }[] = [];
+  try {
+    if (fs.existsSync(historyFile)) {
+      history = JSON.parse(fs.readFileSync(historyFile, 'utf-8'));
+    }
+  } catch { history = []; }
+
+  history.push({ result: probeStatus, ts: Date.now() });
+  if (history.length > 10) history = history.slice(-10);
+
+  try {
+    fs.writeFileSync(historyFile, JSON.stringify(history, null, 2));
+  } catch { }
+
+  const passCount = history.filter(h => h.result === 'pass').length;
+  const success_rate = Math.round((passCount / history.length) * 100);
+  const status = success_rate >= 80 ? 'Healthy' : 'Degraded';
+  const active_runners = targetEnv.active_runners || 1;
+  last_verified = `${httpLabel} • ${history.length} probe${history.length > 1 ? 's' : ''} sampled`;
 
   const updatePayload = {
     status,
@@ -246,7 +253,7 @@ router.post('/:id/check', authenticate, async (req: Request, res: Response) => {
     const ownerId = await getPrimaryOwnerId(req.user!.id);
     await supabase.from('activity_logs').insert({
       user_id: ownerId,
-      action: `Executed health check probe on cluster '${targetEnv.name}' [${status} - ${last_verified}]`,
+      action: `Health probe on '${targetEnv.name}': ${status} — ${httpLabel} (${success_rate}% over ${history.length} probes)`,
       category: 'Environment',
       ip_address: req.ip || '127.0.0.1',
       created_at: new Date().toISOString()

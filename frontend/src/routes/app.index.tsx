@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo } from "react";
-import { FolderGit2, FlaskConical, GitBranch, Target, ArrowRight, Sparkles, Bug, AlertTriangle, CreditCard } from "lucide-react";
+import { FolderGit2, FlaskConical, Target, Sparkles, Bug, AlertTriangle, Server, CheckCircle2, RefreshCw, Zap } from "lucide-react";
 import { useApp } from "@/lib/store";
 import { PageSkeleton } from "@/components/page-skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,7 +14,7 @@ export const Route = createFileRoute("/app/")({
 });
 
 function DashboardHome() {
-  const { projects, testCases, reports, defects: allDefects, loading } = useApp();
+  const { projects, testCases, reports, defects: allDefects, environments, loading } = useApp();
   
   const coverage = useMemo(() => {
     if (reports.length === 0) return 0;
@@ -166,6 +166,65 @@ function DashboardHome() {
             </div>
          </div>
       </div>
+
+      {/* Environment Health Panel */}
+      {environments.length > 0 && (() => {
+        const degraded = environments.filter(e => e.status === "Degraded");
+        return (
+          <div className="relative z-10 space-y-3">
+            {degraded.length > 0 && (
+              <div className="flex items-start gap-3 p-4 rounded-2xl bg-red-500/10 border border-red-500/30 animate-pulse">
+                <AlertTriangle className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-bold text-red-500">{degraded.length} Environment{degraded.length > 1 ? 's' : ''} Degraded — Test Dispatch at Risk</p>
+                  <p className="text-xs text-red-400/80 mt-0.5">Test runs targeting <span className="font-mono font-bold">{degraded.map(e => e.name).join(', ')}</span> may fail. Trigger a health check or pause dispatches.</p>
+                </div>
+                <Link to="/app/environments" className="ml-auto shrink-0">
+                  <Button size="sm" variant="outline" className="rounded-full border-red-500/30 text-red-500 hover:bg-red-500/10 hover:border-red-500 text-xs font-bold">
+                    Fix Now
+                  </Button>
+                </Link>
+              </div>
+            )}
+            <div className="rounded-3xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#14120B] p-6 shadow-none">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <Server className="h-5 w-5 text-primary" /> Environment Health
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-white/40 mt-0.5">Live status of all registered test execution clusters</p>
+                </div>
+                <Link to="/app/environments">
+                  <Button size="sm" variant="ghost" className="rounded-full text-xs font-semibold text-primary hover:bg-primary/10">
+                    Manage <RefreshCw className="ml-1.5 h-3 w-3" />
+                  </Button>
+                </Link>
+              </div>
+              <div className="space-y-2">
+                {environments.slice(0, 4).map(env => (
+                  <div key={env.id} className="flex items-center gap-3 p-3 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10">
+                    <div className={`h-2.5 w-2.5 rounded-full shrink-0 ${
+                      env.status === 'Healthy' ? 'bg-green-500' : env.status === 'Degraded' ? 'bg-red-500 animate-pulse' : 'bg-blue-500 animate-pulse'
+                    }`} />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{env.name}</p>
+                      <p className="text-[10px] text-slate-500 dark:text-white/40 font-mono truncate">{env.url}</p>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border ${
+                        env.status === 'Healthy' ? 'bg-green-500/10 text-green-500 border-green-500/20' :
+                        env.status === 'Degraded' ? 'bg-red-500/10 text-red-500 border-red-500/20' :
+                        'bg-blue-500/10 text-blue-500 border-blue-500/20'
+                      }`}>{env.status}</span>
+                      <span className="text-[10px] font-mono text-slate-400 dark:text-white/30 hidden sm:inline">{env.success_rate}% pass</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       <div className="grid gap-6 lg:grid-cols-2 relative z-10">
          <div className="rounded-3xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#14120B] p-6 sm:p-8 shadow-none flex flex-col">

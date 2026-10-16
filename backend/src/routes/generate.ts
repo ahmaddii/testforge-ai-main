@@ -113,6 +113,7 @@ router.post('/', authenticate, async (req: Request, res: Response) => {
         project_id: projectId,
         user_id: ownerId,
         report_id: report.id,
+        requirement_id: requirementId || null,
         module: moduleName,
         title: c.title || 'Untitled Test Scenario',
         steps: Array.isArray(c.steps) ? c.steps.join('\n') : (c.steps || ''),
