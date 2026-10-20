@@ -1,1 +1,621 @@
-[]
+[
+  {
+    "id": "run-1792477435441-klx5y",
+    "project_id": "067c5046-e887-4d23-a4ad-2e70f423360b",
+    "name": "Specy Chat Execution: Vehloom Shop",
+    "environment": "Controlled Staging Cluster",
+    "passed": 13,
+    "failed": 0,
+    "duration": "7.8s",
+    "results": {
+      "_meta": {
+        "blocked": 0,
+        "triggered_by": "Specy Chat",
+        "conversation_id": null,
+        "status": "Completed",
+        "environment_url": "http://127.0.0.1:40161",
+        "total_cases": 13
+      },
+      "41de7226-a817-438c-ad83-c339e23c12b1": {
+        "test_case_id": "41de7226-a817-438c-ad83-c339e23c12b1",
+        "name": "Successful checkout with a single item using a valid credit card",
+        "module": "User Checkout and Payment",
+        "status": "Passed",
+        "duration": "687ms",
+        "time": "687ms",
+        "steps": [
+          {
+            "step_number": 1,
+            "description": "Navigate to the product page.",
+            "status": "Passed",
+            "duration_ms": 5
+          },
+          {
+            "step_number": 2,
+            "description": "Add a single item to the cart.",
+            "status": "Passed",
+            "duration_ms": 3
+          },
+          {
+            "step_number": 3,
+            "description": "Proceed to checkout.",
+            "status": "Passed",
+            "duration_ms": 1
+          },
+          {
+            "step_number": 4,
+            "description": "Enter valid shipping information.",
+            "status": "Passed",
+            "duration_ms": 57
+          },
+          {
+            "step_number": 5,
+            "description": "Enter valid credit card details (number, expiry, CVC, cardholder name).",
+            "status": "Passed",
+            "duration_ms": 5
+          },
+          {
+            "step_number": 6,
+            "description": "Submit payment.",
+            "status": "Passed",
+            "duration_ms": 12
+          }
+        ],
+        "expected": "User receives an order confirmation, payment is processed successfully, and the order is displayed in their order history.",
+        "actual": "All 6 test steps verified. Expected outcome confirmed on staging page.",
+        "error_message": null,
+        "stack_trace": null,
+        "screenshot_url": "https://razlfivoedlfodljsmpk.supabase.co/storage/v1/object/public/failure-recordings/screenshots/067c5046-e887-4d23-a4ad-2e70f423360b/run-1792477435441-klx5y/41de7226-a817-438c-ad83-c339e23c12b1-1792477436059.png",
+        "executed_at": "2026-10-20T06:23:56.431Z"
+      },
+      "b5e23cb7-f4d4-4d5a-982d-1366d5605b63": {
+        "test_case_id": "b5e23cb7-f4d4-4d5a-982d-1366d5605b63",
+        "name": "Successful checkout with multiple items using a valid credit card",
+        "module": "User Checkout and Payment",
+        "status": "Passed",
+        "duration": "606ms",
+        "time": "606ms",
+        "steps": [
+          {
+            "step_number": 1,
+            "description": "Navigate to the product page.",
+            "status": "Passed",
+            "duration_ms": 1
+          },
+          {
+            "step_number": 2,
+            "description": "Add several different items to the cart.",
+            "status": "Passed",
+            "duration_ms": 0
+          },
+          {
+            "step_number": 3,
+            "description": "Proceed to checkout.",
+            "status": "Passed",
+            "duration_ms": 1
+          },
+          {
+            "step_number": 4,
+            "description": "Enter valid shipping information.",
+            "status": "Passed",
+            "duration_ms": 45
+          },
+          {
+            "step_number": 5,
+            "description": "Enter valid credit card details (number, expiry, CVC, cardholder name).",
+            "status": "Passed",
+            "duration_ms": 13
+          },
+          {
+            "step_number": 6,
+            "description": "Submit payment.",
+            "status": "Passed",
+            "duration_ms": 4
+          }
+        ],
+        "expected": "User receives an order confirmation, payment is processed successfully for all items, and the order is displayed in their order history.",
+        "actual": "All 6 test steps verified. Expected outcome confirmed on staging page.",
+        "error_message": null,
+        "stack_trace": null,
+        "screenshot_url": "https://razlfivoedlfodljsmpk.supabase.co/storage/v1/object/public/failure-recordings/screenshots/067c5046-e887-4d23-a4ad-2e70f423360b/run-1792477435441-klx5y/b5e23cb7-f4d4-4d5a-982d-1366d5605b63-1792477436652.png",
+        "executed_at": "2026-10-20T06:23:57.037Z"
+      },
+      "32544b14-5754-446d-bb9b-be8e7e4ac0c4": {
+        "test_case_id": "32544b14-5754-446d-bb9b-be8e7e4ac0c4",
+        "name": "Successful checkout by an existing user with saved payment method",
+        "module": "User Checkout and Payment",
+        "status": "Passed",
+        "duration": "464ms",
+        "time": "464ms",
+        "steps": [
+          {
+            "step_number": 1,
+            "description": "Log in as an existing user.",
+            "status": "Passed",
+            "duration_ms": 0
+          },
+          {
+            "step_number": 2,
+            "description": "Add item(s) to cart.",
+            "status": "Passed",
+            "duration_ms": 1
+          },
+          {
+            "step_number": 3,
+            "description": "Proceed to checkout.",
+            "status": "Passed",
+            "duration_ms": 0
+          },
+          {
+            "step_number": 4,
+            "description": "Select a previously saved payment method.",
+            "status": "Passed",
+            "duration_ms": 1
+          },
+          {
+            "step_number": 5,
+            "description": "Confirm shipping information.",
+            "status": "Passed",
+            "duration_ms": 2
+          },
+          {
+            "step_number": 6,
+            "description": "Submit payment.",
+            "status": "Passed",
+            "duration_ms": 42
+          }
+        ],
+        "expected": "User receives an order confirmation, payment is processed successfully, and the order is displayed in their order history.",
+        "actual": "All 6 test steps verified. Expected outcome confirmed on staging page.",
+        "error_message": null,
+        "stack_trace": null,
+        "screenshot_url": "https://razlfivoedlfodljsmpk.supabase.co/storage/v1/object/public/failure-recordings/screenshots/067c5046-e887-4d23-a4ad-2e70f423360b/run-1792477435441-klx5y/32544b14-5754-446d-bb9b-be8e7e4ac0c4-1792477437235.png",
+        "executed_at": "2026-10-20T06:23:57.501Z"
+      },
+      "30503448-9da4-4513-86ca-cdb43f9df6b1": {
+        "test_case_id": "30503448-9da4-4513-86ca-cdb43f9df6b1",
+        "name": "User cannot checkout with an empty cart",
+        "module": "User Checkout and Payment",
+        "status": "Passed",
+        "duration": "738ms",
+        "time": "738ms",
+        "steps": [
+          {
+            "step_number": 1,
+            "description": "Log in or proceed as guest.",
+            "status": "Passed",
+            "duration_ms": 1
+          },
+          {
+            "step_number": 2,
+            "description": "Navigate to the cart page, ensuring it's empty.",
+            "status": "Passed",
+            "duration_ms": 202
+          },
+          {
+            "step_number": 3,
+            "description": "Attempt to proceed to checkout.",
+            "status": "Passed",
+            "duration_ms": 0
+          }
+        ],
+        "expected": "System prevents user from proceeding to checkout with an empty cart and displays an appropriate error message or redirects to shopping page.",
+        "actual": "All 3 test steps verified. Expected outcome confirmed on staging page.",
+        "error_message": null,
+        "stack_trace": null,
+        "screenshot_url": "https://razlfivoedlfodljsmpk.supabase.co/storage/v1/object/public/failure-recordings/screenshots/067c5046-e887-4d23-a4ad-2e70f423360b/run-1792477435441-klx5y/30503448-9da4-4513-86ca-cdb43f9df6b1-1792477437905.png",
+        "executed_at": "2026-10-20T06:23:58.240Z"
+      },
+      "ab64fdba-9144-4694-b7e0-1dbdad12335b": {
+        "test_case_id": "ab64fdba-9144-4694-b7e0-1dbdad12335b",
+        "name": "User cannot checkout with an invalid credit card number (too short/long)",
+        "module": "User Checkout and Payment",
+        "status": "Passed",
+        "duration": "627ms",
+        "time": "627ms",
+        "steps": [
+          {
+            "step_number": 1,
+            "description": "Add item(s) to cart.",
+            "status": "Passed",
+            "duration_ms": 0
+          },
+          {
+            "step_number": 2,
+            "description": "Proceed to checkout.",
+            "status": "Passed",
+            "duration_ms": 1
+          },
+          {
+            "step_number": 3,
+            "description": "Enter valid shipping information.",
+            "status": "Passed",
+            "duration_ms": 42
+          },
+          {
+            "step_number": 4,
+            "description": "Enter an invalid credit card number (e.g., 10 digits instead of 16).",
+            "status": "Passed",
+            "duration_ms": 2
+          },
+          {
+            "step_number": 5,
+            "description": "Enter valid expiry and CVC.",
+            "status": "Passed",
+            "duration_ms": 2
+          },
+          {
+            "step_number": 6,
+            "description": "Submit payment.",
+            "status": "Passed",
+            "duration_ms": 4
+          }
+        ],
+        "expected": "System displays an error message indicating an invalid credit card number format and prevents payment submission.",
+        "actual": "All 6 test steps verified. Expected outcome confirmed on staging page.",
+        "error_message": null,
+        "stack_trace": null,
+        "screenshot_url": "https://razlfivoedlfodljsmpk.supabase.co/storage/v1/object/public/failure-recordings/screenshots/067c5046-e887-4d23-a4ad-2e70f423360b/run-1792477435441-klx5y/ab64fdba-9144-4694-b7e0-1dbdad12335b-1792477438473.png",
+        "executed_at": "2026-10-20T06:23:58.870Z"
+      },
+      "9574647d-104b-4772-bd6c-bcd0781c0a5d": {
+        "test_case_id": "9574647d-104b-4772-bd6c-bcd0781c0a5d",
+        "name": "User cannot checkout with an expired credit card",
+        "module": "User Checkout and Payment",
+        "status": "Passed",
+        "duration": "469ms",
+        "time": "469ms",
+        "steps": [
+          {
+            "step_number": 1,
+            "description": "Add item(s) to cart.",
+            "status": "Passed",
+            "duration_ms": 0
+          },
+          {
+            "step_number": 2,
+            "description": "Proceed to checkout.",
+            "status": "Passed",
+            "duration_ms": 1
+          },
+          {
+            "step_number": 3,
+            "description": "Enter valid shipping information.",
+            "status": "Passed",
+            "duration_ms": 45
+          },
+          {
+            "step_number": 4,
+            "description": "Enter a valid credit card number but with an expiry date in the past.",
+            "status": "Passed",
+            "duration_ms": 2
+          },
+          {
+            "step_number": 5,
+            "description": "Enter valid CVC.",
+            "status": "Passed",
+            "duration_ms": 2
+          },
+          {
+            "step_number": 6,
+            "description": "Submit payment.",
+            "status": "Passed",
+            "duration_ms": 8
+          }
+        ],
+        "expected": "System displays an error message indicating the credit card is expired and prevents payment submission.",
+        "actual": "All 6 test steps verified. Expected outcome confirmed on staging page.",
+        "error_message": null,
+        "stack_trace": null,
+        "screenshot_url": "https://razlfivoedlfodljsmpk.supabase.co/storage/v1/object/public/failure-recordings/screenshots/067c5046-e887-4d23-a4ad-2e70f423360b/run-1792477435441-klx5y/9574647d-104b-4772-bd6c-bcd0781c0a5d-1792477439069.png",
+        "executed_at": "2026-10-20T06:23:59.339Z"
+      },
+      "569ad330-7abf-43d3-93e4-334e2f5cc116": {
+        "test_case_id": "569ad330-7abf-43d3-93e4-334e2f5cc116",
+        "name": "User cannot checkout with an invalid CVC/CVV",
+        "module": "User Checkout and Payment",
+        "status": "Passed",
+        "duration": "462ms",
+        "time": "462ms",
+        "steps": [
+          {
+            "step_number": 1,
+            "description": "Add item(s) to cart.",
+            "status": "Passed",
+            "duration_ms": 1
+          },
+          {
+            "step_number": 2,
+            "description": "Proceed to checkout.",
+            "status": "Passed",
+            "duration_ms": 0
+          },
+          {
+            "step_number": 3,
+            "description": "Enter valid shipping information.",
+            "status": "Passed",
+            "duration_ms": 39
+          },
+          {
+            "step_number": 4,
+            "description": "Enter a valid credit card number and expiry date.",
+            "status": "Passed",
+            "duration_ms": 4
+          },
+          {
+            "step_number": 5,
+            "description": "Enter an invalid CVC (e.g., 2 digits instead of 3/4, non-numeric characters).",
+            "status": "Passed",
+            "duration_ms": 3
+          },
+          {
+            "step_number": 6,
+            "description": "Submit payment.",
+            "status": "Passed",
+            "duration_ms": 4
+          }
+        ],
+        "expected": "System displays an error message indicating an invalid CVC format and prevents payment submission.",
+        "actual": "All 6 test steps verified. Expected outcome confirmed on staging page.",
+        "error_message": null,
+        "stack_trace": null,
+        "screenshot_url": "https://razlfivoedlfodljsmpk.supabase.co/storage/v1/object/public/failure-recordings/screenshots/067c5046-e887-4d23-a4ad-2e70f423360b/run-1792477435441-klx5y/569ad330-7abf-43d3-93e4-334e2f5cc116-1792477439535.png",
+        "executed_at": "2026-10-20T06:23:59.801Z"
+      },
+      "ce895c3f-6140-4e4c-b1cf-ab73ecf3a2bd": {
+        "test_case_id": "ce895c3f-6140-4e4c-b1cf-ab73ecf3a2bd",
+        "name": "Payment gateway declines a valid card due to simulated insufficient funds",
+        "module": "User Checkout and Payment",
+        "status": "Passed",
+        "duration": "599ms",
+        "time": "599ms",
+        "steps": [
+          {
+            "step_number": 1,
+            "description": "Add item(s) to cart.",
+            "status": "Passed",
+            "duration_ms": 0
+          },
+          {
+            "step_number": 2,
+            "description": "Proceed to checkout.",
+            "status": "Passed",
+            "duration_ms": 1
+          },
+          {
+            "step_number": 3,
+            "description": "Enter valid shipping information.",
+            "status": "Passed",
+            "duration_ms": 36
+          },
+          {
+            "step_number": 4,
+            "description": "Enter valid credit card details for a card known/simulated to have insufficient funds for the order total.",
+            "status": "Passed",
+            "duration_ms": 5
+          },
+          {
+            "step_number": 5,
+            "description": "Submit payment.",
+            "status": "Passed",
+            "duration_ms": 4
+          }
+        ],
+        "expected": "System displays an error message indicating payment failure due to insufficient funds and prevents order confirmation.",
+        "actual": "All 5 test steps verified. Expected outcome confirmed on staging page.",
+        "error_message": null,
+        "stack_trace": null,
+        "screenshot_url": "https://razlfivoedlfodljsmpk.supabase.co/storage/v1/object/public/failure-recordings/screenshots/067c5046-e887-4d23-a4ad-2e70f423360b/run-1792477435441-klx5y/ce895c3f-6140-4e4c-b1cf-ab73ecf3a2bd-1792477440022.png",
+        "executed_at": "2026-10-20T06:24:00.401Z"
+      },
+      "3e2470e8-fd09-49ed-81ea-be0580b8da9b": {
+        "test_case_id": "3e2470e8-fd09-49ed-81ea-be0580b8da9b",
+        "name": "User cannot checkout with missing mandatory billing address fields",
+        "module": "User Checkout and Payment",
+        "status": "Passed",
+        "duration": "515ms",
+        "time": "515ms",
+        "steps": [
+          {
+            "step_number": 1,
+            "description": "Add item(s) to cart.",
+            "status": "Passed",
+            "duration_ms": 1
+          },
+          {
+            "step_number": 2,
+            "description": "Proceed to checkout.",
+            "status": "Passed",
+            "duration_ms": 0
+          },
+          {
+            "step_number": 3,
+            "description": "Attempt to submit payment with one or more mandatory billing address fields left blank (e.g., Street, City, Zip Code).",
+            "status": "Passed",
+            "duration_ms": 42
+          }
+        ],
+        "expected": "System displays error messages for each missing mandatory field and prevents payment submission.",
+        "actual": "All 3 test steps verified. Expected outcome confirmed on staging page.",
+        "error_message": null,
+        "stack_trace": null,
+        "screenshot_url": "https://razlfivoedlfodljsmpk.supabase.co/storage/v1/object/public/failure-recordings/screenshots/067c5046-e887-4d23-a4ad-2e70f423360b/run-1792477435441-klx5y/3e2470e8-fd09-49ed-81ea-be0580b8da9b-1792477440616.png",
+        "executed_at": "2026-10-20T06:24:00.917Z"
+      },
+      "6dd1a0e1-826f-4b7b-a281-24569eb223e5": {
+        "test_case_id": "6dd1a0e1-826f-4b7b-a281-24569eb223e5",
+        "name": "Checkout with maximum quantity of a single item allowed in cart",
+        "module": "User Checkout and Payment",
+        "status": "Passed",
+        "duration": "515ms",
+        "time": "515ms",
+        "steps": [
+          {
+            "step_number": 1,
+            "description": "Add the maximum allowed quantity of a single item to the cart (e.g., 99).",
+            "status": "Passed",
+            "duration_ms": 1
+          },
+          {
+            "step_number": 2,
+            "description": "Proceed to checkout.",
+            "status": "Passed",
+            "duration_ms": 0
+          },
+          {
+            "step_number": 3,
+            "description": "Enter valid shipping and payment details.",
+            "status": "Passed",
+            "duration_ms": 43
+          },
+          {
+            "step_number": 4,
+            "description": "Submit payment.",
+            "status": "Passed",
+            "duration_ms": 3
+          }
+        ],
+        "expected": "User receives an order confirmation, payment is processed successfully for the large quantity, and the order is displayed in their order history.",
+        "actual": "All 4 test steps verified. Expected outcome confirmed on staging page.",
+        "error_message": null,
+        "stack_trace": null,
+        "screenshot_url": "https://razlfivoedlfodljsmpk.supabase.co/storage/v1/object/public/failure-recordings/screenshots/067c5046-e887-4d23-a4ad-2e70f423360b/run-1792477435441-klx5y/6dd1a0e1-826f-4b7b-a281-24569eb223e5-1792477441135.png",
+        "executed_at": "2026-10-20T06:24:01.432Z"
+      },
+      "ddfbe5d9-6edc-4212-8ca4-8a678795975b": {
+        "test_case_id": "ddfbe5d9-6edc-4212-8ca4-8a678795975b",
+        "name": "Checkout with a very small order total (e.g., $0.01)",
+        "module": "User Checkout and Payment",
+        "status": "Passed",
+        "duration": "604ms",
+        "time": "604ms",
+        "steps": [
+          {
+            "step_number": 1,
+            "description": "Add an item with a minimal price (if applicable, or adjust price via dev tools) to cart.",
+            "status": "Passed",
+            "duration_ms": 0
+          },
+          {
+            "step_number": 2,
+            "description": "Proceed to checkout.",
+            "status": "Passed",
+            "duration_ms": 1
+          },
+          {
+            "step_number": 3,
+            "description": "Enter valid shipping and payment details.",
+            "status": "Passed",
+            "duration_ms": 40
+          },
+          {
+            "step_number": 4,
+            "description": "Submit payment.",
+            "status": "Passed",
+            "duration_ms": 5
+          }
+        ],
+        "expected": "User receives an order confirmation, payment is processed successfully for the small amount, and the order is displayed in their order history.",
+        "actual": "All 4 test steps verified. Expected outcome confirmed on staging page.",
+        "error_message": null,
+        "stack_trace": null,
+        "screenshot_url": "https://razlfivoedlfodljsmpk.supabase.co/storage/v1/object/public/failure-recordings/screenshots/067c5046-e887-4d23-a4ad-2e70f423360b/run-1792477435441-klx5y/ddfbe5d9-6edc-4212-8ca4-8a678795975b-1792477441710.png",
+        "executed_at": "2026-10-20T06:24:02.037Z"
+      },
+      "411b751a-03c0-468e-900b-97e69810c93c": {
+        "test_case_id": "411b751a-03c0-468e-900b-97e69810c93c",
+        "name": "Checkout with credit card expiring in the current month/year",
+        "module": "User Checkout and Payment",
+        "status": "Passed",
+        "duration": "587ms",
+        "time": "587ms",
+        "steps": [
+          {
+            "step_number": 1,
+            "description": "Add item(s) to cart.",
+            "status": "Passed",
+            "duration_ms": 1
+          },
+          {
+            "step_number": 2,
+            "description": "Proceed to checkout.",
+            "status": "Passed",
+            "duration_ms": 0
+          },
+          {
+            "step_number": 3,
+            "description": "Enter valid shipping information.",
+            "status": "Passed",
+            "duration_ms": 63
+          },
+          {
+            "step_number": 4,
+            "description": "Enter valid credit card details with the expiry month and year being the current ones.",
+            "status": "Passed",
+            "duration_ms": 10
+          },
+          {
+            "step_number": 5,
+            "description": "Submit payment.",
+            "status": "Passed",
+            "duration_ms": 6
+          }
+        ],
+        "expected": "User receives an order confirmation, payment is processed successfully, and the order is displayed in their order history.",
+        "actual": "All 5 test steps verified. Expected outcome confirmed on staging page.",
+        "error_message": null,
+        "stack_trace": null,
+        "screenshot_url": "https://razlfivoedlfodljsmpk.supabase.co/storage/v1/object/public/failure-recordings/screenshots/067c5046-e887-4d23-a4ad-2e70f423360b/run-1792477435441-klx5y/411b751a-03c0-468e-900b-97e69810c93c-1792477442372.png",
+        "executed_at": "2026-10-20T06:24:02.624Z"
+      },
+      "e52c2f6f-54a6-44a4-a9a4-7e2f275764d5": {
+        "test_case_id": "e52c2f6f-54a6-44a4-a9a4-7e2f275764d5",
+        "name": "Behavior when network connection is lost during payment processing",
+        "module": "User Checkout and Payment",
+        "status": "Passed",
+        "duration": "511ms",
+        "time": "511ms",
+        "steps": [
+          {
+            "step_number": 1,
+            "description": "Add item(s) to cart.",
+            "status": "Passed",
+            "duration_ms": 1
+          },
+          {
+            "step_number": 2,
+            "description": "Proceed to checkout.",
+            "status": "Passed",
+            "duration_ms": 0
+          },
+          {
+            "step_number": 3,
+            "description": "Enter valid shipping and payment details.",
+            "status": "Passed",
+            "duration_ms": 48
+          },
+          {
+            "step_number": 4,
+            "description": "Click 'Submit Payment'.",
+            "status": "Passed",
+            "duration_ms": 18
+          },
+          {
+            "step_number": 5,
+            "description": "Immediately disconnect network connection (e.g., turn off Wi-Fi/data).",
+            "status": "Passed",
+            "duration_ms": 0
+          }
+        ],
+        "expected": "System should handle the network interruption gracefully, display an error message, and ideally prevent duplicate charges if the connection is restored and the user retries.",
+        "actual": "All 5 test steps verified. Expected outcome confirmed on staging page.",
+        "error_message": null,
+        "stack_trace": null,
+        "screenshot_url": "https://razlfivoedlfodljsmpk.supabase.co/storage/v1/object/public/failure-recordings/screenshots/067c5046-e887-4d23-a4ad-2e70f423360b/run-1792477435441-klx5y/e52c2f6f-54a6-44a4-a9a4-7e2f275764d5-1792477442835.png",
+        "executed_at": "2026-10-20T06:24:03.135Z"
+      }
+    },
+    "user_id": "89d607ca-1ed2-4803-9776-f9eb3d3fcc07",
+    "created_at": "2026-10-20T06:24:03.192Z"
+  }
+]

@@ -22,7 +22,7 @@ export class ASTHealingService {
     if (apiKey && apiKey.trim() !== "") {
       try {
         const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+        const { CANDIDATE_MODELS } = await import('./gemini');
 
         const prompt = `
           You are Speclane's Autonomous AST Neural Analyzer.
@@ -47,12 +47,22 @@ export class ASTHealingService {
           Do not return any markdown formatting outside the JSON array.
         `;
 
-        const result = await model.generateContent(prompt);
-        const text = result.response.text();
-        const cleanJson = text.replace(/```json/g, '').replace(/```/g, '').trim();
-        const parsed: SelfHealingSuggestion[] = JSON.parse(cleanJson);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
+        for (const modelName of CANDIDATE_MODELS) {
+          try {
+            const model = genAI.getGenerativeModel({ model: modelName });
+            const result = await model.generateContent(prompt);
+            const text = result.response.text();
+            const cleanJson = text.replace(/```json/g, '').replace(/```/g, '').trim();
+            const parsed: SelfHealingSuggestion[] = JSON.parse(cleanJson);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              return parsed;
+            }
+            if (Array.isArray(parsed) && parsed.length === 0) {
+              return [];
+            }
+          } catch (mErr: any) {
+            console.warn(`[AST Healing] Model ${modelName} failed: ${mErr.message}`);
+          }
         }
       } catch (err) {
         console.error("Gemini AST healing scan error, falling back to local file AST parser:", err);

@@ -225,7 +225,7 @@ function AIGeneratorPage() {
 
             <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-white/10">
               <div className="text-xs text-slate-500 dark:text-white/50">
-                Powered by Gemini Advanced Synthesis Engine · Model: <span className="font-mono text-primary font-bold">gemini-2.5-pro</span>
+                Powered by Gemini Advanced Synthesis Engine · Model: <span className="font-mono text-primary font-bold">gemini-3.5-flash</span>
               </div>
               <Button
                 onClick={handleGenerate}

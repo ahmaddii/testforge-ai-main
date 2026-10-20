@@ -1,8 +1,8 @@
 import { supabase } from "./supabase";
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+export const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
-async function getHeaders() {
+export async function getHeaders() {
   const { data: { session } } = await supabase.auth.getSession();
   return {
     'Content-Type': 'application/json',

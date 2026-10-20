@@ -3,6 +3,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+import specyRagRoutes from './routes/specy-rag';
 
 import projectRoutes from './routes/projects';
 import requirementRoutes from './routes/requirements';
@@ -23,6 +24,8 @@ import testPlanRoutes from './routes/test-plans';
 import executionRunRoutes from './routes/execution-runs';
 import selfHealingRoutes from './routes/self-healing';
 import specyRoutes from './routes/specy';
+import specyAgentRoutes from './routes/specy-agent';
+import { initializeSpecyRAGRealtime } from './services/specy-rag';
 dotenv.config();
 
 const app = express();
@@ -55,6 +58,8 @@ app.use('/api/test-plans', testPlanRoutes);
 app.use('/api/execution-runs', executionRunRoutes);
 app.use('/api/self-healing', selfHealingRoutes);
 app.use('/api/specy', specyRoutes);
+app.use('/api/specy-rag', specyRagRoutes);
+app.use('/api/specy-agent', specyAgentRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
@@ -63,4 +68,5 @@ app.get('/health', (req, res) => {
 
 app.listen(port, () => {
   console.log(`Speclane Backend running on port ${port}`);
+  initializeSpecyRAGRealtime();
 });

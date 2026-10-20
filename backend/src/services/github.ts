@@ -124,10 +124,10 @@ export class GitHubService {
     const priorityFiles = tree.filter(f => {
       const p = f.path.toLowerCase();
       return (
-        p === 'package.json' || 
-        p === 'readme.md' || 
-        p.includes('src/app') || 
-        p.endsWith('.tsx') || 
+        p === 'package.json' ||
+        p === 'readme.md' ||
+        p.includes('src/app') ||
+        p.endsWith('.tsx') ||
         p.endsWith('.jsx') ||
         p.endsWith('.ts')
       );

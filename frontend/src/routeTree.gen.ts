@@ -29,6 +29,7 @@ import { Route as AppTrendsRouteImport } from './routes/app.trends'
 import { Route as AppTestPlansRouteImport } from './routes/app.test-plans'
 import { Route as AppTestCasesRouteImport } from './routes/app.test-cases'
 import { Route as AppTeamRouteImport } from './routes/app.team'
+import { Route as AppSpecyRouteImport } from './routes/app.specy'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
 import { Route as AppSelfHealingRouteImport } from './routes/app.self-healing'
 import { Route as AppRunsRouteImport } from './routes/app.runs'
@@ -40,6 +41,7 @@ import { Route as AppNotificationsRouteImport } from './routes/app.notifications
 import { Route as AppIntegrationsRouteImport } from './routes/app.integrations'
 import { Route as AppImportExportRouteImport } from './routes/app.import-export'
 import { Route as AppHelpRouteImport } from './routes/app.help'
+import { Route as AppExecutedTestsRouteImport } from './routes/app.executed-tests'
 import { Route as AppEnvironmentsRouteImport } from './routes/app.environments'
 import { Route as AppDefectsRouteImport } from './routes/app.defects'
 import { Route as AppCoverageRouteImport } from './routes/app.coverage'
@@ -153,6 +155,11 @@ const AppTeamRoute = AppTeamRouteImport.update({
   path: '/team',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSpecyRoute = AppSpecyRouteImport.update({
+  id: '/specy',
+  path: '/specy',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppSettingsRoute = AppSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -206,6 +213,11 @@ const AppImportExportRoute = AppImportExportRouteImport.update({
 const AppHelpRoute = AppHelpRouteImport.update({
   id: '/help',
   path: '/help',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppExecutedTestsRoute = AppExecutedTestsRouteImport.update({
+  id: '/executed-tests',
+  path: '/executed-tests',
   getParentRoute: () => AppRoute,
 } as any)
 const AppEnvironmentsRoute = AppEnvironmentsRouteImport.update({
@@ -291,6 +303,7 @@ export interface FileRoutesByFullPath {
   '/app/coverage': typeof AppCoverageRoute
   '/app/defects': typeof AppDefectsRoute
   '/app/environments': typeof AppEnvironmentsRoute
+  '/app/executed-tests': typeof AppExecutedTestsRoute
   '/app/help': typeof AppHelpRoute
   '/app/import-export': typeof AppImportExportRoute
   '/app/integrations': typeof AppIntegrationsRoute
@@ -302,6 +315,7 @@ export interface FileRoutesByFullPath {
   '/app/runs': typeof AppRunsRoute
   '/app/self-healing': typeof AppSelfHealingRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/specy': typeof AppSpecyRoute
   '/app/team': typeof AppTeamRoute
   '/app/test-cases': typeof AppTestCasesRoute
   '/app/test-plans': typeof AppTestPlansRoute
@@ -334,6 +348,7 @@ export interface FileRoutesByTo {
   '/app/coverage': typeof AppCoverageRoute
   '/app/defects': typeof AppDefectsRoute
   '/app/environments': typeof AppEnvironmentsRoute
+  '/app/executed-tests': typeof AppExecutedTestsRoute
   '/app/help': typeof AppHelpRoute
   '/app/import-export': typeof AppImportExportRoute
   '/app/integrations': typeof AppIntegrationsRoute
@@ -345,6 +360,7 @@ export interface FileRoutesByTo {
   '/app/runs': typeof AppRunsRoute
   '/app/self-healing': typeof AppSelfHealingRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/specy': typeof AppSpecyRoute
   '/app/team': typeof AppTeamRoute
   '/app/test-cases': typeof AppTestCasesRoute
   '/app/test-plans': typeof AppTestPlansRoute
@@ -380,6 +396,7 @@ export interface FileRoutesById {
   '/app/coverage': typeof AppCoverageRoute
   '/app/defects': typeof AppDefectsRoute
   '/app/environments': typeof AppEnvironmentsRoute
+  '/app/executed-tests': typeof AppExecutedTestsRoute
   '/app/help': typeof AppHelpRoute
   '/app/import-export': typeof AppImportExportRoute
   '/app/integrations': typeof AppIntegrationsRoute
@@ -391,6 +408,7 @@ export interface FileRoutesById {
   '/app/runs': typeof AppRunsRoute
   '/app/self-healing': typeof AppSelfHealingRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/specy': typeof AppSpecyRoute
   '/app/team': typeof AppTeamRoute
   '/app/test-cases': typeof AppTestCasesRoute
   '/app/test-plans': typeof AppTestPlansRoute
@@ -427,6 +445,7 @@ export interface FileRouteTypes {
     | '/app/coverage'
     | '/app/defects'
     | '/app/environments'
+    | '/app/executed-tests'
     | '/app/help'
     | '/app/import-export'
     | '/app/integrations'
@@ -438,6 +457,7 @@ export interface FileRouteTypes {
     | '/app/runs'
     | '/app/self-healing'
     | '/app/settings'
+    | '/app/specy'
     | '/app/team'
     | '/app/test-cases'
     | '/app/test-plans'
@@ -470,6 +490,7 @@ export interface FileRouteTypes {
     | '/app/coverage'
     | '/app/defects'
     | '/app/environments'
+    | '/app/executed-tests'
     | '/app/help'
     | '/app/import-export'
     | '/app/integrations'
@@ -481,6 +502,7 @@ export interface FileRouteTypes {
     | '/app/runs'
     | '/app/self-healing'
     | '/app/settings'
+    | '/app/specy'
     | '/app/team'
     | '/app/test-cases'
     | '/app/test-plans'
@@ -515,6 +537,7 @@ export interface FileRouteTypes {
     | '/app/coverage'
     | '/app/defects'
     | '/app/environments'
+    | '/app/executed-tests'
     | '/app/help'
     | '/app/import-export'
     | '/app/integrations'
@@ -526,6 +549,7 @@ export interface FileRouteTypes {
     | '/app/runs'
     | '/app/self-healing'
     | '/app/settings'
+    | '/app/specy'
     | '/app/team'
     | '/app/test-cases'
     | '/app/test-plans'
@@ -697,6 +721,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppTeamRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/specy': {
+      id: '/app/specy'
+      path: '/specy'
+      fullPath: '/app/specy'
+      preLoaderRoute: typeof AppSpecyRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/settings': {
       id: '/app/settings'
       path: '/settings'
@@ -772,6 +803,13 @@ declare module '@tanstack/react-router' {
       path: '/help'
       fullPath: '/app/help'
       preLoaderRoute: typeof AppHelpRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/executed-tests': {
+      id: '/app/executed-tests'
+      path: '/executed-tests'
+      fullPath: '/app/executed-tests'
+      preLoaderRoute: typeof AppExecutedTestsRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/environments': {
@@ -883,6 +921,7 @@ interface AppRouteChildren {
   AppCoverageRoute: typeof AppCoverageRoute
   AppDefectsRoute: typeof AppDefectsRoute
   AppEnvironmentsRoute: typeof AppEnvironmentsRoute
+  AppExecutedTestsRoute: typeof AppExecutedTestsRoute
   AppHelpRoute: typeof AppHelpRoute
   AppImportExportRoute: typeof AppImportExportRoute
   AppIntegrationsRoute: typeof AppIntegrationsRoute
@@ -894,6 +933,7 @@ interface AppRouteChildren {
   AppRunsRoute: typeof AppRunsRoute
   AppSelfHealingRoute: typeof AppSelfHealingRoute
   AppSettingsRoute: typeof AppSettingsRoute
+  AppSpecyRoute: typeof AppSpecyRoute
   AppTeamRoute: typeof AppTeamRoute
   AppTestCasesRoute: typeof AppTestCasesRoute
   AppTestPlansRoute: typeof AppTestPlansRoute
@@ -913,6 +953,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppCoverageRoute: AppCoverageRoute,
   AppDefectsRoute: AppDefectsRoute,
   AppEnvironmentsRoute: AppEnvironmentsRoute,
+  AppExecutedTestsRoute: AppExecutedTestsRoute,
   AppHelpRoute: AppHelpRoute,
   AppImportExportRoute: AppImportExportRoute,
   AppIntegrationsRoute: AppIntegrationsRoute,
@@ -924,6 +965,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppRunsRoute: AppRunsRoute,
   AppSelfHealingRoute: AppSelfHealingRoute,
   AppSettingsRoute: AppSettingsRoute,
+  AppSpecyRoute: AppSpecyRoute,
   AppTeamRoute: AppTeamRoute,
   AppTestCasesRoute: AppTestCasesRoute,
   AppTestPlansRoute: AppTestPlansRoute,

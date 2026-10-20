@@ -43,8 +43,6 @@ router.post('/chat', async (req: Request, res: Response) => {
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
-    
     const prompt = `
       ${SYSTEM_PROMPT}
 
@@ -57,15 +55,24 @@ router.post('/chat', async (req: Request, res: Response) => {
       }
     `;
 
-    const result = await model.generateContent(prompt);
-    const responseText = await result.response.text();
-    const cleanJson = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
-    const parsed = JSON.parse(cleanJson);
+    const { CANDIDATE_MODELS } = await import('../services/gemini');
+    for (const modelName of CANDIDATE_MODELS) {
+      try {
+        const model = genAI.getGenerativeModel({ model: modelName });
+        const result = await model.generateContent(prompt);
+        const responseText = await result.response.text();
+        const cleanJson = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
+        const parsed = JSON.parse(cleanJson);
 
-    return res.json({
-      text: parsed.text,
-      suggestions: parsed.suggestions || []
-    });
+        return res.json({
+          text: parsed.text,
+          suggestions: parsed.suggestions || []
+        });
+      } catch (err: any) {
+        console.warn(`[Specy Chat] Model ${modelName} failed: ${err.message}. Trying next candidate...`);
+      }
+    }
+    return res.status(500).json({ error: 'All Gemini models failed to generate response.' });
 
   } catch (err: any) {
     console.error('Gemini Specy Chat Error:', err);

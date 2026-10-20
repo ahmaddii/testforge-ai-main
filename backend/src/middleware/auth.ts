@@ -13,6 +13,14 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
 
   if (process.env.MASTER_API_KEY && token === process.env.MASTER_API_KEY) {
     (req as any).isMaster = true;
+    if (!req.user) {
+      req.user = {
+        id:
+          (req.headers['x-impersonate-user-id'] as string) ||
+          '89d607ca-1ed2-4803-9776-f9eb3d3fcc07',
+        email: 'master@testforge.com',
+      };
+    }
     return next();
   }
 

@@ -157,6 +157,48 @@ export interface TestPlanItem {
   created_at?: string;
 }
 
+export interface ExecutionStepResult {
+  step_number: number;
+  description: string;
+  status: 'Passed' | 'Failed' | 'Blocked' | 'Skipped' | 'Error';
+  duration_ms?: number;
+  action_type?: string;
+  performed_action?: string;
+  expected_value?: string;
+  observed_value?: string;
+  input_value?: string;
+  http_status?: number;
+  error?: string;
+}
+
+export interface ExecutionTestCaseResult {
+  test_case_id?: string;
+  name: string;
+  module: string;
+  status: 'Passed' | 'Failed' | 'Blocked' | 'Error';
+  time: string;
+  duration?: string;
+  steps?: ExecutionStepResult[];
+  expected?: string;
+  actual?: string;
+  http_status?: number | null;
+  console_errors?: string[];
+  network_errors?: string[];
+  error_message?: string | null;
+  stack_trace?: string | null;
+  screenshot_url?: string | null;
+  executed_at?: string;
+}
+
+export interface ExecutionRunMeta {
+  blocked?: number;
+  triggered_by?: string;
+  conversation_id?: string | null;
+  status?: 'Completed' | 'Failed' | 'Partial' | 'Running';
+  environment_url?: string;
+  total_cases?: number;
+}
+
 export interface ExecutionRun {
   id: string;
   project_id?: string;
@@ -165,8 +207,12 @@ export interface ExecutionRun {
   environment: string;
   passed: number;
   failed: number;
+  blocked?: number;
   duration: string;
-  results: Record<string, { status: string; time: string; name: string; module: string }>;
+  status?: 'Completed' | 'Failed' | 'Partial' | 'Running';
+  triggered_by?: string;
+  conversation_id?: string;
+  results: Record<string, ExecutionTestCaseResult | any>;
   created_at: string;
 }
 

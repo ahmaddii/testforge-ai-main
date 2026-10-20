@@ -2,7 +2,7 @@ import { createFileRoute, Outlet, Link, useNavigate, useRouterState, redirect } 
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
-  LayoutDashboard, FolderGit2, ListChecks, FlaskConical, FileBarChart, Settings, Search, LogOut, ChevronRight, Bug, Activity, PlugZap, UsersRound, MessageSquare, Video, CreditCard, Inbox, Layers, Server, History, Bell, Sparkles, Milestone, TrendingUp, GitCompare, ArrowDownUp, DownloadCloud, FileCode2, LifeBuoy, Wand2, GitPullRequest
+  LayoutDashboard, FolderGit2, ListChecks, FlaskConical, FileBarChart, Settings, Search, LogOut, ChevronRight, Bug, Activity, PlugZap, UsersRound, MessageSquare, Video, CreditCard, Inbox, Layers, Server, History, Bell, Sparkles, Milestone, TrendingUp, GitCompare, ArrowDownUp, DownloadCloud, FileCode2, LifeBuoy, Wand2, GitPullRequest, ClipboardCheck
 } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarGroupLabel,
@@ -80,6 +80,7 @@ const nav: NavItem[] = [
   { to: "/app/test-plans", label: "Test Plans", icon: Layers },
   { to: "/app/releases", label: "Releases", icon: Milestone },
   { to: "/app/environments", label: "Environments", icon: Server },
+  { to: "/app/executed-tests", label: "Executed Tests", icon: ClipboardCheck },
   { to: "/app/ai-generator", label: "AI Test Generator", icon: Sparkles },
   { to: "/app/test-cases", label: "Test Cases", icon: FlaskConical },
   { to: "/app/runs", label: "Manual AI Runs", icon: Activity },
@@ -120,6 +121,8 @@ const navGroups: Array<{ title: string; items: NavItem[] }> = [
   {
     title: "Execution & AI",
     items: [
+      { to: "/app/specy", label: "Specy AI Agent", icon: Wand2 },
+      { to: "/app/executed-tests", label: "Executed Tests", icon: ClipboardCheck },
       { to: "/app/ai-generator", label: "AI Test Generator", icon: Sparkles, pro: true, requiredFeature: "aiTestGenerator" },
       { to: "/app/test-cases", label: "Test Cases", icon: FlaskConical },
       { to: "/app/runs", label: "Manual AI Runs", icon: Activity },
@@ -437,6 +440,11 @@ function AppLayout() {
     setSearchText("");
   };
 
+  const isSpecy = pathname === "/app/specy" || pathname.startsWith("/app/specy");
+  if (isSpecy) {
+    return <Outlet />;
+  }
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background">
@@ -464,6 +472,11 @@ function AppLayout() {
                               {showProBadge && (
                                 <span className="ml-auto text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 uppercase tracking-wider group-data-[state=collapsed]:hidden select-none">
                                   Pro
+                                </span>
+                              )}
+                              {n.to === "/app/specy" && (
+                                <span className="ml-auto text-[9px] font-semibold px-1.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 group-data-[state=collapsed]:hidden select-none">
+                                  Agent
                                 </span>
                               )}
                             </Link>

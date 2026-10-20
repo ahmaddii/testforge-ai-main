@@ -30,8 +30,7 @@ export class PlaywrightHealingService {
     if (apiKey && apiKey.trim() !== "") {
       try {
         const genAI = new GoogleGenerativeAI(apiKey);
-        // Fallback to simpler model if needed, but 2.5-flash is preferred
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+        const { CANDIDATE_MODELS } = await import('./gemini');
 
         const prompt = `
           You are Speclane's Playwright Self-Healing AI.
@@ -63,21 +62,26 @@ export class PlaywrightHealingService {
           Do not include any markdown formatting outside the JSON object.
         `;
 
-        const result = await model.generateContent(prompt);
-        const text = result.response.text();
-        const cleanJson = text.replace(/```json/g, '').replace(/```/g, '').trim();
-        
-        if (cleanJson === "null") {
-          return null;
-        }
+        for (const modelName of CANDIDATE_MODELS) {
+          try {
+            const model = genAI.getGenerativeModel({ model: modelName });
+            const result = await model.generateContent(prompt);
+            const text = result.response.text();
+            const cleanJson = text.replace(/```json/g, '').replace(/```/g, '').trim();
+            
+            if (cleanJson === "null") {
+              return null;
+            }
 
-        const parsed: SelfHealingSuggestion = JSON.parse(cleanJson);
-        
-        parsed.error_message = failure.errorMessage;
-        parsed.screenshot_url = failure.screenshotUrl;
-        parsed.trace_url = failure.traceUrl;
-        
-        return parsed;
+            const parsed: SelfHealingSuggestion = JSON.parse(cleanJson);
+            parsed.error_message = failure.errorMessage;
+            parsed.screenshot_url = failure.screenshotUrl;
+            parsed.trace_url = failure.traceUrl;
+            return parsed;
+          } catch (mErr: any) {
+            console.warn(`[Playwright Healing] Model ${modelName} failed: ${mErr.message}`);
+          }
+        }
       } catch (err) {
         console.error("Gemini AI Playwright analysis error:", err);
       }

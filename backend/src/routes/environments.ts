@@ -71,11 +71,20 @@ router.post('/', authenticate, async (req: Request, res: Response) => {
     }
   }
 
+  if (!req.body.url || typeof req.body.url !== 'string' || req.body.url.trim() === '') {
+    return res.status(400).json({ error: 'Environment URL is required.' });
+  }
+
+  const rawUrl = req.body.url.trim();
+  const normalizedUrl = (rawUrl.startsWith('http://') || rawUrl.startsWith('https://'))
+    ? rawUrl
+    : `https://${rawUrl}`;
+
   const newEnv = {
     project_id: validProjectId,
-    name: req.body.name || 'Core Staging Cluster',
+    name: req.body.name || 'Core Cluster',
     type: req.body.type || 'Staging',
-    url: req.body.url || 'https://staging.speclane.com',
+    url: normalizedUrl,
     status: req.body.status || 'Healthy',
     last_verified: req.body.last_verified || 'Just now',
     active_runners: req.body.active_runners || 1,
