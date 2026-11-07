@@ -1,1 +1,23 @@
-[]
+[
+  {
+    "id": "specy-1792779155612",
+    "user_id": "89d607ca-1ed2-4803-9776-f9eb3d3fcc07",
+    "project_id": null,
+    "title": "hi",
+    "messages": [
+      {
+        "role": "user",
+        "content": "hi"
+      },
+      {
+        "role": "assistant",
+        "content": "Hi! I’m Specy. I can help with your requirements, test cases, defects, and Playwright runs. What are you working on?",
+        "sources": [],
+        "model_used": "Specy instant reply",
+        "execution_run": null
+      }
+    ],
+    "created_at": "2026-10-23T18:12:36.159Z",
+    "updated_at": "2026-10-23T18:12:36.159Z"
+  }
+]
