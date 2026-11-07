@@ -53,9 +53,38 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import GrayAgent from "./Gray-agent";
+
+function MarkdownContent({ content }: { content: string }) {
+  const paragraphs = content.split('\n\n');
+  return (
+    <div className="space-y-3">
+      {paragraphs.map((p, idx) => {
+        const trimmed = p.trim();
+        if (trimmed.startsWith('### ')) {
+          return <h3 key={idx} className="text-base font-bold text-white mt-3 mb-1">{trimmed.replace(/^###\s+/, '')}</h3>;
+        }
+        if (trimmed.startsWith('## ')) {
+          return <h2 key={idx} className="text-lg font-bold text-white mt-4 mb-2">{trimmed.replace(/^##\s+/, '')}</h2>;
+        }
+        if (trimmed.startsWith('# ')) {
+          return <h1 key={idx} className="text-xl font-bold text-white mt-5 mb-2">{trimmed.replace(/^#\s+/, '')}</h1>;
+        }
+        if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+          const items = trimmed.split('\n').filter(Boolean);
+          return (
+            <ul key={idx} className="list-disc list-inside space-y-1 text-zinc-300">
+              {items.map((item, iIdx) => (
+                <li key={iIdx}>{item.replace(/^[-*]\s+/, '')}</li>
+              ))}
+            </ul>
+          );
+        }
+        return <p key={idx} className="text-zinc-200 leading-relaxed whitespace-pre-wrap">{trimmed}</p>;
+      })}
+    </div>
+  );
+}
 
 export const Route = createFileRoute("/app/specy")({
   component: SpecyPage,
@@ -991,10 +1020,8 @@ function SpecyPage() {
                       ) : (
                         <div className="space-y-3">
                           {/* Markdown Response */}
-                          <div className="select-text prose prose-invert prose-zinc max-w-none text-sm leading-relaxed [&_p]:my-3 [&_ul]:my-3 [&_ol]:my-3 [&_li]:my-1.5 [&_h1]:mt-5 [&_h2]:mt-4 [&_h3]:mt-3 [&_table]:block [&_table]:w-full [&_table]:overflow-x-auto [&_table]:border-collapse [&_th]:border [&_th]:border-white/10 [&_th]:bg-zinc-800/80 [&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_td]:border [&_td]:border-white/10 [&_td]:px-3 [&_td]:py-2 [&_a]:text-emerald-400 [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:text-emerald-300 [&_blockquote]:border-l-2 [&_blockquote]:border-emerald-500/50 [&_blockquote]:pl-3 [&_blockquote]:text-zinc-400">
-                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                              {msg.content}
-                            </ReactMarkdown>
+                          <div className="select-text prose prose-invert prose-zinc max-w-none text-sm leading-relaxed">
+                            <MarkdownContent content={msg.content} />
                           </div>
 
                           {/* Execution run card if triggered */}

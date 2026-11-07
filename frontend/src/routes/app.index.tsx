@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { FolderGit2, FlaskConical, Target, Sparkles, Bug, AlertTriangle, Server, CheckCircle2, RefreshCw, Zap } from "lucide-react";
 import { useApp } from "@/lib/store";
 import { PageSkeleton } from "@/components/page-skeleton";
@@ -15,6 +15,7 @@ export const Route = createFileRoute("/app/")({
 
 function DashboardHome() {
   const { projects, testCases, reports, defects: allDefects, environments, loading } = useApp();
+  const [velocityRange, setVelocityRange] = useState<'7d' | '30d' | 'all'>('7d');
   
   const coverage = useMemo(() => {
     if (reports.length === 0) return 0;
@@ -28,15 +29,81 @@ function DashboardHome() {
     { label: "Avg. Coverage", value: `${coverage}%`, icon: Target, accent: "from-chart-4 to-chart-5" },
   ];
 
-  const trend = [
-    { d: "Mon", v: testCases.length > 0 ? Math.floor(testCases.length * 0.2) : 0 }, 
-    { d: "Tue", v: testCases.length > 0 ? Math.floor(testCases.length * 0.4) : 0 }, 
-    { d: "Wed", v: testCases.length > 0 ? Math.floor(testCases.length * 0.3) : 0 },
-    { d: "Thu", v: testCases.length > 0 ? Math.floor(testCases.length * 0.5) : 0 }, 
-    { d: "Fri", v: testCases.length > 0 ? Math.floor(testCases.length * 0.7) : 0 }, 
-    { d: "Sat", v: testCases.length > 0 ? Math.floor(testCases.length * 0.8) : 0 }, 
-    { d: "Sun", v: testCases.length },
-  ];
+  const { trendData, periodTotal, peakDaily } = useMemo(() => {
+    const now = new Date();
+    const toYMD = (d: Date) => {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+
+    const countsByDate = new Map<string, number>();
+    testCases.forEach((tc) => {
+      if (!tc.created_at) return;
+      try {
+        const d = new Date(tc.created_at);
+        if (isNaN(d.getTime())) return;
+        const key = toYMD(d);
+        countsByDate.set(key, (countsByDate.get(key) || 0) + 1);
+      } catch {
+        // ignore invalid date
+      }
+    });
+
+    let points: { d: string; fullDate: string; count: number }[] = [];
+
+    if (velocityRange === '7d') {
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(now);
+        d.setDate(now.getDate() - i);
+        const key = toYMD(d);
+        const dayName = i === 0 ? "Today" : d.toLocaleDateString(undefined, { weekday: 'short' });
+        const fullDate = d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+        const count = countsByDate.get(key) || 0;
+        points.push({ d: dayName, fullDate, count });
+      }
+    } else if (velocityRange === '30d') {
+      for (let i = 29; i >= 0; i--) {
+        const d = new Date(now);
+        d.setDate(now.getDate() - i);
+        const key = toYMD(d);
+        const dayLabel = i === 0 ? "Today" : (i % 5 === 0 || i === 29 ? d.toLocaleDateString(undefined, { month: 'numeric', day: 'numeric' }) : "");
+        const fullDate = d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+        const count = countsByDate.get(key) || 0;
+        points.push({ d: dayLabel, fullDate, count });
+      }
+    } else {
+      if (countsByDate.size === 0) {
+        points = [{ d: "Today", fullDate: now.toLocaleDateString(), count: 0 }];
+      } else {
+        const sortedKeys = Array.from(countsByDate.keys()).sort();
+        if (sortedKeys.length === 1) {
+          const onlyDate = new Date(sortedKeys[0]);
+          const prev = new Date(onlyDate);
+          prev.setDate(onlyDate.getDate() - 1);
+          points.push({
+            d: prev.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+            fullDate: prev.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }),
+            count: 0
+          });
+        }
+        sortedKeys.forEach(k => {
+          const d = new Date(k + 'T00:00:00');
+          points.push({
+            d: d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+            fullDate: d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }),
+            count: countsByDate.get(k) || 0
+          });
+        });
+      }
+    }
+
+    const total = points.reduce((acc, p) => acc + p.count, 0);
+    const peak = Math.max(0, ...points.map(p => p.count));
+
+    return { trendData: points, periodTotal: total, peakDaily: peak };
+  }, [testCases, velocityRange]);
 
   const testStatusData = useMemo(() => {
     const passed = testCases.filter(t => t.status === "Passed").length;
@@ -91,32 +158,96 @@ function DashboardHome() {
 
       <div className="grid gap-6 lg:grid-cols-3 relative z-10">
          <div className="lg:col-span-2 rounded-3xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#14120B] p-6 sm:p-8 shadow-none flex flex-col">
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
                <div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white">Generation Velocity</h3>
-                  <p className="text-xs text-slate-500 dark:text-white/40 mt-1">Test cases generated over time</p>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white">Generation Velocity</h3>
+                    <Badge variant="outline" className="border-emerald-500/20 bg-emerald-500/10 text-emerald-400 font-mono text-[10px] px-2 py-0.5">
+                      {periodTotal} Generated
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-white/40 mt-1">
+                    Test cases generated over time {peakDaily > 0 ? `• Peak: ${peakDaily}/day` : ''}
+                  </p>
                </div>
-               <Badge variant="outline" className="border-primary/20 bg-primary/10 text-primary rounded-full px-3 py-1 font-medium text-[10px]">Last 7 Days</Badge>
+
+               <div className="flex items-center gap-1 bg-slate-100 dark:bg-white/5 p-1 rounded-xl border border-slate-200 dark:border-white/10 self-start sm:self-auto">
+                  {(['7d', '30d', 'all'] as const).map((range) => (
+                    <button
+                      key={range}
+                      onClick={() => setVelocityRange(range)}
+                      className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
+                        velocityRange === range
+                          ? "bg-white dark:bg-[#1f1d16] text-slate-900 dark:text-white shadow-sm border border-slate-200 dark:border-white/10"
+                          : "text-slate-500 dark:text-white/50 hover:text-slate-900 dark:hover:text-white"
+                      }`}
+                    >
+                      {range === '7d' ? 'Last 7 Days' : range === '30d' ? '30 Days' : 'All Time'}
+                    </button>
+                  ))}
+               </div>
             </div>
+
             <div className="flex-1 min-h-[280px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={trend} margin={{ top: 10, left: -20, right: 0, bottom: 0 }}>
+                  <AreaChart data={trendData} margin={{ top: 10, left: -20, right: 10, bottom: 0 }}>
                     <defs>
                       <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="0%" stopColor="#EDECED" stopOpacity={0.6} />
                         <stop offset="100%" stopColor="#EDECED" stopOpacity={0} />
                       </linearGradient>
                     </defs>
-                    <XAxis dataKey="d" stroke="currentColor" className="text-slate-400 dark:text-white/20" fontSize={11} tickLine={false} axisLine={false} />
-                    <YAxis stroke="currentColor" className="text-slate-400 dark:text-white/20" fontSize={11} tickLine={false} axisLine={false} />
+                    <XAxis 
+                      dataKey="d" 
+                      stroke="currentColor" 
+                      className="text-slate-400 dark:text-white/20" 
+                      fontSize={11} 
+                      tickLine={false} 
+                      axisLine={false} 
+                    />
+                    <YAxis 
+                      stroke="currentColor" 
+                      className="text-slate-400 dark:text-white/20" 
+                      fontSize={11} 
+                      tickLine={false} 
+                      axisLine={false}
+                      allowDecimals={false}
+                    />
                     <Tooltip 
                        contentStyle={{ background: "#14120B", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, color: "#fff" }} 
-                       itemStyle={{ color: "#fff", fontWeight: "bold" }} 
+                       itemStyle={{ color: "#fff", fontWeight: "bold" }}
+                       formatter={(value: any) => [`${value} test case${value === 1 ? '' : 's'}`, "Generated"]}
+                       labelFormatter={(_label: any, payload: any) => {
+                         if (payload && payload[0]?.payload?.fullDate) {
+                           return payload[0].payload.fullDate;
+                         }
+                         return _label;
+                       }}
                     />
-                    <Area type="monotone" dataKey="v" stroke="#EDECED" strokeWidth={3} fill="url(#g1)" activeDot={{ r: 6, fill: "#EDECED", stroke: "#14120B", strokeWidth: 2 }} />
+                    <Area 
+                      type="monotone" 
+                      dataKey="count" 
+                      name="Generated"
+                      stroke="#EDECED" 
+                      strokeWidth={3} 
+                      fill="url(#g1)" 
+                      activeDot={{ r: 6, fill: "#EDECED", stroke: "#14120B", strokeWidth: 2 }} 
+                    />
                   </AreaChart>
                 </ResponsiveContainer>
             </div>
+
+            {periodTotal === 0 && testCases.length > 0 && velocityRange === '7d' && (
+              <div className="mt-3 flex items-center justify-between text-xs text-slate-500 dark:text-white/40 bg-slate-50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 rounded-xl px-3 py-2">
+                <span>No test cases generated in the last 7 days. ({testCases.length} earlier test cases recorded)</span>
+                <button 
+                  onClick={() => setVelocityRange('all')}
+                  className="text-primary hover:underline font-semibold ml-2 shrink-0"
+                >
+                  View All Time
+                </button>
+              </div>
+            )}
          </div>
 
          <div className="rounded-3xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#14120B] p-6 sm:p-8 shadow-none flex flex-col">
