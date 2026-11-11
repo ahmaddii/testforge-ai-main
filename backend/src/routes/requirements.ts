@@ -53,10 +53,36 @@ router.post('/', authenticate, async (req: Request, res: Response) => {
       ownerId = project.user_id;
     }
 
+    // If no project_id was provided, auto-assign the user's first project
+    // to satisfy the NOT NULL constraint on the requirements table.
+    let finalProjectId = validated.project_id;
+    if (!finalProjectId) {
+      const ownerIds = await getAccessibleOwnerIds(req.user!.id);
+      const { data: firstProject } = await supabase
+        .from('projects')
+        .select('id')
+        .in('user_id', ownerIds)
+        .order('created_at', { ascending: true })
+        .limit(1)
+        .single();
+
+      if (firstProject) {
+        finalProjectId = firstProject.id;
+      }
+    }
+
+    if (!finalProjectId) {
+      return res.status(400).json({ error: 'Please create a project first before adding requirements.' });
+    }
+
     const { data, error } = await supabase
       .from('requirements')
       .insert({
-        ...validated,
+        title: validated.title,
+        description: validated.description,
+        priority: validated.priority,
+        status: validated.status,
+        project_id: finalProjectId,
         user_id: ownerId,
       })
       .select()

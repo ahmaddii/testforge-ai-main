@@ -58,12 +58,14 @@ function RequirementsPage() {
 
   const openNew = () => {
     setEditId(null);
+    // Auto-select the current filter project, or the first available project
+    const defaultProject = project_id !== "all" ? project_id : (projects.length > 0 ? projects[0].id : "");
     setForm({
       title: "",
       description: "",
       priority: "Medium",
       status: "Draft",
-      project_id: project_id === "all" ? "" : project_id
+      project_id: defaultProject
     });
     setOpen(true);
   };
@@ -74,10 +76,13 @@ function RequirementsPage() {
   };
   const save = async () => {
     if (!form.title) return toast.error("Title is required");
+    if (!form.project_id && projects.length === 0) {
+      return toast.error("Please create a project first before adding requirements.");
+    }
     try {
       const payload = {
         ...form,
-        project_id: form.project_id || null
+        project_id: form.project_id || (projects.length > 0 ? projects[0].id : null)
       };
 
       const actorName = user?.name || user?.email?.split('@')[0] || 'Team member';
@@ -330,14 +335,17 @@ function RequirementsPage() {
               </div>
             </div>
             <div className="space-y-2">
-              <Label className="text-slate-600 dark:text-white/70 font-medium">Linked Project (Optional)</Label>
+              <Label className="text-slate-600 dark:text-white/70 font-medium">Linked Project</Label>
               <Select value={form.project_id || "none"} onValueChange={(v) => setForm({ ...form, project_id: v === "none" ? "" : v })}>
                 <SelectTrigger className="bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:ring-primary/20 h-11 rounded-xl">
-                  <SelectValue placeholder="No project" />
+                  <SelectValue placeholder="Select a project" />
                 </SelectTrigger>
                 <SelectContent className="bg-white dark:bg-[#14120B] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white max-h-[200px] rounded-xl shadow-2xl">
-                  <SelectItem value="none" className="focus:bg-slate-50 dark:focus:bg-white/10">No project linked</SelectItem>
-                  {projects.map((p) => <SelectItem key={p.id} value={p.id} className="focus:bg-slate-50 dark:focus:bg-white/10">{p.name}</SelectItem>)}
+                  {projects.length > 0 ? (
+                    projects.map((p) => <SelectItem key={p.id} value={p.id} className="focus:bg-slate-50 dark:focus:bg-white/10">{p.name}</SelectItem>)
+                  ) : (
+                    <SelectItem value="none" disabled className="focus:bg-slate-50 dark:focus:bg-white/10 text-muted-foreground">No projects — create one first</SelectItem>
+                  )}
                 </SelectContent>
               </Select>
             </div>

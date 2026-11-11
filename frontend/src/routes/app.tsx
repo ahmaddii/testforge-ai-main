@@ -167,6 +167,7 @@ function AppLayout() {
   const requirements = useApp((s) => s.requirements);
   const testCases = useApp((s) => s.testCases);
   const defects = useApp((s) => s.defects);
+  const teamMembers = useApp((s) => s.teamMembers);
   const setUser = useApp((s) => s.setUser);
   const fetchData = useApp((s) => s.fetchData);
   const loading = useApp((s) => s.loading);
@@ -250,10 +251,13 @@ function AppLayout() {
     return () => subscription.unsubscribe();
   }, [fetchData, setUser, navigate]);
 
-  useEffect(() => {
-    if (!user?.id) return;
+  const workspaceId = user?.workspaceOwnerId || user?.id;
 
-    const channel = supabase.channel('workspace-presence', {
+  useEffect(() => {
+    if (!user?.id || !workspaceId) return;
+
+    // Isolate presence strictly to the current workspace
+    const channel = supabase.channel(`workspace-presence-${workspaceId}`, {
       config: { presence: { key: user.id } },
     });
 
@@ -261,7 +265,14 @@ function AppLayout() {
       .on('presence', { event: 'sync' }, () => {
         const newState = channel.presenceState();
         const users: any[] = [];
-        Object.values(newState).forEach((p: any) => p[0] && users.push(p[0]));
+        Object.values(newState).forEach((p: any) => {
+          if (p[0]) {
+            const member = p[0];
+            if (!member.workspace_id || member.workspace_id === workspaceId) {
+              users.push(member);
+            }
+          }
+        });
         setOnlineUsers(users);
       })
       .subscribe(async (status) => {
@@ -271,43 +282,66 @@ function AppLayout() {
             name: user.name,
             avatar: user.avatar,
             email: user.email,
+            workspace_id: workspaceId,
             last_seen: new Date().toISOString(),
           });
         }
       });
 
-    const dbChannel = supabase.channel('db-changes');
+    // Isolate database real-time listeners strictly to this workspace
+    const dbChannel = supabase.channel(`db-changes-${workspaceId}`);
 
     dbChannel
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'projects' }, () => fetchData())
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'requirements' }, () => fetchData())
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'test_cases' }, () => fetchData())
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'defects' }, () => fetchData())
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'reports' }, () => fetchData())
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications' }, (payload: any) => {
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'projects' }, (payload: any) => {
+        if (payload?.new?.user_id && payload.new.user_id !== user.id && payload.new.user_id !== workspaceId) return;
         fetchData();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'requirements' }, (payload: any) => {
+        if (payload?.new?.user_id && payload.new.user_id !== user.id && payload.new.user_id !== workspaceId) return;
+        fetchData();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'test_cases' }, (payload: any) => {
+        if (payload?.new?.user_id && payload.new.user_id !== user.id && payload.new.user_id !== workspaceId) return;
+        fetchData();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'defects' }, (payload: any) => {
+        if (payload?.new?.user_id && payload.new.user_id !== user.id && payload.new.user_id !== workspaceId) return;
+        fetchData();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'reports' }, (payload: any) => {
+        if (payload?.new?.user_id && payload.new.user_id !== user.id && payload.new.user_id !== workspaceId) return;
+        fetchData();
+      })
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications' }, (payload: any) => {
         const item = payload.new;
-        if (item) {
-          let text = item.message || '';
-          let actor = '';
-          if (typeof text === 'string' && text.trim().startsWith('{')) {
-            try {
-              const parsed = JSON.parse(text);
-              text = parsed.text || text;
-              actor = parsed.actor_name || '';
-            } catch {}
-          }
-          const toastTitle = actor ? `${actor} • ${item.title || "Workspace Update"}` : (item.title || "Workspace Notification");
-          if (item.type === 'error' || item.type === 'critical') {
-            toast.error(toastTitle, { description: text });
-          } else if (item.type === 'warning' || item.type === 'alert') {
-            toast.warning(toastTitle, { description: text });
-          } else {
-            toast.success(toastTitle, { description: text });
-          }
+        if (!item) return;
+        // Only react if notification is addressed to this user or this workspace
+        if (item.user_id && item.user_id !== user.id && item.user_id !== workspaceId) {
+          return;
+        }
+        fetchData();
+        let text = item.message || '';
+        let actor = '';
+        if (typeof text === 'string' && text.trim().startsWith('{')) {
+          try {
+            const parsed = JSON.parse(text);
+            text = parsed.text || text;
+            actor = parsed.actor_name || '';
+          } catch {}
+        }
+        const toastTitle = actor ? `${actor} • ${item.title || "Workspace Update"}` : (item.title || "Workspace Notification");
+        if (item.type === 'error' || item.type === 'critical') {
+          toast.error(toastTitle, { description: text });
+        } else if (item.type === 'warning' || item.type === 'alert') {
+          toast.warning(toastTitle, { description: text });
+        } else {
+          toast.success(toastTitle, { description: text });
         }
       })
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'activity' }, (payload: any) => {
+        if (payload?.new?.user_id && payload.new.user_id !== user.id && payload.new.user_id !== workspaceId) {
+          return;
+        }
         fetchData();
         if (payload.new?.action) {
           toast.info(payload.new.category ? `${payload.new.category} Update` : "Workspace Activity", {
@@ -315,11 +349,14 @@ function AppLayout() {
           });
         }
       })
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload: any) => {
+        if (payload.new?.workspace_owner_id && payload.new.workspace_owner_id !== workspaceId) {
+          return;
+        }
         if (pathname !== '/app/chat' && payload.new.user_id !== user.id) {
-          setUnreadMessages(prev => prev + 1);
+          setUnreadMessages(prev => (typeof prev === 'number' ? prev + 1 : 1));
           toast.info("New message from team member", {
-            description: payload.new.content.startsWith('[VOICE_NOTE]') ? "Voice Note" : payload.new.content.substring(0, 30) + (payload.new.content.length > 30 ? "..." : ""),
+            description: payload.new.content?.startsWith('[VOICE_NOTE]') ? "Voice Note" : (payload.new.content?.substring(0, 30) + (payload.new.content?.length > 30 ? "..." : "")),
             action: {
               label: "View",
               onClick: () => navigate({ to: "/app/chat" })
@@ -330,10 +367,10 @@ function AppLayout() {
       .subscribe();
 
     return () => {
-      channel.unsubscribe();
-      dbChannel.unsubscribe();
+      supabase.removeChannel(channel);
+      supabase.removeChannel(dbChannel);
     };
-  }, [user?.id, user?.name, user?.avatar, setOnlineUsers, fetchData, pathname, setUnreadMessages]);
+  }, [user?.id, user?.name, user?.avatar, user?.email, workspaceId, setOnlineUsers, fetchData, pathname, setUnreadMessages]);
 
   // Ensure data is loaded as soon as user state becomes available after login.
   useEffect(() => {

@@ -18,6 +18,7 @@ export interface User {
   isAdmin?: boolean;
   isSuperAdmin?: boolean;
   role?: string;
+  workspaceOwnerId?: string;
 }
 
 
@@ -265,6 +266,8 @@ interface AppState {
   testPlans: TestPlanItem[];
   executionRuns: ExecutionRun[];
   onlineUsers: User[];
+  teamMembers: any[];
+  setTeamMembers: (tm: any[]) => void;
   billing: any | null;
   loading: boolean;
   setBilling: (b: any | null) => void;
@@ -329,6 +332,8 @@ export const useApp = create<AppState>()(
       testPlans: [],
       executionRuns: [],
       onlineUsers: [],
+      teamMembers: [],
+      setTeamMembers: (teamMembers) => set({ teamMembers }),
       selfHealingJobs: [],
       loading: false,
       billing: { plan: 'business' },
@@ -667,7 +672,7 @@ export const useApp = create<AppState>()(
           set({ loading: true });
         }
         try {
-          const [projects, requirements, reports, defects, activities, notifications, releases, environments, testPlans, executionRuns, selfHealingJobs, profile] = await Promise.all([
+          const [projects, requirements, reports, defects, activities, notifications, releases, environments, testPlans, executionRuns, selfHealingJobs, profile, teamMembers] = await Promise.all([
             api.get('/projects'),
             api.get('/requirements'),
             api.get('/reports'),
@@ -680,13 +685,24 @@ export const useApp = create<AppState>()(
             api.get('/execution-runs').catch(() => []),
             api.get('/self-healing').catch(() => []),
             api.get('/profile/me').catch(() => null),
+            api.get('/team').catch(() => []),
           ]);
 
-          if (profile?.avatar) {
+          if (profile) {
             set((state) => ({
-              user: state.user ? { ...state.user, avatar: profile.avatar, name: profile.name || state.user.name } : state.user
+              user: state.user ? {
+                ...state.user,
+                avatar: profile.avatar || state.user.avatar,
+                name: profile.name || state.user.name,
+                isAdmin: profile.isAdmin ?? true,
+                isSuperAdmin: profile.isSuperAdmin || false,
+                role: profile.role || 'Owner',
+                workspaceOwnerId: profile.workspaceOwnerId || state.user.workspaceOwnerId || state.user.id
+              } : state.user
             }));
-            localStorage.setItem('speclane_user_avatar', profile.avatar);
+            if (profile.avatar) {
+              localStorage.setItem('speclane_user_avatar', profile.avatar);
+            }
           }
 
           set({
@@ -701,6 +717,7 @@ export const useApp = create<AppState>()(
             testPlans: testPlans || [],
             executionRuns: executionRuns || [],
             selfHealingJobs: selfHealingJobs || [],
+            teamMembers: teamMembers || [],
             billing: { plan: 'business' },
             loading: false,
           });
@@ -708,16 +725,6 @@ export const useApp = create<AppState>()(
           // Fetch heavier payload last.
           const testCases = await api.get('/test-cases');
           set({ testCases: testCases || [] });
-
-          // Fetch user role and admin permissions
-          try {
-            const profileInfo = await api.get('/profile/me');
-            if (profileInfo && user) {
-              set((s) => ({
-                user: s.user ? { ...s.user, isAdmin: profileInfo.isAdmin ?? true, isSuperAdmin: profileInfo.isSuperAdmin || false, role: profileInfo.role || 'Owner' } : null
-              }));
-            }
-          } catch (_) { }
         } catch (error) {
           console.error("Error fetching data:", error);
         } finally {

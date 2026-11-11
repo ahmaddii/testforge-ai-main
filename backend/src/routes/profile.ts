@@ -34,6 +34,7 @@ router.get('/me', authenticate, async (req: Request, res: Response) => {
     const isInvitedMember = teamInfo?.owner_id && teamInfo.owner_id !== userId;
     const role = isInvitedMember ? teamInfo.role : 'Owner';
     const isAdmin = role === 'Owner' || role === 'Manager';
+    const workspaceOwnerId = teamInfo?.owner_id || userId;
 
     res.json({
       id: userId,
@@ -43,7 +44,8 @@ router.get('/me', authenticate, async (req: Request, res: Response) => {
       avatar_url: avatarUrl,
       role,
       isAdmin,
-      isSuperAdmin
+      isSuperAdmin,
+      workspaceOwnerId
     });
   } catch (err: any) {
     const userEmail = (req.user?.email || '').toLowerCase();
@@ -57,7 +59,8 @@ router.get('/me', authenticate, async (req: Request, res: Response) => {
       avatar_url: '',
       role: 'Owner',
       isAdmin: true,
-      isSuperAdmin
+      isSuperAdmin,
+      workspaceOwnerId: req.user!.id
     });
   }
 });
