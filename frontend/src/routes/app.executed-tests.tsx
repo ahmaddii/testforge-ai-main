@@ -21,7 +21,6 @@ import {
   FolderGit2,
   Bot,
   RotateCcw,
-  Sparkles,
   Download,
   Trash2,
   Eye,
@@ -32,6 +31,7 @@ import {
   ShieldAlert,
   AlertCircle,
 } from "lucide-react";
+import { GeminiIcon } from "@/components/gemini-icon";
 import {
   useApp,
   type ExecutionRun,
@@ -623,7 +623,7 @@ function ExecutedTestsPage() {
               Pass Rate
             </span>
             <div className="h-7 w-7 rounded-lg bg-purple-500/10 text-purple-500 flex items-center justify-center">
-              <Sparkles className="h-4 w-4" />
+              <GeminiIcon className="h-4 w-4 object-contain" />
             </div>
           </div>
           <div className="mt-2 text-2xl font-bold tracking-tight">

@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, useMemo } from "react";
-import { Check, Clock, Inbox, LogOut, RefreshCw, Search, ShieldCheck, Download, Building2, Mail, MessageSquare, AlertCircle, Sparkles, UserCheck, ArrowUpRight, Filter } from "lucide-react";
+import { Check, Clock, Inbox, LogOut, RefreshCw, Search, ShieldCheck, Download, Building2, Mail, MessageSquare, AlertCircle, UserCheck, ArrowUpRight, Filter } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

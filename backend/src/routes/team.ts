@@ -22,7 +22,15 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
     .order('created_at', { ascending: false });
 
   if (error) return res.status(500).json({ error: error.message });
-  const rows = data || [];
+  // A member can have multiple legacy invite/access rows for the same workspace.
+  // Present one row per owner + email, keeping the newest row as the editable entry.
+  const rows = Array.from(
+    (data || []).reduce((members: Map<string, any>, row: any) => {
+      const key = `${row.owner_id || ''}:${(row.email || '').trim().toLowerCase()}`;
+      if (!members.has(key)) members.set(key, row);
+      return members;
+    }, new Map<string, any>()).values()
+  );
 
   // Enrich with owner email (best-effort) so member can see who invited them.
   const ownerIds = Array.from(new Set(rows.map((r: any) => r.owner_id).filter(Boolean)));
@@ -89,6 +97,49 @@ router.post('/invite', authenticate, async (req: Request, res: Response) => {
 
     if ((req.user?.email || '').toLowerCase() === email.toLowerCase()) {
       return res.status(400).json({ error: 'You cannot invite yourself.' });
+    }
+
+    const { data: acceptedMembership, error: membershipErr } = await supabase
+      .from('team_members')
+      .select('id, owner_id')
+      .eq('member_id', ownerId)
+      .eq('status', 'active')
+      .limit(1)
+      .maybeSingle();
+
+    if (membershipErr) return res.status(500).json({ error: membershipErr.message });
+
+    const { data: pendingMembership, error: pendingMembershipErr } = await supabase
+      .from('team_members')
+      .select('id, owner_id')
+      .ilike('email', (req.user?.email || '').trim())
+      .in('status', ['active', 'pending'])
+      .limit(1)
+      .maybeSingle();
+
+    if (pendingMembershipErr) return res.status(500).json({ error: pendingMembershipErr.message });
+    if (
+      (acceptedMembership && acceptedMembership.owner_id !== ownerId) ||
+      pendingMembership
+    ) {
+      return res.status(403).json({ error: 'Only the workspace owner can invite team members.' });
+    }
+
+    const { data: existingMember, error: existingErr } = await supabase
+      .from('team_members')
+      .select('id, status')
+      .eq('owner_id', ownerId)
+      .ilike('email', email.trim())
+      .limit(1)
+      .maybeSingle();
+
+    if (existingErr) return res.status(500).json({ error: existingErr.message });
+    if (existingMember) {
+      return res.status(409).json({
+        error: existingMember.status === 'pending'
+          ? 'An invitation for this email is already pending.'
+          : 'This person is already a member of the workspace.',
+      });
     }
 
     const insertPayload: any = {

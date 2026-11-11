@@ -1,7 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { GitCompare, Plus, Trash2, CheckCircle2, XCircle, Clock, Zap, ShieldAlert, Sparkles, FolderGit2, Check } from "lucide-react";
-import { useApp, type ExecutionRun } from "@/lib/store";
+import { GitCompare, Plus, Trash2, CheckCircle2, XCircle, Clock, ShieldAlert, Check, AlertTriangle } from "lucide-react";
+import { GeminiIcon } from "@/components/gemini-icon";
+import { useApp } from "@/lib/store";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -17,7 +18,7 @@ export const Route = createFileRoute("/app/run-comparison")({
 });
 
 function RunComparisonPage() {
-  const { testCases, executionRuns, addExecutionRun, deleteExecutionRun, projects, environments, fetchData, loading } = useApp();
+  const { executionRuns, deleteExecutionRun, projects, environments, fetchData, loading } = useApp();
 
   useEffect(() => {
     fetchData();
@@ -25,235 +26,191 @@ function RunComparisonPage() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [runName, setRunName] = useState("");
-  const [envName, setEnvName] = useState(environments[0]?.name || "Staging Cluster");
-  const [targetProjectId, setTargetProjectId] = useState<string>("all");
+  const [envName, setEnvName] = useState(environments[0]?.name || "");
+  const [environmentId, setEnvironmentId] = useState("");
+  const [targetProjectId, setTargetProjectId] = useState<string>(projects[0]?.id || "");
   const [capturing, setCapturing] = useState(false);
-  const [uploadMode, setUploadMode] = useState<"simulate" | "upload">("simulate");
+  const [uploadMode, setUploadMode] = useState<"execute" | "upload">("execute");
   const [testResultFile, setTestResultFile] = useState<File | null>(null);
 
   useEffect(() => {
-    if (environments.length > 0 && (!envName || envName === "Staging Cluster")) {
-      setEnvName(environments[0].name);
+    if (!targetProjectId || !projects.some((project) => project.id === targetProjectId)) {
+      setTargetProjectId(projects[0]?.id || "");
     }
-  }, [environments]);
+  }, [projects, targetProjectId]);
+
+  const eligibleEnvironments = useMemo(
+    () => environments.filter((environment) => !environment.project_id || environment.project_id === targetProjectId),
+    [environments, targetProjectId]
+  );
+
+  useEffect(() => {
+    if (!eligibleEnvironments.some((environment) => environment.id === environmentId)) {
+      setEnvironmentId(eligibleEnvironments[0]?.id || "");
+    }
+    if (!envName && environments.length > 0) setEnvName(environments[0].name);
+  }, [eligibleEnvironments, environmentId, envName, environments]);
 
   const [runAId, setRunAId] = useState<string>("");
   const [runBId, setRunBId] = useState<string>("");
 
   useEffect(() => {
-    if (executionRuns.length > 0) {
-      if (!runAId || !executionRuns.find(r => r.id === runAId)) {
-        setRunAId(executionRuns[0]?.id || "");
-      }
-      if (!runBId || !executionRuns.find(r => r.id === runBId)) {
-        setRunBId(executionRuns[1]?.id || executionRuns[0]?.id || "");
-      }
+    if (!executionRuns.some((run) => run.id === runAId)) setRunAId(executionRuns[0]?.id || "");
+    const baseline = executionRuns.find((run) => run.id === runAId) || executionRuns[0];
+    const target = executionRuns.find((run) => run.id === runBId);
+    if (!target || target.id === baseline?.id || target.project_id !== baseline?.project_id) {
+      setRunBId(executionRuns.find((run) => run.id !== baseline?.id && run.project_id === baseline?.project_id)?.id || "");
     }
   }, [executionRuns, runAId, runBId]);
 
   const handleCapture = async () => {
     const finalName = runName.trim() || `Execution Run #${executionRuns.length + 1}`;
-    const finalEnv = envName.trim() || "Staging Cluster";
-    const pid = targetProjectId === "all" ? (projects[0]?.id || null) : targetProjectId;
+    const projectId = targetProjectId === "all" ? null : targetProjectId;
 
     setCapturing(true);
     try {
-      if (uploadMode === "upload") {
+      if (uploadMode === "execute") {
+        if (!projectId) throw new Error("Select a project before running its test cases.");
+        const targetEnvironment = eligibleEnvironments.find((environment) => environment.id === environmentId);
+        if (!targetEnvironment) throw new Error("Register an environment before running tests.");
+        if (targetEnvironment.status === "Degraded" && !confirm(`Environment "${targetEnvironment.name}" is degraded. Run the suite there anyway?`)) return;
+
+        const summary = await api.post("/execution-runs/execute", {
+          project_id: projectId,
+          environment_id: targetEnvironment.id,
+          force_all: true,
+          run_name: finalName,
+          triggered_by: "Run Comparison",
+        });
+        await fetchData();
+        toast.success(`${summary.name || finalName} saved on ${targetEnvironment.name}: ${summary.passed} passed, ${summary.failed} failed, ${summary.blocked || 0} blocked.`);
+      } else {
         if (!testResultFile) throw new Error("Please upload a JSON test report file.");
-        
-        const fileContent = await testResultFile.text();
-        let parsed;
+
+        let parsed: any;
         try {
-          parsed = JSON.parse(fileContent);
-        } catch (e) {
-          throw new Error("Invalid JSON file format. Please upload a valid JSON report.");
+          parsed = JSON.parse(await testResultFile.text());
+        } catch {
+          throw new Error("Invalid JSON file. Upload a Jest or Playwright JSON report.");
         }
-        
+
         const results: Record<string, any> = {};
         let passed = 0;
         let failed = 0;
+        let blocked = 0;
         let totalDurationMs = 0;
+        const addResult = (name: string, module: string, rawStatus: string, durationMs: number) => {
+          if (!name?.trim() || !module?.trim()) throw new Error("Each imported test needs a name and module.");
+          const normalizedStatus = rawStatus.toLowerCase();
+          const status = normalizedStatus === "passed"
+            ? "Passed"
+            : ["skipped", "pending", "todo", "interrupted"].includes(normalizedStatus)
+              ? "Blocked"
+              : "Failed";
+          if (status === "Passed") passed++;
+          else if (status === "Failed") failed++;
+          else blocked++;
+          totalDurationMs += durationMs;
+          const stableName = name.trim().toLowerCase().replace(/\s+/g, " ");
+          const stableModule = module.trim().toLowerCase().replace(/\s+/g, " ");
+          const resultKey = `report:${stableModule}::${stableName}`;
+          if (results[resultKey]) throw new Error(`The report contains duplicate test identity "${name}" in "${module}". Give duplicate tests distinct names before importing.`);
+          results[resultKey] = {
+            status,
+            time: `${durationMs}ms`,
+            name,
+            module,
+          };
+        };
 
-        if (parsed.testResults && Array.isArray(parsed.testResults)) {
-            // Jest format
-            parsed.testResults.forEach((tr: any, idx: number) => {
-               if (tr.assertionResults && Array.isArray(tr.assertionResults)) {
-                  tr.assertionResults.forEach((ar: any, i: number) => {
-                      const st = ar.status === "passed" ? "Passed" : "Failed";
-                      if (st === "Passed") passed++; else failed++;
-                      totalDurationMs += ar.duration || 0;
-                      results[`test-${idx}-${i}`] = {
-                          status: st,
-                          time: `${ar.duration || 0}ms`,
-                          name: ar.title || ar.fullName || `Test ${i}`,
-                          module: ar.ancestorTitles?.[0] || "General"
-                      };
-                  });
-               }
+        if (Array.isArray(parsed.testResults)) {
+          parsed.testResults.forEach((suite: any) => {
+            (suite.assertionResults || []).forEach((assertion: any) => {
+              addResult(
+                assertion.fullName || assertion.title || "Unnamed Jest test",
+                suite.name || assertion.ancestorTitles?.join(" / ") || "General",
+                assertion.status || "failed",
+                Number(assertion.duration) || 0,
+              );
             });
-        } else if (parsed.suites && Array.isArray(parsed.suites)) {
-            // Playwright / Generic format
-            const traverseSuites = (suites: any[]) => {
-                suites.forEach(s => {
-                    if (s.specs) {
-                        s.specs.forEach((sp: any, i: number) => {
-                            const ok = sp.ok || (sp.tests && sp.tests.some((t:any) => t.results && t.results.some((r:any) => r.status === 'passed')));
-                            const st = ok ? "Passed" : "Failed";
-                            if (st === "Passed") passed++; else failed++;
-                            const duration = sp.tests?.[0]?.results?.[0]?.duration || 120;
-                            totalDurationMs += duration;
-                            results[`spec-${passed+failed}`] = {
-                                status: st,
-                                time: `${duration}ms`,
-                                name: sp.title || `Test ${passed+failed}`,
-                                module: s.title || "General"
-                            };
-                        });
-                    }
-                    if (s.suites) traverseSuites(s.suites);
-                });
-            };
-            traverseSuites(parsed.suites);
+          });
+        } else if (Array.isArray(parsed.suites)) {
+          const visitSuites = (suites: any[], parentTitle = "") => {
+            suites.forEach((suite: any) => {
+              const module = [parentTitle, suite.title].filter(Boolean).join(" / ") || "General";
+              (suite.specs || []).forEach((spec: any) => {
+                const tests = spec.tests || [];
+                const finalResults = tests.map((test: any) => test.results?.[test.results.length - 1]).filter(Boolean);
+                const lastResult = finalResults[finalResults.length - 1];
+                const status = spec.ok === true
+                  ? "passed"
+                  : spec.ok === false
+                    ? "failed"
+                    : lastResult?.status || "failed";
+                const duration = finalResults.reduce((total: number, result: any) => total + (Number(result.duration) || 0), 0);
+                addResult(spec.title || "Unnamed Playwright test", module, status, duration);
+              });
+              visitSuites(suite.suites || [], module);
+            });
+          };
+          visitSuites(parsed.suites);
         } else {
-             // Fallback minimal format
-             const items = Array.isArray(parsed) ? parsed : Object.values(parsed);
-             items.forEach((item: any, idx) => {
-                 if (item && item.name && item.status) {
-                     const st = item.status.toLowerCase() === "passed" ? "Passed" : "Failed";
-                     if (st === "Passed") passed++; else failed++;
-                     results[`item-${idx}`] = {
-                         status: st,
-                         time: `${item.duration || item.time || 0}ms`,
-                         name: item.name,
-                         module: item.module || "General"
-                     };
-                 }
-             });
+          const items = Array.isArray(parsed) ? parsed : Object.values(parsed || {});
+          items.forEach((item: any) => {
+            if (item?.name && item?.status) {
+              addResult(item.name, item.module || "General", item.status, Number(item.duration) || 0);
+            }
+          });
         }
-        
+
         if (Object.keys(results).length === 0) {
-            throw new Error("Could not extract test results. Ensure the JSON is from Jest or Playwright.");
+          throw new Error("No test results found. Upload a Jest/Playwright JSON report or an array of {name, status} results.");
         }
 
-        const durationStr = totalDurationMs > 0 ? `${Math.floor(totalDurationMs/1000)}s` : `1m 24s`;
-
-        await addExecutionRun({
-          project_id: pid || undefined,
+        const duration = totalDurationMs > 0 ? `${Math.max(1, Math.round(totalDurationMs / 1000))}s` : "0s";
+        await api.post("/execution-runs", {
+          project_id: projectId || undefined,
           name: finalName,
-          environment: finalEnv,
+          environment: envName.trim() || "Imported Report",
           passed,
           failed,
-          duration: durationStr,
-          results
+          duration,
+          results: { _meta: { blocked, total_cases: Object.keys(results).length }, ...results },
         });
-      } else {
-        const relevantCases = pid 
-          ? testCases.filter(t => t.project_id === pid)
-          : testCases;
-
-      const results: Record<string, { status: string; time: string; name: string; module: string }> = {};
-      let passed = 0;
-      let failed = 0;
-      let totalRunDurationMs = 0;
-      const isProd = finalEnv.toLowerCase().includes("prod");
-
-      if (relevantCases.length > 0) {
-        relevantCases.forEach((tc) => {
-          let st = tc.status;
-
-          // Deterministic execution evaluation:
-          if (st !== "Passed" && st !== "Failed") {
-            // Negative and mock card cases pass in Staging sandbox mocks,
-            // but fail on Production live gateway restrictions
-            const isNegativeOrEdge = (
-              tc.type === "negative" || 
-              tc.type === "edge" || 
-              tc.title.toLowerCase().includes("invalid") || 
-              tc.title.toLowerCase().includes("expired") || 
-              tc.title.toLowerCase().includes("empty") || 
-              tc.title.toLowerCase().includes("declines") || 
-              tc.title.toLowerCase().includes("lost") || 
-              tc.title.toLowerCase().includes("missing")
-            );
-
-            if (isProd && isNegativeOrEdge) {
-              st = "Failed";
-            } else {
-              st = "Passed";
-            }
-          }
-
-          if (st === "Passed") passed++;
-          else failed++;
-
-          // Deterministic step-based execution time
-          const stepCount = (tc.steps ? tc.steps.split("\n").filter(Boolean).length : 3) || 3;
-          const caseTimeMs = stepCount * 85 + (tc.title.length % 40) * 4 + 75;
-          totalRunDurationMs += caseTimeMs;
-
-          results[tc.id] = {
-            status: st,
-            time: `${caseTimeMs}ms`,
-            name: tc.title,
-            module: tc.module || "General"
-          };
-        });
-      } else {
-        const sampleTitles = [
-          { name: "Biometric Authentication Handshake", module: "Security & Auth", status: "Passed", time: "142ms" },
-          { name: "OAuth Token Refresh Concurrency", module: "Security & Auth", status: isProd ? "Failed" : "Passed", time: "504ms" },
-          { name: "High Volume Virtualized Data Grid", module: "UI / Frontend", status: "Passed", time: "240ms" },
-          { name: "Stripe Webhook Asynchronous Retry", module: "Billing & Payment", status: "Passed", time: "112ms" },
-          { name: "GraphQL Subscription Rate Limiting", module: "API Gateway", status: isProd ? "Failed" : "Passed", time: "389ms" },
-          { name: "Redis Cache Eviction Policy Verification", module: "Backend Core", status: "Passed", time: "65ms" }
-        ];
-
-        sampleTitles.forEach((st, idx) => {
-          if (st.status === "Passed") passed++;
-          else failed++;
-          totalRunDurationMs += parseInt(st.time) || 120;
-          results[`tc-demo-${idx}`] = {
-            status: st.status,
-            time: st.time,
-            name: st.name,
-            module: st.module
-          };
-        });
+        await fetchData();
+        toast.success(`Report saved: ${passed} passed, ${failed} failed, ${blocked} blocked.`);
       }
 
-      const totalSecs = Math.max(14, Math.round(totalRunDurationMs / 1000));
-      const durationStr = totalSecs >= 60 ? `${Math.floor(totalSecs / 60)}m ${totalSecs % 60}s` : `${totalSecs}s`;
-
-      await addExecutionRun({
-        project_id: pid || undefined,
-        name: finalName,
-        environment: finalEnv,
-        passed,
-        failed,
-        duration: durationStr,
-        results
-      });
-      }
-
-      toast.success("Execution snapshot successfully recorded");
       setRunName("");
+      setTestResultFile(null);
       setIsOpen(false);
     } catch (err: any) {
-      toast.error(err.message || "Failed to capture execution run");
+      toast.error(err?.message || "Failed to create execution run");
     } finally {
       setCapturing(false);
     }
   };
 
-  const selectedA = useMemo(() => executionRuns.find((r) => r.id === runAId) || executionRuns[0], [executionRuns, runAId]);
-  const selectedB = useMemo(() => executionRuns.find((r) => r.id === runBId) || executionRuns[1] || executionRuns[0], [executionRuns, runBId]);
+  const selectedA = useMemo(() => executionRuns.find((r) => r.id === runAId), [executionRuns, runAId]);
+  const selectedB = useMemo(() => executionRuns.find((r) => r.id === runBId), [executionRuns, runBId]);
+
+  const comparableRuns = useMemo(
+    () => selectedA ? executionRuns.filter((run) => run.id !== selectedA.id && run.project_id === selectedA.project_id) : [],
+    [executionRuns, selectedA]
+  );
+
+  useEffect(() => {
+    if (selectedA && runBId && selectedB && (selectedA.project_id !== selectedB.project_id || selectedA.id === selectedB.id)) {
+      setRunBId(comparableRuns[0]?.id || "");
+    }
+  }, [selectedA, selectedB, comparableRuns]);
 
   const diffItems = useMemo(() => {
-    if (!selectedA && !selectedB) return [];
+    if (!selectedA || !selectedB) return [];
     const allKeys = Array.from(new Set([
-      ...Object.keys(selectedA?.results || {}),
-      ...Object.keys(selectedB?.results || {})
-    ]));
+      ...Object.keys(selectedA.results || {}),
+      ...Object.keys(selectedB.results || {})
+    ])).filter((key) => key !== "_meta");
 
     return allKeys.map(key => {
       const a = selectedA?.results?.[key];
@@ -262,8 +219,11 @@ function RunComparisonPage() {
       const module = a?.module || b?.module || "General";
 
       let comparison = "stable";
-      if (a?.status === "Passed" && b?.status === "Failed") comparison = "regression";
-      if (a?.status === "Failed" && b?.status === "Passed") comparison = "fixed";
+      const failureStatuses = ["Failed", "Error"];
+      if (a?.status === "Passed" && failureStatuses.includes(b?.status)) comparison = "regression";
+      if (failureStatuses.includes(a?.status) && b?.status === "Passed") comparison = "fixed";
+      if (!a && b) comparison = "new";
+      if (a && !b) comparison = "removed";
 
       return { key, name, module, a, b, comparison };
     });
@@ -276,8 +236,13 @@ function RunComparisonPage() {
       if (item.comparison === "regression") regressions++;
       if (item.comparison === "fixed") fixes++;
     });
-    return { regressions, fixes };
+    const newTests = diffItems.filter((item) => !item.a && item.b).length;
+    const removedTests = diffItems.filter((item) => item.a && !item.b).length;
+    return { regressions, fixes, newTests, removedTests };
   }, [diffItems]);
+
+  const getBlockedCount = (run: typeof selectedA) =>
+    (run as any)?.blocked ?? (run?.results?._meta as any)?.blocked ?? 0;
 
   const navigate = useNavigate();
   const [generatingTicket, setGeneratingTicket] = useState(false);
@@ -287,7 +252,7 @@ function RunComparisonPage() {
     setGeneratingTicket(true);
     
     const regressionItems = diffItems.filter(item => item.comparison === "regression");
-    const description = `Automated regression ticket generated from Execution Run Diffing.\n\nBaseline Run: ${selectedA.name}\nTarget Run: ${selectedB.name} (${selectedB.environment})\n\nRegressed Scenarios:\n` + regressionItems.map(item => `- ${item.name} [Module: ${item.module}] (Failed in ${selectedB.name})`).join("\n");
+    const description = `Automated regression ticket generated from Execution Run Diffing.\n\nBaseline Run: ${selectedA.name}\nTarget Run: ${selectedB.name} (${selectedB.environment})\n\nRegressed Scenarios:\n` + regressionItems.map(item => `- ${item.name} [Module: ${item.module}] (${item.b?.status} in ${selectedB.name})`).join("\n");
 
     try {
       const payload = {
@@ -337,7 +302,7 @@ function RunComparisonPage() {
         <div>
           <div className="flex items-center gap-2 mb-2">
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase bg-primary/10 text-primary border border-primary/20 flex items-center gap-1.5">
-              <Sparkles className="h-3 w-3" /> Live Run Diffing
+              <GeminiIcon className="h-3 w-3 object-contain" /> Live Run Diffing
             </span>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight bg-gradient-to-br from-slate-900 to-slate-800 dark:from-white dark:to-white/60 bg-clip-text text-transparent mb-1 flex items-center gap-3">
@@ -350,19 +315,19 @@ function RunComparisonPage() {
 
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-              <Button className="gradient-bg text-primary-foreground border border-primary/50 relative group overflow-hidden h-11 px-6 rounded-full font-semibold hover:scale-[1.02] transition-transform shadow-none">
+          <Button className="gradient-bg text-primary-foreground border border-primary/50 relative group overflow-hidden h-11 px-6 rounded-full font-semibold hover:scale-[1.02] transition-transform shadow-none">
                 <Plus className="mr-2 h-4 w-4 relative z-10" />
-                <span className="relative z-10">Capture Run Snapshot</span>
+                <span className="relative z-10">Create Run</span>
               </Button>
             </DialogTrigger>
             <DialogContent className="bg-white dark:bg-[#14120B] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white sm:rounded-3xl shadow-none max-w-md">
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50" />
               <DialogHeader className="mb-2">
-                <DialogTitle className="text-2xl font-bold">Record Execution Run</DialogTitle>
+                <DialogTitle className="text-2xl font-bold">Create Execution Run</DialogTitle>
               </DialogHeader>
               <div className="space-y-4 py-2">
                 <div className="space-y-2">
-                  <Label className="text-slate-600 dark:text-white/70 font-medium">Run Snapshot Name</Label>
+                  <Label className="text-slate-600 dark:text-white/70 font-medium">Run Name</Label>
                   <Input
                     value={runName}
                     onChange={(e) => setRunName(e.target.value)}
@@ -372,25 +337,41 @@ function RunComparisonPage() {
                 </div>
                 <div className="space-y-2">
                   <Label className="text-slate-600 dark:text-white/70 font-medium">Target Environment</Label>
-                  <Select value={envName} onValueChange={setEnvName}>
+                  {uploadMode === "execute" ? (
+                    <Select
+                      value={environmentId}
+                      onValueChange={(id) => {
+                        setEnvironmentId(id);
+                        setEnvName(eligibleEnvironments.find((environment) => environment.id === id)?.name || "");
+                      }}
+                    >
                     <SelectTrigger className="bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:ring-primary/20 h-11 rounded-xl">
-                      <SelectValue />
+                        <SelectValue placeholder="Select an environment" />
                     </SelectTrigger>
                     <SelectContent className="bg-white dark:bg-[#14120B] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white rounded-xl">
-                      {environments.length > 0 ? (
-                        environments.map((e) => (
-                          <SelectItem key={e.id} value={e.name} className="focus:bg-slate-50 dark:focus:bg-white/10 font-medium">
+                        {eligibleEnvironments.map((e) => (
+                          <SelectItem key={e.id} value={e.id} className="focus:bg-slate-50 dark:focus:bg-white/10 font-medium">
                             {e.name} ({e.type})
                           </SelectItem>
-                        ))
-                      ) : (
-                        <>
-                          <SelectItem value="Staging EU" className="focus:bg-slate-50 dark:focus:bg-white/10">Staging EU</SelectItem>
-                          <SelectItem value="Production Cluster" className="focus:bg-slate-50 dark:focus:bg-white/10">Production Cluster</SelectItem>
-                        </>
-                      )}
+                        ))}
                     </SelectContent>
-                  </Select>
+                    </Select>
+                  ) : environments.length > 0 ? (
+                    <Select value={envName} onValueChange={setEnvName}>
+                      <SelectTrigger className="bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:ring-primary/20 h-11 rounded-xl">
+                        <SelectValue placeholder="Choose report environment" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white dark:bg-[#14120B] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white rounded-xl">
+                        {environments.map((environment) => (
+                          <SelectItem key={environment.id} value={environment.name} className="focus:bg-slate-50 dark:focus:bg-white/10 font-medium">
+                            {environment.name} ({environment.type})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <Input value={envName} onChange={(event) => setEnvName(event.target.value)} placeholder="e.g. Staging" />
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label className="text-slate-600 dark:text-white/70 font-medium">Scope to Project</Label>
@@ -399,7 +380,7 @@ function RunComparisonPage() {
                       <SelectValue placeholder="All Projects" />
                     </SelectTrigger>
                     <SelectContent className="bg-white dark:bg-[#14120B] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white rounded-xl">
-                      <SelectItem value="all" className="focus:bg-slate-50 dark:focus:bg-white/10 font-bold">All Projects ({projects.length})</SelectItem>
+                      {uploadMode === "upload" && <SelectItem value="all" className="focus:bg-slate-50 dark:focus:bg-white/10 font-bold">All Projects ({projects.length})</SelectItem>}
                       {projects.map((p) => (
                         <SelectItem key={p.id} value={p.id} className="focus:bg-slate-50 dark:focus:bg-white/10 font-medium">{p.name}</SelectItem>
                       ))}
@@ -408,16 +389,29 @@ function RunComparisonPage() {
                 </div>
                 <div className="space-y-2">
                   <Label className="text-slate-600 dark:text-white/70 font-medium">Execution Engine</Label>
-                  <Select value={uploadMode} onValueChange={(v: any) => setUploadMode(v)}>
+                  <Select value={uploadMode} onValueChange={(value: "execute" | "upload") => {
+                    setUploadMode(value);
+                    if (value === "execute" && targetProjectId === "all") setTargetProjectId(projects[0]?.id || "");
+                  }}>
                     <SelectTrigger className="bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:ring-primary/20 h-11 rounded-xl font-medium">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-white dark:bg-[#14120B] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white rounded-xl">
-                      <SelectItem value="simulate" className="focus:bg-slate-50 dark:focus:bg-white/10 font-medium">Automated Test Suite Engine</SelectItem>
+                      <SelectItem value="execute" className="focus:bg-slate-50 dark:focus:bg-white/10 font-medium">Run real Playwright test suite</SelectItem>
                       <SelectItem value="upload" className="focus:bg-slate-50 dark:focus:bg-white/10 font-medium">Upload Test Report (Jest/Playwright JSON)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
+
+                {uploadMode === "execute" && (
+                  <p className="text-xs leading-relaxed text-slate-500 dark:text-white/50">
+                    Runs the selected project’s saved test cases against this environment and stores the real Playwright results. Production targets use read-only safety rules.
+                  </p>
+                )}
+
+                {uploadMode === "execute" && eligibleEnvironments.length === 0 && (
+                  <p className="text-xs text-amber-700 dark:text-amber-300">No environment is registered for this project. Add one on the Environments page first.</p>
+                )}
                 
                 {uploadMode === "upload" && (
                   <div className="space-y-2">
@@ -433,8 +427,12 @@ function RunComparisonPage() {
               </div>
               <DialogFooter className="mt-6 gap-2 sm:gap-0">
                 <Button variant="outline" onClick={() => setIsOpen(false)} className="border-slate-200 dark:border-white/10 bg-transparent text-slate-600 dark:text-white hover:bg-slate-50 dark:hover:bg-white/10 rounded-full h-11 px-8 font-bold">Cancel</Button>
-                <Button onClick={handleCapture} disabled={capturing} className="gradient-bg text-primary-foreground rounded-full h-11 px-8 font-bold shadow-none">
-                  {capturing ? "Capturing..." : "Record Snapshot"}
+                <Button
+                  onClick={handleCapture}
+                  disabled={capturing || (uploadMode === "execute" && (!targetProjectId || targetProjectId === "all" || !environmentId)) || (uploadMode === "upload" && !testResultFile)}
+                  className="gradient-bg text-primary-foreground rounded-full h-11 px-8 font-bold shadow-none"
+                >
+                  {capturing ? (uploadMode === "execute" ? "Running Suite..." : "Saving Report...") : (uploadMode === "execute" ? "Run Test Suite" : "Save Report Run")}
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -451,7 +449,7 @@ function RunComparisonPage() {
             Record your first execution run snapshot above to start diffing outcomes across code changes and deployments.
           </p>
           <Button onClick={() => setIsOpen(true)} className="gradient-bg text-primary-foreground shadow-none h-11 px-8 rounded-full font-bold relative z-10">
-            <Plus className="mr-2 h-4 w-4" /> Capture First Snapshot
+            <Plus className="mr-2 h-4 w-4" /> Create First Run
           </Button>
         </div>
       ) : (
@@ -475,7 +473,11 @@ function RunComparisonPage() {
                   )}
                 </div>
 
-                <Select value={runAId} onValueChange={setRunAId}>
+                <Select value={runAId} onValueChange={(id) => {
+                  setRunAId(id);
+                  const nextBaseline = executionRuns.find((run) => run.id === id);
+                  if (selectedB && nextBaseline?.project_id !== selectedB.project_id) setRunBId("");
+                }}>
                   <SelectTrigger className="w-full h-12 bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-900 dark:text-white rounded-2xl font-bold text-sm">
                     <SelectValue placeholder="Select Run A" />
                   </SelectTrigger>
@@ -490,12 +492,15 @@ function RunComparisonPage() {
               </div>
 
               {selectedA && (
-                <div className="grid grid-cols-3 gap-3 mt-6 font-mono text-xs">
+                <div className="grid grid-cols-4 gap-3 mt-6 font-mono text-xs">
                   <div className="p-3 rounded-2xl bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 font-bold flex items-center justify-center gap-1.5">
                     <CheckCircle2 className="h-4 w-4 shrink-0" /> {selectedA.passed} Passed
                   </div>
                   <div className="p-3 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 font-bold flex items-center justify-center gap-1.5">
                     <XCircle className="h-4 w-4 shrink-0" /> {selectedA.failed} Failed
+                  </div>
+                  <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-300 font-bold flex items-center justify-center gap-1.5">
+                    <AlertTriangle className="h-4 w-4 shrink-0" /> {getBlockedCount(selectedA)} Blocked
                   </div>
                   <div className="p-3 rounded-2xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-white/70 font-bold flex items-center justify-center gap-1.5">
                     <Clock className="h-4 w-4 shrink-0" /> {selectedA.duration}
@@ -521,12 +526,12 @@ function RunComparisonPage() {
                   )}
                 </div>
 
-                <Select value={runBId} onValueChange={setRunBId}>
+                <Select value={runBId} onValueChange={setRunBId} disabled={comparableRuns.length === 0}>
                   <SelectTrigger className="w-full h-12 bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-900 dark:text-white rounded-2xl font-bold text-sm">
                     <SelectValue placeholder="Select Run B" />
                   </SelectTrigger>
                   <SelectContent className="bg-white dark:bg-[#14120B] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white rounded-xl">
-                    {executionRuns.map(r => (
+                    {comparableRuns.map(r => (
                       <SelectItem key={r.id} value={r.id} className="focus:bg-slate-50 dark:focus:bg-white/10 text-sm font-medium">
                         {r.name} · {r.environment}
                       </SelectItem>
@@ -536,23 +541,27 @@ function RunComparisonPage() {
               </div>
 
               {selectedB && (
-                <div className="grid grid-cols-3 gap-3 mt-6 font-mono text-xs">
+                <div className="grid grid-cols-4 gap-3 mt-6 font-mono text-xs">
                   <div className="p-3 rounded-2xl bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 font-bold flex items-center justify-center gap-1.5">
                     <CheckCircle2 className="h-4 w-4 shrink-0" /> {selectedB.passed} Passed
                   </div>
                   <div className="p-3 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 font-bold flex items-center justify-center gap-1.5">
                     <XCircle className="h-4 w-4 shrink-0" /> {selectedB.failed} Failed
                   </div>
+                  <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-300 font-bold flex items-center justify-center gap-1.5">
+                    <AlertTriangle className="h-4 w-4 shrink-0" /> {getBlockedCount(selectedB)} Blocked
+                  </div>
                   <div className="p-3 rounded-2xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-white/70 font-bold flex items-center justify-center gap-1.5">
                     <Clock className="h-4 w-4 shrink-0" /> {selectedB.duration}
                   </div>
                 </div>
               )}
+              {!selectedB && <p className="mt-4 text-xs text-slate-500 dark:text-white/50">Create another run for this project to enable comparison.</p>}
             </div>
           </div>
 
           {/* Delta Summary Banner */}
-          {selectedA && selectedB && (
+          {selectedA && selectedB ? (
             <div className={`p-6 rounded-3xl border border-slate-200 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-none ${diffSummary.regressions > 0 ? 'bg-red-500/10 border-red-500/20' : diffSummary.fixes > 0 ? 'bg-green-500/10 border-green-500/20' : 'bg-slate-50 dark:bg-white/5'}`}>
               <div className="flex items-center gap-4">
                 <div className={`p-3.5 rounded-2xl ${diffSummary.regressions > 0 ? 'bg-red-500 text-white' : diffSummary.fixes > 0 ? 'bg-green-500 text-white' : 'bg-primary/20 text-primary'}`}>
@@ -560,7 +569,7 @@ function RunComparisonPage() {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
-                    {diffSummary.regressions > 0 ? `${diffSummary.regressions} Regressions Detected Between Runs` : diffSummary.fixes > 0 ? `${diffSummary.fixes} Issues Fixed Between Runs` : 'No Deltas / Fully Stable Comparison'}
+                    {diffSummary.regressions > 0 ? `${diffSummary.regressions} Regressions Detected Between Runs` : diffSummary.fixes > 0 ? `${diffSummary.fixes} Issues Fixed Between Runs` : diffSummary.newTests + diffSummary.removedTests > 0 ? `${diffSummary.newTests} New · ${diffSummary.removedTests} Removed Test Cases` : 'No Deltas / Fully Stable Comparison'}
                   </h3>
                   <p className="text-sm text-slate-600 dark:text-white/70 mt-1">
                     Comparing baseline {selectedA.name} with target {selectedB.name} ({selectedB.environment}).
@@ -578,7 +587,11 @@ function RunComparisonPage() {
                 </Button>
               )}
             </div>
-          )}
+          ) : selectedA ? (
+            <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.03] p-5 text-sm text-slate-600 dark:text-white/60">
+              Select another run from <strong>{selectedA.name}</strong>’s project to compare results. Runs from different projects cannot be compared.
+            </div>
+          ) : null}
 
           {/* Diff Table */}
           <div className="rounded-3xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#14120B] overflow-hidden shadow-none">
@@ -590,6 +603,21 @@ function RunComparisonPage() {
 
             <div className="divide-y divide-slate-100 dark:divide-white/5">
               {diffItems.map((item, idx) => {
+                const renderOutcome = (outcome: any) => {
+                  if (!outcome) return <span className="text-xs text-slate-400 dark:text-white/30 italic">Not in run</span>;
+                  const status = outcome.status || "Unknown";
+                  const style = status === "Passed"
+                    ? "bg-green-500/10 border-green-500/20 text-green-600 dark:text-green-400"
+                    : status === "Blocked"
+                      ? "bg-amber-500/10 border-amber-500/20 text-amber-700 dark:text-amber-300"
+                      : "bg-red-500/10 border-red-500/20 text-red-600 dark:text-red-400";
+                  const icon = status === "Passed"
+                    ? <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
+                    : status === "Blocked"
+                      ? <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
+                      : <XCircle className="h-3.5 w-3.5 shrink-0" />;
+                  return <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${style}`}>{icon}<span>{status.toUpperCase()} ({outcome.time || "—"})</span></div>;
+                };
                 const bgClass = item.comparison === "regression" 
                   ? "bg-red-500/10 dark:bg-red-500/5 hover:bg-red-500/15" 
                   : item.comparison === "fixed"
@@ -611,27 +639,9 @@ function RunComparisonPage() {
                       <div className="text-xs text-slate-500 dark:text-white/50 font-mono">{item.module}</div>
                     </div>
 
-                    <div className="col-span-3 flex items-center justify-center font-mono">
-                      {item.a ? (
-                        <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${item.a.status === 'Passed' ? 'bg-green-500/10 border-green-500/20 text-green-600 dark:text-green-400' : 'bg-red-500/10 border-red-500/20 text-red-600 dark:text-red-400'}`}>
-                          {item.a.status === 'Passed' ? <CheckCircle2 className="h-3.5 w-3.5 shrink-0" /> : <XCircle className="h-3.5 w-3.5 shrink-0" />}
-                          <span>{item.a.status.toUpperCase()} ({item.a.time})</span>
-                        </div>
-                      ) : (
-                        <span className="text-xs text-slate-400 dark:text-white/30 italic">Not in run</span>
-                      )}
-                    </div>
+                    <div className="col-span-3 flex items-center justify-center font-mono">{renderOutcome(item.a)}</div>
 
-                    <div className="col-span-3 flex items-center justify-center font-mono">
-                      {item.b ? (
-                        <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${item.b.status === 'Passed' ? 'bg-green-500/10 border-green-500/20 text-green-600 dark:text-green-400' : 'bg-red-500/10 border-red-500/20 text-red-600 dark:text-red-400'}`}>
-                          {item.b.status === 'Passed' ? <CheckCircle2 className="h-3.5 w-3.5 shrink-0" /> : <XCircle className="h-3.5 w-3.5 shrink-0" />}
-                          <span>{item.b.status.toUpperCase()} ({item.b.time})</span>
-                        </div>
-                      ) : (
-                        <span className="text-xs text-slate-400 dark:text-white/30 italic">Not in run</span>
-                      )}
-                    </div>
+                    <div className="col-span-3 flex items-center justify-center font-mono">{renderOutcome(item.b)}</div>
                   </div>
                 );
               })}

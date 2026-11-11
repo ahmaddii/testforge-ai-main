@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect, useMemo } from "react";
-import { Sparkles, Wand2, ArrowRight, CheckCircle2, Copy, FileText, PlusCircle, Check, Zap, FolderGit2 } from "lucide-react";
+import { Wand2, ArrowRight, CheckCircle2, Copy, FileText, PlusCircle, Check, Zap, FolderGit2 } from "lucide-react";
+import { GeminiIcon } from "@/components/gemini-icon";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -8,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useApp } from "@/lib/store";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
+import GrayAgent from "./Gray-agent";
 
 export const Route = createFileRoute("/app/ai-generator")({
   component: AIGeneratorPage,
@@ -138,7 +140,7 @@ function AIGeneratorPage() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
         <div>
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight bg-gradient-to-br from-slate-900 to-slate-800 dark:from-white dark:to-white/60 bg-clip-text text-transparent mb-1 flex items-center gap-3">
-            <Wand2 className="h-8 w-8 text-primary" /> Autonomous AI Test Generator
+            <GrayAgent size={32} color="#2A8BF3" eyeColor="#ffffff" /> Autonomous AI Test Generator
           </h1>
           <p className="text-slate-500 dark:text-white/50 text-sm md:text-base">
             Harness Google Gemini 2.5 Pro to automatically analyze product requirements and synthesize BDD test cases.
@@ -209,7 +211,7 @@ function AIGeneratorPage() {
           {/* Custom Prompt */}
           <div className="space-y-2">
             <label className="text-xs font-bold text-slate-700 dark:text-white/80 uppercase tracking-wider flex items-center gap-1.5">
-              <Sparkles className="h-4 w-4 text-primary" /> Or Custom User Story
+              <GeminiIcon className="h-4 w-4 object-contain" /> Or Custom User Story
             </label>
             <Input
               placeholder="e.g. As a shopper, I want to checkout..."
@@ -234,7 +236,7 @@ function AIGeneratorPage() {
               >
                 {generating ? (
                   <>
-                    <Sparkles className="h-5 w-5 animate-spin" /> Generating Tests with Gemini...
+                    <GeminiIcon className="h-5 w-5 animate-spin object-contain" /> Generating Tests with Gemini...
                   </>
                 ) : (
                   <>
@@ -250,7 +252,7 @@ function AIGeneratorPage() {
                   <div className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-primary to-transparent animate-laser-h" />
                 </div>
                 <div className="text-sm font-bold text-primary animate-pulse flex items-center justify-center gap-2">
-                  <Sparkles className="h-4 w-4" /> Analyzing requirement AST and generating edge cases...
+                  <GeminiIcon className="h-4 w-4 object-contain" /> Analyzing requirement AST and generating edge cases...
                 </div>
               </div>
             )}

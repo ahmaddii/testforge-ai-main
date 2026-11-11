@@ -15,7 +15,7 @@ export const Route = createFileRoute("/login")({
 
 import { supabase } from "@/lib/supabase";
 
-import { Mail, Lock, Sparkles, Quote, ArrowRight, User as UserIcon, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, Quote, ArrowRight, User as UserIcon, Eye, EyeOff } from "lucide-react";
 
 function LoginPage() {
   const navigate = useNavigate();

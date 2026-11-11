@@ -491,3 +491,8 @@ li[data-sonner-toast] [data-close-button]::before {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.dashboard-generate-button > svg {
+  width: 22px !important;
+  height: 22px !important;
+}

@@ -1,12 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { FolderGit2, FlaskConical, Target, Sparkles, Bug, AlertTriangle, Server, CheckCircle2, RefreshCw, Zap } from "lucide-react";
+import { FolderGit2, FlaskConical, Target, Bug, AlertTriangle, Server, CheckCircle2, RefreshCw, Zap } from "lucide-react";
 import { useApp } from "@/lib/store";
 import { PageSkeleton } from "@/components/page-skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, PieChart, Pie, Cell } from "recharts";
+import GrayAgent from "./Gray-agent";
 
 export const Route = createFileRoute("/app/")({
   component: DashboardHome,
@@ -132,8 +133,8 @@ function DashboardHome() {
         <div className="flex items-center gap-3">
 
           <Link to={projects.length > 0 ? "/app/test-cases" : "/app/projects"}>
-            <Button className="gradient-bg text-primary-foreground shadow-none border border-primary/50 relative group overflow-hidden h-10 px-6 rounded-full font-semibold">
-              <Sparkles className="mr-2 h-4 w-4 relative z-10" /> 
+            <Button className="dashboard-generate-button gradient-bg text-primary-foreground shadow-none border border-primary/50 relative group overflow-hidden h-10 px-6 rounded-full font-semibold">
+              <GrayAgent size={100} color="#2A8BF3" eyeColor="#ffffff" />
               <span className="relative z-10">Generate test cases</span>
             </Button>
           </Link>

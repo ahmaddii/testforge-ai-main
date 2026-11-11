@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { ArrowLeft, Github, Loader2, Sparkles, Trash2, RefreshCw } from "lucide-react";
+import { ArrowLeft, Github, Loader2, Trash2, RefreshCw } from "lucide-react";
+import { GeminiIcon } from "@/components/gemini-icon";
 import { useApp } from "@/lib/store";
 import { PageSkeleton } from "@/components/page-skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -143,7 +144,7 @@ function ProjectDetail() {
               <Input value={repo} onChange={(e) => setRepo(e.target.value)} placeholder="https://github.com/org/repo" className="pl-9" />
             </div>
             <Button onClick={analyze} disabled={running} className="gradient-bg text-primary-foreground shadow-none">
-              {running ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
+              {running ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <GeminiIcon className="mr-2 h-4 w-4 object-contain" />}
               {running ? "Analyzing…" : "Analyze repository"}
             </Button>
           </div>

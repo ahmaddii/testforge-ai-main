@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Building, Clock, Loader2, Mail, MessageSquare, Phone, Send, Shield, Sparkles, Zap } from "lucide-react";
+import { Building, Clock, Loader2, Mail, MessageSquare, Phone, Send, Shield, Zap } from "lucide-react";
+import { GeminiIcon } from "@/components/gemini-icon";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -73,7 +74,7 @@ function ContactPage() {
                     <Building className="h-16 w-16" />
                   </div>
                   <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary mb-6 border border-primary/20">
-                    <Sparkles className="h-6 w-6" />
+                    <GeminiIcon className="h-6 w-6 object-contain" />
                   </div>
                   <h3 className="text-xl font-extrabold text-white mb-2">Sales & Enterprise</h3>
                   <p className="text-sm text-white/60 leading-relaxed mb-6 font-light">

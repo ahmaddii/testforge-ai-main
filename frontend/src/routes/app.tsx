@@ -2,7 +2,7 @@ import { createFileRoute, Outlet, Link, useNavigate, useRouterState, redirect } 
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
-  LayoutDashboard, FolderGit2, ListChecks, FlaskConical, FileBarChart, Settings, Search, LogOut, ChevronRight, Bug, Activity, PlugZap, UsersRound, MessageSquare, Video, CreditCard, Inbox, Layers, Server, History, Bell, Sparkles, Milestone, TrendingUp, GitCompare, ArrowDownUp, DownloadCloud, FileCode2, LifeBuoy, Wand2, GitPullRequest, ClipboardCheck
+  LayoutDashboard, FolderGit2, ListChecks, FlaskConical, FileBarChart, Settings, Search, LogOut, ChevronRight, Bug, Activity, PlugZap, UsersRound, MessageSquare, Video, CreditCard, Inbox, Layers, Server, History, Bell, Milestone, TrendingUp, GitCompare, ArrowDownUp, DownloadCloud, FileCode2, LifeBuoy, Wand2, GitPullRequest, ClipboardCheck
 } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarGroupLabel,
@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useApp } from "@/lib/store";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import GrayAgent from "./Gray-agent";
+import { GeminiIcon } from "@/components/gemini-icon";
 
 export const Route = createFileRoute("/app")({
   component: AppLayout,
@@ -81,7 +83,7 @@ const nav: NavItem[] = [
   { to: "/app/releases", label: "Releases", icon: Milestone },
   { to: "/app/environments", label: "Environments", icon: Server },
   { to: "/app/executed-tests", label: "Executed Tests", icon: ClipboardCheck },
-  { to: "/app/ai-generator", label: "AI Test Generator", icon: Sparkles },
+  { to: "/app/ai-generator", label: "AI Test Generator", icon: GeminiIcon },
   { to: "/app/test-cases", label: "Test Cases", icon: FlaskConical },
   { to: "/app/runs", label: "Manual AI Runs", icon: Activity },
   { to: "/app/run-comparison", label: "Run Comparison", icon: GitCompare },
@@ -121,9 +123,9 @@ const navGroups: Array<{ title: string; items: NavItem[] }> = [
   {
     title: "Execution & AI",
     items: [
-      { to: "/app/specy", label: "Specy AI Agent", icon: Wand2 },
+      { to: "/app/specy", label: "Specy AI Agent", icon: GrayAgent },
       { to: "/app/executed-tests", label: "Executed Tests", icon: ClipboardCheck },
-      { to: "/app/ai-generator", label: "AI Test Generator", icon: Sparkles, pro: true, requiredFeature: "aiTestGenerator" },
+      { to: "/app/ai-generator", label: "AI Test Generator", icon: GeminiIcon, pro: true, requiredFeature: "aiTestGenerator" },
       { to: "/app/test-cases", label: "Test Cases", icon: FlaskConical },
       { to: "/app/runs", label: "Manual AI Runs", icon: Activity },
       { to: "/app/run-comparison", label: "Run Comparison", icon: GitCompare, pro: true, requiredFeature: "runComparison" },
@@ -504,7 +506,13 @@ function AppLayout() {
                         <SidebarMenuItem key={n.to} className="relative">
                           <SidebarMenuButton asChild isActive={isActive} tooltip={n.label} className="h-8 py-1.5">
                             <Link to={n.to as any} className="flex items-center gap-2 w-full">
-                              <n.icon className="h-4 w-4 shrink-0" />
+                              {n.to === "/app/specy" ? (
+                                <GrayAgent size={18} color="#71717a" eyeColor="#ffffff" />
+                              ) : n.to === "/app/ai-generator" ? (
+                                <GeminiIcon alt="" className="h-4 w-4 shrink-0 object-contain" />
+                              ) : (
+                                <n.icon className="h-4 w-4 shrink-0" />
+                              )}
                               <span className="truncate">{n.label}</span>
                               {showProBadge && (
                                 <span className="ml-auto text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 uppercase tracking-wider group-data-[state=collapsed]:hidden select-none">

@@ -38,7 +38,29 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
   const { data, error } = await query.order('created_at', { ascending: false });
   
   if (error) return res.status(500).json({ error: error.message });
-  res.json(data);
+
+  const projects = data || [];
+  const projectIds = projects.map((project: any) => project.id);
+  const countsByProjectId: Record<string, number> = {};
+
+  if (projectIds.length > 0) {
+    const { data: testCases, error: testCasesError } = await supabase
+      .from('test_cases')
+      .select('project_id')
+      .in('project_id', projectIds);
+
+    if (testCasesError) return res.status(500).json({ error: testCasesError.message });
+    for (const testCase of testCases || []) {
+      if (testCase.project_id) {
+        countsByProjectId[testCase.project_id] = (countsByProjectId[testCase.project_id] || 0) + 1;
+      }
+    }
+  }
+
+  res.json(projects.map((project: any) => ({
+    ...project,
+    test_case_count: countsByProjectId[project.id] || 0,
+  })));
 });
 
 /**

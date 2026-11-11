@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { Sparkles, Download, Search, Loader2, Trash2, Pencil, FileText, FileSpreadsheet, Plus } from "lucide-react";
+import { Download, Search, Loader2, Trash2, Pencil, FileText, FileSpreadsheet, Plus } from "lucide-react";
+import { GeminiIcon } from "@/components/gemini-icon";
 import { useApp, delay, type TestCase, type Priority, type TestType, type TestStatus } from "@/lib/store";
 import { PageSkeleton } from "@/components/page-skeleton";
 import { generateMockTestCases } from "@/lib/mock-generation";
@@ -230,7 +231,7 @@ function TestCasesPage() {
             </SelectContent>
           </Select>
           <Button onClick={generate} disabled={generating} className="gradient-bg text-primary-foreground border border-primary/50 relative group overflow-hidden h-10 px-6 rounded-full font-semibold hover:scale-[1.02] transition-transform shadow-none">
-            {generating ? <Loader2 className="mr-2 h-4 w-4 animate-spin relative z-10" /> : <Sparkles className="mr-2 h-4 w-4 relative z-10" />}
+            {generating ? <Loader2 className="mr-2 h-4 w-4 animate-spin relative z-10" /> : <GeminiIcon className="mr-2 h-4 w-4 relative z-10 object-contain" />}
             <span className="relative z-10">{generating ? "Generating…" : "Generate with AI"}</span>
           </Button>
         </div>
@@ -365,7 +366,7 @@ function TestCasesPage() {
                 <tr>
                   <td colSpan={8} className="py-20 text-center">
                     <div className="grid h-16 w-16 place-items-center rounded-2xl bg-white/5 border border-white/10 text-primary mx-auto mb-6 shadow-none">
-                      <Sparkles className="h-8 w-8" />
+                      <GeminiIcon className="h-8 w-8 object-contain" />
                     </div>
                     <h3 className="text-xl font-bold text-white mb-2">No test cases generated</h3>
                     <p className="text-white/40 max-w-sm mx-auto">Select a project and click "Generate with AI" to build your automated test plan.</p>

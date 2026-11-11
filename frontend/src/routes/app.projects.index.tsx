@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
-import { Plus, Github, MoreHorizontal, FolderGit2, FlaskConical, Sparkles } from "lucide-react";
+import { useState, useEffect, useMemo } from "react";
+import { Plus, Github, MoreHorizontal, FolderGit2, FlaskConical } from "lucide-react";
+import { GeminiIcon } from "@/components/gemini-icon";
 import { useApp } from "@/lib/store";
 import { PageSkeleton } from "@/components/page-skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,10 +23,21 @@ import { api } from "@/lib/api";
 function ProjectsPage() {
   const navigate = useNavigate();
   const projects = useApp((s) => s.projects);
+  const testCases = useApp((s) => s.testCases);
   const user = useApp((s) => s.user);
   const fetchData = useApp((s) => s.fetchData);
   const appLoading = useApp((s) => s.loading);
   const billing = useApp((s) => s.billing);
+
+  const testCaseCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const testCase of testCases) {
+      if (testCase.project_id) {
+        counts.set(testCase.project_id, (counts.get(testCase.project_id) || 0) + 1);
+      }
+    }
+    return counts;
+  }, [testCases]);
 
 
   const [open, setOpen] = useState(false);
@@ -215,7 +227,7 @@ function ProjectsPage() {
                     <div className="grid h-6 w-6 place-items-center rounded bg-primary/10 text-primary border border-primary/20">
                       <FlaskConical className="h-3 w-3" />
                     </div>
-                    <span className="text-sm font-semibold text-slate-700 dark:text-white/80">{p.test_case_count || 0} <span className="font-normal text-slate-400 dark:text-white/40">cases</span></span>
+                    <span className="text-sm font-semibold text-slate-700 dark:text-white/80">{testCaseCounts.get(p.id) ?? p.test_case_count ?? 0} <span className="font-normal text-slate-400 dark:text-white/40">cases</span></span>
                   </div>
                   <span className="text-[10px] font-medium text-slate-400 dark:text-white/30 uppercase tracking-wider">
                     {p.last_analyzed ? new Date(p.last_analyzed).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : "New"}
@@ -277,7 +289,7 @@ function ProjectsPage() {
             {/* Top Bar */}
             <div className="h-10 bg-white/5 border-b border-white/10 flex items-center justify-between px-4 select-none">
               <span className="text-xs font-semibold tracking-wider text-white/70 flex items-center gap-1.5">
-                <Sparkles className="h-3.5 w-3.5 text-primary" /> Speclane Setup Wizard
+                <GeminiIcon className="h-3.5 w-3.5 object-contain" /> Speclane Setup Wizard
               </span>
             </div>
 
@@ -420,7 +432,7 @@ function ProjectsPage() {
                   <div className="flex-1 flex flex-col justify-center">
                     <div className="space-y-4">
                       <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary border border-primary/20">
-                        <Sparkles className="h-6 w-6" />
+                        <GeminiIcon className="h-6 w-6 object-contain" />
                       </div>
                       <div className="space-y-1">
                         <h3 className="text-lg font-bold text-white">Completing Speclane Setup</h3>

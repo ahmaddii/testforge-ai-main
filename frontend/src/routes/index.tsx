@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Play, Check, Activity, Target, Zap, Bell, ChevronDown, Plus, Github, Search, Command, LayoutGrid, GitPullRequest, FileText, Sparkles, Share2, FolderGit2, ListChecks, FlaskConical, Bug, GitCompare, TrendingUp, Layers, History, Milestone, Server, FileBarChart, MessageSquare, Video, UsersRound, DownloadCloud, PlugZap, CreditCard, Settings, LifeBuoy, Wand2, ShieldCheck, PieChart, RefreshCw, FileSpreadsheet, LayoutDashboard, Send, X } from "lucide-react";
+import { ArrowRight, Play, Check, Activity, Target, Zap, Bell, ChevronDown, Plus, Github, Search, Command, LayoutGrid, GitPullRequest, FileText, Share2, FolderGit2, ListChecks, FlaskConical, Bug, GitCompare, TrendingUp, Layers, History, Milestone, Server, FileBarChart, MessageSquare, Video, UsersRound, DownloadCloud, PlugZap, CreditCard, Settings, LifeBuoy, Wand2, ShieldCheck, PieChart, RefreshCw, FileSpreadsheet, LayoutDashboard, Send, X } from "lucide-react";
+import { GeminiIcon } from "@/components/gemini-icon";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PublicLayout } from "@/components/public-layout";
@@ -182,7 +183,7 @@ function Hero() {
                         {
                           title: "Execution & AI",
                           items: [
-                            { id: "ai-generator", label: "AI Test Generator", icon: Sparkles },
+                            { id: "ai-generator", label: "AI Test Generator", icon: GeminiIcon },
                             { id: "test-cases", label: "Test Cases", icon: FlaskConical },
                             { id: "runs", label: "Runs", icon: Activity },
                             { id: "defects", label: "Defects", icon: Bug },
@@ -496,7 +497,7 @@ function Hero() {
                         <div className="bg-gradient-to-r from-primary/20 via-transparent to-transparent border border-primary/30 rounded-2xl p-6 relative overflow-hidden">
                           <div className="relative z-10 space-y-3">
                             <div className="inline-flex items-center gap-2 bg-primary text-[#14120B] px-2.5 py-1 rounded-full text-[10px] font-black">
-                              <Sparkles className="h-3 w-3" /> AUTONOMOUS GENERATOR V2
+                              <GeminiIcon className="h-3 w-3 object-contain" /> AUTONOMOUS GENERATOR V2
                             </div>
                             <h3 className="text-lg font-black text-white">Generate High-Fidelity Test Cases Instantly</h3>
                             <p className="text-xs text-white/70">Our AI analyzes your AST, GitHub commits, and OpenAPI specs to write foolproof Cypress/Playwright tests in seconds.</p>
@@ -749,7 +750,7 @@ function CodeDiff() {
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> speclane-studio.app/workspace/dashboard
                 </div>
                 <div className="hidden sm:flex items-center gap-1.5 text-white/40 text-[10px] font-mono font-semibold">
-                  <Sparkles className="w-3 h-3 text-primary animate-pulse" /> Speclane OS v2.5
+                  <GeminiIcon className="w-3 h-3 animate-pulse object-contain" /> Speclane OS v2.5
                 </div>
               </div>
 
@@ -806,7 +807,7 @@ function CodeDiff() {
                         <div className="text-[9px] font-bold tracking-wider text-white/40 uppercase px-2 mb-1.5">Execution & AI</div>
                         <div className="space-y-0.5">
                           <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition-colors">
-                            <Sparkles className="w-3.5 h-3.5 shrink-0 text-primary" /> <span className="truncate text-primary">AI Test Generator</span>
+                            <GeminiIcon className="w-3.5 h-3.5 shrink-0 object-contain" /> <span className="truncate text-primary">AI Test Generator</span>
                           </div>
                           <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition-colors">
                             <FlaskConical className="w-3.5 h-3.5 shrink-0" /> <span className="truncate">Test Cases</span>
@@ -913,7 +914,7 @@ function CodeDiff() {
                         <CreditCard className="w-3 h-3" /> Manage Subscription
                       </div>
                       <div className="bg-primary text-[#14120B] px-4 py-1.5 rounded-lg text-[11px] shadow-none flex items-center gap-1.5 font-bold cursor-pointer hover:opacity-90 transition-all">
-                        <Sparkles className="w-3 h-3" /> Generate test cases
+                        <GeminiIcon className="w-3 h-3 object-contain" /> Generate test cases
                       </div>
                     </div>
                   </div>
@@ -1310,7 +1311,7 @@ function KeyboardSpeed() {
 
             {[
               { step: "01", title: "Connect Source", desc: "Link your GitHub or GitLab repo. We analyze the code structure automatically.", icon: <Github className="h-5 w-5" /> },
-              { step: "02", title: "AI Analysis", desc: "Speclane scans your PRs and requirements to find what needs testing.", icon: <Sparkles className="h-5 w-5" /> },
+              { step: "02", title: "AI Analysis", desc: "Speclane scans your PRs and requirements to find what needs testing.", icon: <GeminiIcon className="h-5 w-5 object-contain" /> },
               { step: "03", title: "Instant Generation", desc: "Generate complete Python/JS test cases with 100% coverage in seconds.", icon: <Zap className="h-5 w-5" /> },
               { step: "04", title: "Sync & Export", desc: "Push to TestRail or export high-quality PDF/CSV reports for stakeholders.", icon: <Share2 className="h-5 w-5" /> },
             ].map((item, idx) => (

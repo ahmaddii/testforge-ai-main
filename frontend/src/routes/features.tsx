@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Github, Sparkles, ListChecks, FileText, Shield, Users } from "lucide-react";
+import { Github, ListChecks, FileText, Shield, Users } from "lucide-react";
+import { GeminiIcon } from "@/components/gemini-icon";
 import { Badge } from "@/components/ui/badge";
 import { PublicLayout } from "@/components/public-layout";
 import { CTA } from "@/components/cta";
@@ -45,7 +46,7 @@ function FeaturesList() {
             <div className="relative z-10 flex items-start justify-between mb-8">
               <div>
                 <div className="mb-4 inline-grid h-12 w-12 place-items-center rounded-xl bg-primary/10 text-primary border border-primary/20">
-                  <Sparkles className="h-6 w-6" />
+                  <GeminiIcon className="h-6 w-6 object-contain" />
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-2">AI Test Generation</h3>
                 <p className="text-white/60 leading-relaxed max-w-md">Generate positive, negative, and edge cases automatically from your requirements in plain English.</p>

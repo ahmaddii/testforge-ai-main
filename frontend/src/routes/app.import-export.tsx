@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { DownloadCloud, FileSpreadsheet, Sparkles, FolderGit2 } from "lucide-react";
+import { DownloadCloud, FileSpreadsheet, FolderGit2 } from "lucide-react";
+import { GeminiIcon } from "@/components/gemini-icon";
 import { useApp } from "@/lib/store";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
@@ -139,7 +140,7 @@ function DataExportPage() {
         <div>
           <div className="flex items-center gap-2 mb-2">
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase bg-primary/10 text-primary border border-primary/20 flex items-center gap-1.5">
-              <Sparkles className="h-3 w-3" /> Secure Data Custody
+              <GeminiIcon className="h-3 w-3 object-contain" /> Secure Data Custody
             </span>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight bg-gradient-to-br from-slate-900 to-slate-800 dark:from-white dark:to-white/60 bg-clip-text text-transparent mb-1 flex items-center gap-3">

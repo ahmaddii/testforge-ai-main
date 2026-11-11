@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Github, Workflow, Sparkles, BellRing } from "lucide-react";
+import { Github, Workflow, BellRing } from "lucide-react";
+import { GeminiIcon } from "@/components/gemini-icon";
 import { Badge } from "@/components/ui/badge";
 import { PublicLayout } from "@/components/public-layout";
 import { CTA } from "@/components/cta";
@@ -37,7 +38,7 @@ function HowItWorksPage() {
 function HowItWorksSteps() {
   const steps = [
     { icon: Github, title: "1. Connect & Analyze", desc: "Plug into GitHub or GitLab. We safely analyze your project structure without training on your source code." },
-    { icon: Sparkles, title: "2. AI Generation", desc: "Our models read your code and instantly write robust Playwright or Cypress tests based on your components." },
+    { icon: GeminiIcon, title: "2. AI Generation", desc: "Our models read your code and instantly write robust Playwright or Cypress tests based on your components." },
     { icon: Workflow, title: "3. Continuous Execution", desc: "Tests are seamlessly integrated into your CI/CD pipeline and run automatically on every pull request." },
     { icon: BellRing, title: "4. Smart Reporting", desc: "Get rich, actionable alerts directly in Slack or Jira the moment a test fails, with AI-suggested fixes." },
   ];

@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Check, ShieldCheck, Sparkles, Zap } from "lucide-react";
+import { Check, ShieldCheck, Zap } from "lucide-react";
+import { GeminiIcon } from "@/components/gemini-icon";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PublicLayout } from "@/components/public-layout";
@@ -69,7 +70,7 @@ function PricingPage() {
         <div className="container relative mx-auto px-4 z-10">
           <FramerReveal className="mx-auto max-w-3xl text-center" direction="up" distance={40}>
             <Badge variant="outline" className="mb-4 rounded-full border-primary/20 bg-primary/5 text-primary px-4 py-1.5 font-semibold">
-              <Sparkles className="h-3.5 w-3.5 mr-2 inline text-primary animate-pulse" /> Transparent Pricing
+              <GeminiIcon className="h-3.5 w-3.5 mr-2 inline object-contain animate-pulse" /> Transparent Pricing
             </Badge>
             <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl mb-6 bg-gradient-to-b from-white to-white/60 bg-clip-text text-transparent leading-[1.15]">
               Simple, predictable pricing for QA automation

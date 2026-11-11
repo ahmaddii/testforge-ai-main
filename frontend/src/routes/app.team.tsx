@@ -26,7 +26,8 @@ function TeamPage() {
   const [projectId, setProjectId] = useState<string>("all");
   const [submitting, setSubmitting] = useState(false);
 
-  const isOwnerOrManager = user?.role === 'Owner' || user?.role === 'Manager' || user?.isAdmin !== false;
+  const isWorkspaceOwner = user?.role === 'Owner' && (!user.workspaceOwnerId || user.workspaceOwnerId === user.id);
+  const isOwnerOrManager = isWorkspaceOwner || user?.role === 'Manager';
 
   const loadTeam = async () => {
     try {
@@ -67,6 +68,7 @@ function TeamPage() {
   );
 
   const inviteMember = async () => {
+    if (!isWorkspaceOwner) return toast.error("Only the workspace owner can invite team members.");
     if (!email.trim()) return toast.error("Please enter member email");
     setSubmitting(true);
     try {
@@ -158,6 +160,9 @@ function TeamPage() {
           <CardTitle className="text-lg font-bold text-slate-900 dark:text-white">Invite Team Member</CardTitle>
         </CardHeader>
         <CardContent className="pt-6 space-y-4">
+          {!isWorkspaceOwner && (
+            <p className="text-sm text-muted-foreground">Only the workspace owner can invite team members.</p>
+          )}
           <div className="grid gap-3 sm:grid-cols-12 items-end">
             <div className="space-y-1 sm:col-span-5">
               <Label className="text-xs font-semibold text-slate-600 dark:text-white/70">Member Email</Label>
@@ -166,6 +171,7 @@ function TeamPage() {
                 placeholder="colleague@company.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                disabled={!isWorkspaceOwner}
                 className="h-10 rounded-xl bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10"
               />
             </div>
@@ -173,7 +179,7 @@ function TeamPage() {
             <div className="space-y-1 sm:col-span-3">
               <Label className="text-xs font-semibold text-slate-600 dark:text-white/70">Role</Label>
               <Select value={role} onValueChange={(v) => setRole(v as "Member" | "Manager")}>
-                <SelectTrigger className="h-10 rounded-xl bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10">
+                <SelectTrigger disabled={!isWorkspaceOwner} className="h-10 rounded-xl bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10">
                   <SelectValue placeholder="Select role" />
                 </SelectTrigger>
                 <SelectContent className="bg-white dark:bg-[#14120B] border-slate-200 dark:border-white/10">
@@ -186,7 +192,7 @@ function TeamPage() {
             <div className="space-y-1 sm:col-span-4">
               <Label className="text-xs font-semibold text-slate-600 dark:text-white/70">Project Access Scope</Label>
               <Select value={projectId} onValueChange={setProjectId}>
-                <SelectTrigger className="h-10 rounded-xl bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10">
+                <SelectTrigger disabled={!isWorkspaceOwner} className="h-10 rounded-xl bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10">
                   <SelectValue placeholder="Select scope" />
                 </SelectTrigger>
                 <SelectContent className="bg-white dark:bg-[#14120B] border-slate-200 dark:border-white/10">
@@ -204,7 +210,7 @@ function TeamPage() {
           <div className="flex justify-end pt-2">
             <Button
               onClick={inviteMember}
-              disabled={submitting}
+              disabled={submitting || !isWorkspaceOwner}
               className="gradient-bg text-primary-foreground font-semibold rounded-full h-10 px-8 shadow-none"
             >
               {submitting ? "Sending Invite..." : "Send Invitation"}

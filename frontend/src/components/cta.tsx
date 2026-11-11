@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Search, CheckCircle2, FolderGit2, ChevronDown, Home, Layers, Sparkles, Bug, Target, AlertTriangle, Wand2, Settings, CreditCard } from "lucide-react";
+import { Search, CheckCircle2, FolderGit2, ChevronDown, Home, Layers, Bug, Target, AlertTriangle, Wand2, Settings, CreditCard } from "lucide-react";
+import { GeminiIcon } from "@/components/gemini-icon";
 import { Button } from "@/components/ui/button";
 import { FramerReveal } from "@/components/framer-reveal";
 
@@ -110,7 +111,7 @@ export function CTA() {
                     <div className="space-y-0.5 pt-1 border-t border-white/5">
                       <div className="text-[7px] font-bold text-white/30 uppercase tracking-widest px-1.5 mb-1">Execution & AI</div>
                       {[
-                        { label: "AI Generator", icon: Sparkles, active: false },
+                        { label: "AI Generator", icon: GeminiIcon, active: false },
                         { label: "Test Cases", icon: Layers, active: false },
                         { label: "Runs", icon: Target, active: false },
                         { label: "Defects", icon: Bug, active: false },
@@ -170,7 +171,7 @@ export function CTA() {
                     </div>
                     <div className="flex items-center gap-1.5">
                       <Button className="h-6 px-2 text-[8px] bg-primary text-[#14120B] hover:bg-primary/95 font-bold rounded-lg gap-1 border border-primary/20">
-                        <Sparkles size={8} />
+                        <GeminiIcon size={8} />
                         <span>Generate SQA</span>
                       </Button>
                     </div>
